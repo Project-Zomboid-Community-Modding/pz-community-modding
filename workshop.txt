@@ -1,5 +1,7 @@
 version=1
+id=2909488957
 title=Community Patch
-description=
-tags=Build 41;Framework;Misc
+description=This is a team effort, visit the github here:
+description=https://github.com/ChuckTheSheep/pz-community-patch
+tags=Build 41;Framework
 visibility=friendsOnly
