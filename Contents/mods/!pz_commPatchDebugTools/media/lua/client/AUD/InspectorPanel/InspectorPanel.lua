@@ -29,12 +29,13 @@ local function inspectorWindowToggle()
 end
 
 function AUD.InspectorPanel.inspectorButton()
-    local movableBtn = ISEquippedItem.instance.movableBtn;
-	AUD.InspectorPanel.toolbarButton = ISButton:new(2, movableBtn:getY() + ((movableBtn:getHeight()+8)*2) + 150, 48, 48, "", nil, inspectorWindowToggle);
-	AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_Insp_Off)
-	AUD.InspectorPanel.toolbarButton:setDisplayBackground(false);
-    AUD.InspectorPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1};
 
-	ISEquippedItem.instance:addChild(AUD.InspectorPanel.toolbarButton);
-    ISEquippedItem.instance:setHeight(Core:getInstance():getScreenHeight());
+    local xMax, yMax = AUD.getNewButtonXY()
+	AUD.InspectorPanel.toolbarButton = ISButton:new(xMax, yMax, 48, 48, "", nil, inspectorWindowToggle)
+	AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_Insp_Off)
+	AUD.InspectorPanel.toolbarButton:setDisplayBackground(false)
+    AUD.InspectorPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
+
+	ISEquippedItem.instance:addChild(AUD.InspectorPanel.toolbarButton)
+    ISEquippedItem.instance:setHeight(ISEquippedItem.instance:getHeight()+AUD.InspectorPanel.toolbarButton:getHeight()+5)
 end

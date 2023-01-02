@@ -53,60 +53,50 @@ function AUD.DebugPanel.show()
         AUD.DebugPanel.lastPosSaved = true
     end
 
-
     AUD.debugPanelTabPanel = ISTabPanel:new(AUD.DebugPanel.lastX, AUD.DebugPanel.lastY, AUD.DebugPanel.lastWidth, AUD.DebugPanel.lastHeight)
     AUD.debugPanelTabPanel:initialise();
-    AUD.debugPanelTabPanel:setAnchorBottom(true);
-    AUD.debugPanelTabPanel:setAnchorRight(true);
-    AUD.debugPanelTabPanel.target = self;
+    AUD.debugPanelTabPanel:setAnchorBottom(true)
+    AUD.debugPanelTabPanel:setAnchorRight(true)
+    AUD.debugPanelTabPanel.target = self
     AUD.debugPanelTabPanel:setEqualTabWidth(true)
     --AUD.debugPanelTabPanel:setCenterTabs(true)
-    AUD.debugPanelWindow = AUD.debugPanelTabPanel:wrapInCollapsableWindow("AUD");
+    AUD.debugPanelWindow = AUD.debugPanelTabPanel:wrapInCollapsableWindow("AUD")
     
     AUD.debugPanelWindow.close = AUD.DebugPanel.close
     AUD.debugPanelWindow.closeButton.onmousedown = AUD.DebugPanel.close
 
-    AUD.debugPanelWindow:setResizable(true);
+    AUD.debugPanelWindow:setResizable(true)
 
     AUD.DebugPanel.loadTabs()
 
-    AUD.debugPanelWindow:addToUIManager();
+    AUD.debugPanelWindow:addToUIManager()
     AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_DebugPanel_On);
 end
 
 
-
-
-
-
---------------------------------------------------------
-
 local function debugPanelToggle()
     if AUD.debugPanelWindow and AUD.debugPanelWindow:getIsVisible() then
-        AUD.debugPanelWindow:close();
+        AUD.debugPanelWindow:close()
 	else
         AUD.DebugPanel.show()
         AUD.debugPanelTabPanel:activateView(AUD.DebugPanel.activeViews[AUD.DebugPanel.activeView])
 	end
 end
 
-function AUD.DebugPanel.debugPanelWindowButton()
-    local movableBtn = ISEquippedItem.instance.movableBtn;
-	AUD.DebugPanel.toolbarButton = ISCustomButton:new(2, movableBtn:getY() + movableBtn:getHeight() + 150, 48, 48, "", nil, debugPanelToggle);
-	AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_DebugPanel_Off)
-	AUD.DebugPanel.toolbarButton:setDisplayBackground(false);
-    AUD.DebugPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1};
 
-	ISEquippedItem.instance:addChild(AUD.DebugPanel.toolbarButton)
-    ISEquippedItem.instance:setHeight(Core:getInstance():getScreenHeight());
+function AUD.DebugPanel.debugPanelWindowButton()
+    local xMax, yMax = AUD.getNewButtonXY()
+    AUD.DebugPanel.toolbarButton = ISCustomButton:new(xMax, yMax, 48, 48, "", nil, debugPanelToggle)
+    AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_DebugPanel_Off)
+    AUD.DebugPanel.toolbarButton:setDisplayBackground(false)
+    AUD.DebugPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
+
+    ISEquippedItem.instance:addChild(AUD.DebugPanel.toolbarButton)
+    ISEquippedItem.instance:setHeight(ISEquippedItem.instance:getHeight()+AUD.DebugPanel.toolbarButton:getHeight()+5)
 end
 
 
-
----------------------
-
 ISCustomButton = ISButton:derive("ISCustomButton");
-
 function ISCustomButton:onRightMouseUp(x, y)
     AUD.RestoreLayout.saveWindowsLayout()
 end

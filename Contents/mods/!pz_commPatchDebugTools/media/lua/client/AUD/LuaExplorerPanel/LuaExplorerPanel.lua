@@ -28,14 +28,14 @@ local function explorerWindowToggle()
 end
 
 function AUD.LuaExplorerPanel.explorerButton()
-    local movableBtn = ISEquippedItem.instance.movableBtn;
-	AUD.LuaExplorerPanel.toolbarButton = ISButton:new(2, movableBtn:getY() + ((movableBtn:getHeight()+8)*4) + 150, 48, 48, "", nil, explorerWindowToggle);
+    local xMax, yMax = AUD.getNewButtonXY()
+	AUD.LuaExplorerPanel.toolbarButton = ISButton:new(xMax, yMax, 48, 48, "", nil, explorerWindowToggle)
 	AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_Explorer_Off)
-	AUD.LuaExplorerPanel.toolbarButton:setDisplayBackground(false);
-    AUD.LuaExplorerPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1};
+	AUD.LuaExplorerPanel.toolbarButton:setDisplayBackground(false)
+    AUD.LuaExplorerPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
 
-	ISEquippedItem.instance:addChild(AUD.LuaExplorerPanel.toolbarButton);
-    ISEquippedItem.instance:setHeight(Core:getInstance():getScreenHeight());
+	ISEquippedItem.instance:addChild(AUD.LuaExplorerPanel.toolbarButton)
+    ISEquippedItem.instance:setHeight(ISEquippedItem.instance:getHeight()+AUD.LuaExplorerPanel.toolbarButton:getHeight()+5)
 end
 
 

@@ -28,15 +28,13 @@ local function teleportWindowToggle()
 end
 
 function AUD.TeleportPanel.teleportButton()
-    local movableBtn = ISEquippedItem.instance.movableBtn;
-	AUD.TeleportPanel.toolbarButton = ISButton:new(2, movableBtn:getY() + ((movableBtn:getHeight()+8)*3) + 150, 48, 48, "", nil, teleportWindowToggle);
+    local xMax, yMax = AUD.getNewButtonXY()
+	AUD.TeleportPanel.toolbarButton = ISButton:new(xMax, yMax, 48, 48, "", nil, teleportWindowToggle)
 	AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_teleport_Off)
-	AUD.TeleportPanel.toolbarButton:setDisplayBackground(false);
-    AUD.TeleportPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1};
+	AUD.TeleportPanel.toolbarButton:setDisplayBackground(false)
+    AUD.TeleportPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
 
-	ISEquippedItem.instance:addChild(AUD.TeleportPanel.toolbarButton);
-    ISEquippedItem.instance:setHeight(Core:getInstance():getScreenHeight());
+	ISEquippedItem.instance:addChild(AUD.TeleportPanel.toolbarButton)
+    ISEquippedItem.instance:setHeight(ISEquippedItem.instance:getHeight()+AUD.TeleportPanel.toolbarButton:getHeight()+5)
 end
-
-
 

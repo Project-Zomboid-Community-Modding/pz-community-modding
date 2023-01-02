@@ -21,7 +21,11 @@ AUD.Config.isSpawnVehicle = false
 AUD.Config.spawnVehicleScript = nil
 
 
-
+function AUD.getNewButtonXY()
+    local xMax = ISEquippedItem.instance.x-8
+    local yMax = ISEquippedItem.instance:getBottom()+5
+    return xMax,yMax
+end
 
 
 local function createButtons()
