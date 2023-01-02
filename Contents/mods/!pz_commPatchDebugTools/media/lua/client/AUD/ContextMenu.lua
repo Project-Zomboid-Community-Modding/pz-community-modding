@@ -27,14 +27,13 @@ local function fillModDataContextMenu(array,contextMenu)
 end
 
 
-local function AUDContextMenu(player, context, worldobjects, test)
-    local sq = nil
-
-    local mainMenu = context:addOptionOnTop("Inspect ModData", worldobjects, nil)
+local function AUDContextMenu(player, context, worldObjects, test)
+    local sq
+    local mainMenu = context:addOptionOnTop("Inspect ModData", worldObjects, nil)
     local subMenu = ISContextMenu:getNew(context)
     context:addSubMenu(mainMenu, subMenu)
 
-    for i,object in ipairs(worldobjects) do
+    for i,object in ipairs(worldObjects) do
         local square = object:getSquare()
         if square and sq == nil then sq = square end
         if instanceof(object, "IsoObject") and (not instanceof(object, "IsoWorldInventoryObject")) then
