@@ -21,10 +21,20 @@ AUD.Config.isSpawnVehicle = false
 AUD.Config.spawnVehicleScript = nil
 
 
-function AUD.getNewButtonXY()
+function AUD.setNewButton(buttonType, audModule, onClick)
     local xMax = ISEquippedItem.instance.x-8
     local yMax = ISEquippedItem.instance:getBottom()+5
-    return xMax,yMax
+
+    ---@type Texture
+    local texture = audModule.texture_Off
+    
+    audModule.toolbarButton = buttonType:new(xMax, yMax, texture:getHeight(), texture:getWidth(), "", nil, onClick)
+    audModule.toolbarButton:setImage(audModule.texture_Off)
+    audModule.toolbarButton:setDisplayBackground(false)
+    audModule.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
+
+    ISEquippedItem.instance:addChild(audModule.toolbarButton)
+    ISEquippedItem.instance:setHeight(ISEquippedItem.instance:getHeight()+audModule.toolbarButton:getHeight()+5)
 end
 
 

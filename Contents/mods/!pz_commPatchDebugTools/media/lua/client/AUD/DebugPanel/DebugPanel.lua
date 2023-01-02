@@ -13,8 +13,8 @@ AUD.DebugPanel.lastWidth = -1
 AUD.DebugPanel.lastHeight = -1
 AUD.DebugPanel.lastPosSaved = false
     
-AUD.DebugPanel.texture_DebugPanel_On = getTexture("media/textures/_mainMenuButton_On.png")
-AUD.DebugPanel.texture_DebugPanel_Off = getTexture("media/textures/_mainMenuButton_Off.png")
+AUD.DebugPanel.texture_On = getTexture("media/textures/_mainMenuButton_On.png")
+AUD.DebugPanel.texture_Off = getTexture("media/textures/_mainMenuButton_Off.png")
 
 
 function AUD.DebugPanel.close(self)
@@ -26,7 +26,7 @@ function AUD.DebugPanel.close(self)
 
     AUD.DebugPanel.activeView = AUD.debugPanelTabPanel:getActiveViewIndex()
     ISCollapsableWindow.close(self);
-    AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_DebugPanel_Off);
+    AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_Off);
     AUD.debugPanelWindow:setRemoved(true)
 end
 
@@ -70,7 +70,7 @@ function AUD.DebugPanel.show()
     AUD.DebugPanel.loadTabs()
 
     AUD.debugPanelWindow:addToUIManager()
-    AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_DebugPanel_On);
+    AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_On);
 end
 
 
@@ -85,14 +85,7 @@ end
 
 
 function AUD.DebugPanel.debugPanelWindowButton()
-    local xMax, yMax = AUD.getNewButtonXY()
-    AUD.DebugPanel.toolbarButton = ISCustomButton:new(xMax, yMax, 48, 48, "", nil, debugPanelToggle)
-    AUD.DebugPanel.toolbarButton:setImage(AUD.DebugPanel.texture_DebugPanel_Off)
-    AUD.DebugPanel.toolbarButton:setDisplayBackground(false)
-    AUD.DebugPanel.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
-
-    ISEquippedItem.instance:addChild(AUD.DebugPanel.toolbarButton)
-    ISEquippedItem.instance:setHeight(ISEquippedItem.instance:getHeight()+AUD.DebugPanel.toolbarButton:getHeight()+5)
+    AUD.setNewButton(ISCustomButton, AUD.DebugPanel, debugPanelToggle)
 end
 
 

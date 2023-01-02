@@ -23,7 +23,7 @@ function AUDLuaExplorer:initialise()
 
         ISCollapsableWindow.close(obj);
         AUD.luaExplorerWindow:setRemoved(true)
-        AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_Explorer_Off)
+        AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_Off)
     end
     
     AUD.luaExplorerWindow.close = closeFunc
@@ -41,6 +41,6 @@ function AUDLuaExplorer:initialise()
     AUD.luaExplorerWindow.nested:addView("All", AUD.LuaExplorer.allTab)
 
     AUD.luaExplorerWindow:addToUIManager();
-    AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_Explorer_On)
+    AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_On)
 end
 

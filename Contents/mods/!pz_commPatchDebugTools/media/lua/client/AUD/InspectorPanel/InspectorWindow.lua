@@ -27,7 +27,7 @@ function AUDInspector:initialise()
 
         ISCollapsableWindow.close(obj);
         AUD.inspectorWindow:setRemoved(true)
-        AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_Insp_Off)
+        AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_Off)
     end
     
     AUD.inspectorWindow.close = closeFunc
@@ -47,7 +47,7 @@ function AUDInspector:initialise()
 
     AUD.inspectorWindow:addToUIManager();
 
-    AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_Insp_On)
+    AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_On)
 end
 
 

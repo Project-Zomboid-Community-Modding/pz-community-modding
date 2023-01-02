@@ -23,7 +23,7 @@ function AUDTeleport:initialise()
 
         ISCollapsableWindow.close(obj);
         AUD.teleportWindow:setRemoved(true)
-        AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_teleport_Off)
+        AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_Off)
     end
     
     AUD.teleportWindow.close = closeFunc
@@ -38,7 +38,7 @@ function AUDTeleport:initialise()
     self:loadPoints()
 
     AUD.teleportWindow:addToUIManager();
-    AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_teleport_On)
+    AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_On)
 end
 
 
