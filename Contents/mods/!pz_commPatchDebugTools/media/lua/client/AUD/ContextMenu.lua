@@ -82,12 +82,3 @@ local function AUDInvContextMenu(player, context, items)
 	end
 end
 Events.OnFillInventoryObjectContextMenu.Add(AUDInvContextMenu)
-
-
-
-local function bIs10YLActive()
-    local activeMods = getActivatedMods()
-    local modIDs = {"10YL_HIGH","10YL_MEDIUM","10YL_LOW"}
-    for _,mod in pairs(modIDs) do if activeMods:contains(mod) then return true end end
-    return false
-end
