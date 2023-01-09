@@ -63,7 +63,7 @@ function AUDMainTab:initialise()
 
     for _,name_func in pairs(vehicleDebugFunctions) do
         local name, func = name_func()
-        AUD.MainTabTable.addCheat(self, func, name, nil, nil, x, y+(yStep*rows), AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
+        AUD.MainTabTable.addButton(self, func, name, nil, nil, x, y+(yStep*rows), AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
         rows = rows+1
     end
 
@@ -72,7 +72,7 @@ function AUDMainTab:initialise()
 end
 
 
-function AUD.MainTabTable.addCheat(UIElement, setFunction, title, cheatPanel, index, x, y, width, height)
+function AUD.MainTabTable.addButton(UIElement, setFunction, title, cheatPanel, index, x, y, width, height)
     local btn = ISButton:new(x, y, width, height, title, nil, setFunction)
     if cheatPanel and index then btn.backgroundColor = cheatPanel.tickBox:isSelected(index) and AUD.Config.Buttons.GREEN or AUD.Config.Buttons.RED end
     UIElement:addChild(btn)
