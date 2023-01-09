@@ -1,14 +1,3 @@
-require("AUD/DebugPanel/CustomTab")
-
-local function whatDoDuck()
-    local func = function(arg1, arg2)
-        print(arg1 .. "-" .. arg2)
-    end
-
-    AUD.setButton(2, "Duck", func, "Quack", "Quack")
-end
-
-
 local function showPlayerStats()
     local player = getPlayer()
 
@@ -32,4 +21,3 @@ end
 
 
 Events.OnTick.Add(showPlayerStats)
-Events.OnTick.Add(whatDoDuck)

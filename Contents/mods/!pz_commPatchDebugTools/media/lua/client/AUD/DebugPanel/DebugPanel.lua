@@ -34,14 +34,6 @@ function AUD.DebugPanel.loadTabs()
     AUD.DebugPanel.mainTab = AUDMainTab:new(0, 48, AUD.debugPanelWindow:getWidth(), AUD.debugPanelWindow:getHeight() - AUD.debugPanelWindow.nested.tabHeight)
     AUD.DebugPanel.mainTab:initialise()
     AUD.debugPanelWindow.nested:addView("Main", AUD.DebugPanel.mainTab)
-
-    AUD.vehicleTab = AUDVehicleTab:new(0, 48, AUD.debugPanelWindow:getWidth(), AUD.debugPanelWindow:getHeight() - AUD.debugPanelWindow.nested.tabHeight)
-    AUD.vehicleTab:initialise()
-    AUD.debugPanelWindow.nested:addView("Vehicle", AUD.vehicleTab)
-
-    AUD.customTab = AUDCustomTab:new(0, 48, AUD.debugPanelWindow:getWidth(), AUD.debugPanelWindow:getHeight() - AUD.debugPanelWindow.nested.tabHeight)
-    AUD.customTab:initialise()
-    AUD.debugPanelWindow.nested:addView("Custom", AUD.customTab)
 end
 
 function AUD.DebugPanel.show()
