@@ -1,7 +1,39 @@
 require("AUD/Init")
+require("")
 AUD.MainTabTable = {}
 
 AUDMainTab = ISPanelJoypad:derive("AUDMainTab")
+
+
+local function decorateSetFunction(index, cheatPanel)
+    return function(target, self)
+
+        local isSelected = cheatPanel.tickBox:isSelected(index)
+        if isSelected then
+            cheatPanel.tickBox:setSelected(index, false)
+            self.backgroundColor = AUD.Config.Buttons.RED
+        else
+            cheatPanel.tickBox:setSelected(index, true)
+            self.backgroundColor = AUD.Config.Buttons.GREEN
+        end
+
+        cheatPanel.setFunction[index](cheatPanel, cheatPanel.tickBox:isSelected(index))
+        self:update()
+    end
+end
+
+
+local function forceInitCheatPanel()
+    if ISCheatPanelUI.instance==nil then
+        ISCheatPanelUI.instance = ISCheatPanelUI:new (50, 200, 212, 350, getPlayer())
+        ISCheatPanelUI.instance:initialise()
+    end
+    ISCheatPanelUI.instance:addToUIManager()
+    ISCheatPanelUI.instance:setVisible(false)
+    return ISCheatPanelUI.instance
+end
+
+local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
 
 function AUDMainTab:initialise()
     ISPanelJoypad.initialise(self);
@@ -12,8 +44,6 @@ function AUDMainTab:initialise()
     self:setAnchorTop(true)
     self:setAnchorBottom(true)
     self:noBackground()
-    self:setScrollChildren(true)
-    self:addScrollBars()
 
     self.borderColor = {r=0, g=0, b=0, a=0};
 
@@ -21,124 +51,29 @@ function AUDMainTab:initialise()
     local y =  AUD.Config.Buttons.TopIndent
     local yStep = AUD.Config.Buttons.VerticalStep
 
-    AUD.MainTabTable.addGodMode(self, x, y, AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
-    AUD.MainTabTable.addGhostMode(self, x, y + yStep, AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
-    AUD.MainTabTable.addNoClip(self, x, y + yStep*2, AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
-    AUD.MainTabTable.addDebugScenarioRestart(self, x, y + yStep*3, AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
-    AUD.MainTabTable.addFastMoving(self, x, y + yStep*4, AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
+    local rows = 0
+
+    local cheatPanel = forceInitCheatPanel()
+    for i=1,#cheatPanel.tickBox.options do
+        local newFunc = decorateSetFunction(i, cheatPanel)
+        local optionName = cheatPanel.tickBox.optionsIndex[i]
+        AUD.MainTabTable.addCheat(self, newFunc, optionName, cheatPanel, i, x, y+(yStep*rows), AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
+        rows = rows+1
+    end
+
+    for _,name_func in pairs(vehicleDebugFunctions) do
+        local name, func = name_func()
+        AUD.MainTabTable.addButton(self, func, name, nil, nil, x, y+(yStep*rows), AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
+        rows = rows+1
+    end
+
+    self:setScrollChildren(true)
+    self:addScrollBars()
 end
 
 
-function AUD.MainTabTable.addGodMode(UIElement, x, y, width, height)
-    local func = function(target, self)
-        local pl = getPlayer()
-        if pl:isGodMod() then
-            pl:setGodMod(false)
-            self.backgroundColor = AUD.Config.Buttons.RED
-        else
-            pl:setGodMod(true)
-            self.backgroundColor = AUD.Config.Buttons.GREEN
-        end
-        self:update()
-    end
-
-    local btn = ISButton:new(x, y, width, height, "God Mode", nil, func);
-    if getPlayer():isGodMod() then
-        btn.backgroundColor = AUD.Config.Buttons.GREEN
-    else
-        btn.backgroundColor = AUD.Config.Buttons.RED
-    end
-
-    UIElement:addChild(btn);
-end
-
-function AUD.MainTabTable.addGhostMode(UIElement, x, y, width, height)
-    local func = function(target, self)
-        local pl = getPlayer()
-        if pl:isGhostMode() then
-            pl:setGhostMode(false)
-            self.backgroundColor = AUD.Config.Buttons.RED
-        else
-            pl:setGhostMode(true)
-            self.backgroundColor = AUD.Config.Buttons.GREEN
-        end
-        self:update()
-    end
-
-    local btn = ISButton:new(x, y, width, height, "Ghost Mode", nil, func);
-    if getPlayer():isGhostMode() then
-        btn.backgroundColor = AUD.Config.Buttons.GREEN
-    else
-        btn.backgroundColor = AUD.Config.Buttons.RED
-    end
-
-    UIElement:addChild(btn);
-end
-
-function AUD.MainTabTable.addNoClip(UIElement, x, y, width, height)
-    local func = function(target, self)
-        local pl = getPlayer()
-        if pl:isNoClip() then
-            pl:setNoClip(false)
-            self.backgroundColor = AUD.Config.Buttons.RED
-        else
-            pl:setNoClip(true)
-            self.backgroundColor = AUD.Config.Buttons.GREEN
-        end
-        self:update()
-    end
-
-    local btn = ISButton:new(x, y, width, height, "NoClip", nil, func);
-    if getPlayer():isNoClip() then
-        btn.backgroundColor = AUD.Config.Buttons.GREEN
-    else
-        btn.backgroundColor = AUD.Config.Buttons.RED
-    end
-
-    UIElement:addChild(btn);
-end
-
-function AUD.MainTabTable.addDebugScenarioRestart(UIElement, x, y, width, height)
-    local func = function(target, self)
-        if getDebugOptions():getBoolean("DebugScenario.ForceLaunch") then
-            getDebugOptions():setBoolean("DebugScenario.ForceLaunch", false)
-            self.backgroundColor = AUD.Config.Buttons.RED
-        else
-            getDebugOptions():setBoolean("DebugScenario.ForceLaunch", true)
-            self.backgroundColor = AUD.Config.Buttons.GREEN
-        end
-        self:update()
-    end
-
-    local btn = ISButton:new(x, y, width, height, "Debug Scen.Restart", nil, func);
-    if getDebugOptions():getBoolean("DebugScenario.ForceLaunch") then
-        btn.backgroundColor = AUD.Config.Buttons.GREEN
-    else
-        btn.backgroundColor = AUD.Config.Buttons.RED
-    end
-
-    UIElement:addChild(btn);
-end
-
-function AUD.MainTabTable.addFastMoving(UIElement, x, y, width, height)
-    local func = function(target, self)
-        local pl = getPlayer()
-        if pl:getModData()["AUD_FASTMOVE"] then
-            pl:getModData()["AUD_FASTMOVE"] = false
-            self.backgroundColor = AUD.Config.Buttons.RED
-        else
-            pl:getModData()["AUD_FASTMOVE"] = true
-            self.backgroundColor = AUD.Config.Buttons.GREEN
-        end
-        self:update()
-    end
-
-    local btn = ISButton:new(x, y, width, height, "Fast Move", nil, func);
-    if getPlayer():getModData()["AUD_FASTMOVE"] then
-        btn.backgroundColor = AUD.Config.Buttons.GREEN
-    else
-        btn.backgroundColor = AUD.Config.Buttons.RED
-    end
-
-    UIElement:addChild(btn);
+function AUD.MainTabTable.addButton(UIElement, setFunction, title, cheatPanel, index, x, y, width, height)
+    local btn = ISButton:new(x, y, width, height, title, nil, setFunction)
+    if cheatPanel and index then btn.backgroundColor = cheatPanel.tickBox:isSelected(index) and AUD.Config.Buttons.GREEN or AUD.Config.Buttons.RED end
+    UIElement:addChild(btn)
 end
