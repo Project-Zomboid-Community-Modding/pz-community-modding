@@ -57,7 +57,7 @@ function AUDMainTab:initialise()
     for i=1,#cheatPanel.tickBox.options do
         local newFunc = decorateSetFunction(i, cheatPanel)
         local optionName = cheatPanel.tickBox.optionsIndex[i]
-        AUD.MainTabTable.addCheat(self, newFunc, optionName, cheatPanel, i, x, y+(yStep*rows), AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
+        AUD.MainTabTable.addButton(self, newFunc, optionName, cheatPanel, i, x, y+(yStep*rows), AUD.Config.Buttons.Width, AUD.Config.Buttons.Height)
         rows = rows+1
     end
 
