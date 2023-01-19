@@ -1,4 +1,4 @@
-![banner](https://github.com/ChuckTheSheep/pz-community-patch/blob/main/Contents/mods/!pz_communityPatch/banner.png?raw=true)
+![banner](https://raw.githubusercontent.com/ChuckTheSheep/pz-community-patch/main/images/bannerTrim.png)
 ####
 ### Message:
 <b>First and foremost this project is dedicated to the players, modders, developers, and anyone else that makes Project Zomboid what it is - the ultimate zombie survival RPG.</b>
