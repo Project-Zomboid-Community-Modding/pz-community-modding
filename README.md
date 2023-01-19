@@ -4,11 +4,11 @@
 <b>First and foremost this project is dedicated to the players, modders, developers, and anyone else that makes Project Zomboid what it is - the ultimate zombie survival RPG.</b>
 
 ####
-### This Community Patch is a team effort to centralize quality of life changes or fixes, utility functions, and making the available Lua files easier to work with in respect to both compatibility and modability.
+### This community project is a team effort to centralize quality of life changes or fixes, utility functions, and making the available Lua files easier to work with in respect to both compatibility and modability.
 
 ###
 ## Workflow
-#### The patch will be developed alongside the most recent version of PZ (including any IWBUMS/open beta branches).
+#### Everything will be developed alongside the most recent version of PZ (including any IWBUMS/open beta branches).
 
 - Create/Publish your own branch/fork.  
 - Do your work on that branch/fork.
