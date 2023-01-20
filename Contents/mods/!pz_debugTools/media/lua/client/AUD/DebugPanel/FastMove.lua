@@ -1,5 +1,3 @@
-
-
 local function fastMove(key)
     local pl = getPlayer()
     if pl ~= nil then

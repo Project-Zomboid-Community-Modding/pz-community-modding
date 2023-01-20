@@ -6,15 +6,12 @@ ModDataDebugPanel.instance = nil
 ModDataDebugPanel.modDataList = {}
 
 
-local function roundstring(_val) return tostring(ISDebugUtils.roundNum(_val,2)) end
-
-
 function ModDataDebugPanel.OnOpenPanel(obj)
     if ModDataDebugPanel.instance==nil then
         ModDataDebugPanel.modDataList = {}
         table.insert(ModDataDebugPanel.modDataList, obj)
 
-        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "ModData Debugger")
+        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "IsoObject ModData Debugger")
         ModDataDebugPanel.instance:initialise()
         ModDataDebugPanel.instance:instantiate()
     else
@@ -23,7 +20,6 @@ function ModDataDebugPanel.OnOpenPanel(obj)
 
     ModDataDebugPanel.instance:addToUIManager()
     ModDataDebugPanel.instance:setVisible(true)
-
     ModDataDebugPanel.instance:onClickRefresh()
 
     return ModDataDebugPanel.instance
@@ -39,7 +35,7 @@ end
 function ModDataDebugPanel:createChildren()
     ISPanel.createChildren(self)
 
-    ISDebugUtils.addLabel(self, {}, 10, 20, "Global ModData Debugger", UIFont.Medium, true)
+    ISDebugUtils.addLabel(self, {}, 10, 20, "IsoObject ModData Debugger", UIFont.Medium, true)
 
     self.tableNamesList = ISScrollingListBox:new(10, 50, 200, self.height - 100)
     self.tableNamesList:initialise()
@@ -154,13 +150,8 @@ function ModDataDebugPanel:drawInfoList(y, item, alt)
     return y + self.itemheight
 end
 
-function ModDataDebugPanel:prerender()
-    ISPanel.prerender(self)
-end
-
-function ModDataDebugPanel:update()
-    ISPanel.update(self)
-end
+function ModDataDebugPanel:prerender() ISPanel.prerender(self) end
+function ModDataDebugPanel:update() ISPanel.update(self) end
 
 function ModDataDebugPanel:close()
     self:setVisible(false)
