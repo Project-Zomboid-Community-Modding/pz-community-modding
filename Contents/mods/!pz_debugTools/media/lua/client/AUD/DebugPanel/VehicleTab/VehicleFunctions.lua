@@ -70,8 +70,12 @@ function vehicleDebugFunctions.addSelectVehicle(UIElement)
     local func = function(target, self)
         if AUD.Config.isSelectVehicle then
             AUD.Config.isSelectVehicle = false
+            self.backgroundColor = AUD.Config.Buttons.RED
+            self.backgroundColorMouseOver = AUD.Config.Buttons.RED_HIGHLIGHT
         else
             AUD.Config.isSelectVehicle = true
+            self.backgroundColor = AUD.Config.Buttons.GREEN
+            self.backgroundColorMouseOver = AUD.Config.Buttons.GREEN_HIGHLIGHT
         end
     end
     return "Select Vehicle", func

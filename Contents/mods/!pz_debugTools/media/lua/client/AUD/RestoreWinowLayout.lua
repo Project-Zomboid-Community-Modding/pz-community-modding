@@ -5,16 +5,6 @@ function AUD.RestoreLayout.restoreWindows()
     local readFile = getFileReader("AUD_DebugWindowsState.txt", true)
 
     if readFile:readLine() == "TRUE" then
-        AUD.DebugPanel.show()
-        AUD.debugPanelTabPanel:activateView(AUD.DebugPanel.activeViews[tonumber(readFile:readLine())])
-
-        AUD.debugPanelWindow:setX(tonumber(readFile:readLine()))
-        AUD.debugPanelWindow:setY(tonumber(readFile:readLine()))
-        AUD.debugPanelWindow:setWidth(tonumber(readFile:readLine()))
-        AUD.debugPanelWindow:setHeight(tonumber(readFile:readLine()))
-    end
-
-    if readFile:readLine() == "TRUE" then
         local x = tonumber(readFile:readLine())
         local y = tonumber(readFile:readLine())
         local width = tonumber(readFile:readLine())
@@ -49,17 +39,6 @@ end
 
 function AUD.RestoreLayout.saveWindowsLayout()
     local writeFile = getFileWriter("AUD_DebugWindowsState.txt", true, false)
-
-    if AUD.debugPanelWindow and not AUD.debugPanelWindow:isRemoved() then
-        writeFile:write("TRUE".."\r\n");
-        writeFile:write(AUD.DebugPanel.activeView .. "\r\n");
-        writeFile:write(AUD.debugPanelWindow.x .. "\r\n");
-        writeFile:write(AUD.debugPanelWindow.y .. "\r\n");
-        writeFile:write(AUD.debugPanelWindow.width .. "\r\n");
-        writeFile:write(AUD.debugPanelWindow.height .. "\r\n");
-    else
-        writeFile:write("FALSE".."\r\n");
-    end
 
     if AUD.inspectorWindow and not AUD.inspectorWindow:isRemoved() then
         writeFile:write("TRUE".."\r\n");

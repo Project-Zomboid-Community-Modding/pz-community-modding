@@ -6,9 +6,6 @@ ModDataDebugPanel.instance = nil
 ModDataDebugPanel.modDataList = {}
 
 
-local function roundstring(_val) return tostring(ISDebugUtils.roundNum(_val,2)) end
-
-
 function ModDataDebugPanel.OnOpenPanel(obj)
     if ModDataDebugPanel.instance==nil then
         ModDataDebugPanel.modDataList = {}
@@ -23,7 +20,6 @@ function ModDataDebugPanel.OnOpenPanel(obj)
 
     ModDataDebugPanel.instance:addToUIManager()
     ModDataDebugPanel.instance:setVisible(true)
-
     ModDataDebugPanel.instance:onClickRefresh()
 
     return ModDataDebugPanel.instance
@@ -154,13 +150,8 @@ function ModDataDebugPanel:drawInfoList(y, item, alt)
     return y + self.itemheight
 end
 
-function ModDataDebugPanel:prerender()
-    ISPanel.prerender(self)
-end
-
-function ModDataDebugPanel:update()
-    ISPanel.update(self)
-end
+function ModDataDebugPanel:prerender() ISPanel.prerender(self) end
+function ModDataDebugPanel:update() ISPanel.update(self) end
 
 function ModDataDebugPanel:close()
     self:setVisible(false)
