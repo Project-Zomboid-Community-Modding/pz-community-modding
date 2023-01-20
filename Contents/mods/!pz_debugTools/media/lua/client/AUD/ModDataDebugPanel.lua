@@ -14,7 +14,7 @@ function ModDataDebugPanel.OnOpenPanel(obj)
         ModDataDebugPanel.modDataList = {}
         table.insert(ModDataDebugPanel.modDataList, obj)
 
-        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "ModData Debugger")
+        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "IsoObject ModData Debugger")
         ModDataDebugPanel.instance:initialise()
         ModDataDebugPanel.instance:instantiate()
     else
@@ -39,7 +39,7 @@ end
 function ModDataDebugPanel:createChildren()
     ISPanel.createChildren(self)
 
-    ISDebugUtils.addLabel(self, {}, 10, 20, "Global ModData Debugger", UIFont.Medium, true)
+    ISDebugUtils.addLabel(self, {}, 10, 20, "IsoObject ModData Debugger", UIFont.Medium, true)
 
     self.tableNamesList = ISScrollingListBox:new(10, 50, 200, self.height - 100)
     self.tableNamesList:initialise()
