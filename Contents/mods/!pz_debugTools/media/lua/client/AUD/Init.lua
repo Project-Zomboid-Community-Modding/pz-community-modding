@@ -1,3 +1,5 @@
+require "ISUI/ISEquippedItem"
+
 AUD = {}
 AUD.Config = {}
 
@@ -26,11 +28,21 @@ AUD.Config.spawnVehicleScript = nil
 
 local ISEquippedItem_new = ISEquippedItem.new
 function ISEquippedItem:new(x, y, width, height, chr)
-    local o = ISEquippedItem_new(self, x, y+AUD.Config.Buttons.TopIndent, width, height, chr)
+    local o = ISEquippedItem_new(self, x, y, width, height, chr)
     o.debugIcon = getTexture("media/textures/_mainMenuButton_Off.png")
     o.debugIconOn = getTexture("media/textures/_mainMenuButton_On.png")
     return o
 end
+
+local ISEquippedItem_initialise = ISEquippedItem.initialise
+function ISEquippedItem:initialise()
+    ISEquippedItem_initialise(self)
+    if self.debugBtn then
+        self.debugBtn:setY(self.debugBtn:getY()+10)
+        self.debugBtn:setX(self.debugBtn:getX()-3)
+    end
+end
+
 
 
 function AUD.setNewButton(buttonType, audModule, onClick)
@@ -41,7 +53,7 @@ function AUD.setNewButton(buttonType, audModule, onClick)
     local texture = audModule.texture_Off
     
     audModule.toolbarButton = buttonType:new(xMax, yMax, texture:getHeight(), texture:getWidth(), "", nil, onClick)
-    audModule.toolbarButton:setImage(audModule.texture_Off)
+    audModule.toolbarButton:setImage(texture)
     audModule.toolbarButton:setDisplayBackground(false)
     audModule.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
 
