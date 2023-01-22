@@ -1,8 +1,8 @@
 require "AUD/Init"
 require "DebugUIs/DebugMenu/ISDebugUtils"
+require "DebugUIs/DebugMenu/ISDebugMenu"
 
 ButtonPanelUI = ISPanel:derive("ButtonPanelUI")
-
 
 function ButtonPanelUI:handleAddButtons(x, y)
 
@@ -54,8 +54,10 @@ function ButtonPanelUI.OnOpenPanel(ui, x, y)
 
     if ui.instance:getIsVisible() then
         ui.instance:setVisible(false)
+        ui.instance:removeFromUIManager()
     else
         ui.instance:setVisible(true)
+        ui.instance:addToUIManager()
         ui.instance:setX(x)
         ui.instance:setY(y)
     end
