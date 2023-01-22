@@ -1,5 +1,5 @@
 require "ISUI/ISPanel"
-
+require "AUD/Init"
 
 ModDataDebugPanel = ISPanel:derive("ModDataDebugPanel")
 ModDataDebugPanel.instance = nil
@@ -50,7 +50,7 @@ function ModDataDebugPanel:createChildren()
     self.tableNamesList.target = self
     self:addChild(self.tableNamesList)
 
-    self.infoList = ISScrollingListBox:new(220, 50, 600, self.height - 100)
+    self.infoList = ISScrollingListBox:new(220, 50, 200, self.height - 100)
     self.infoList:initialise()
     self.infoList:instantiate()
     self.infoList.itemheight = 22
@@ -61,8 +61,13 @@ function ModDataDebugPanel:createChildren()
     self.infoList.drawBorder = true
     self:addChild(self.infoList)
 
-    local y, obj = ISDebugUtils.addButton(self,"close",self.width-200,self.height-40,180,20,getText("IGUI_CraftUI_Close"),ModDataDebugPanel.onClickClose)
-    y, obj = ISDebugUtils.addButton(self,"refresh",self.width-400,self.height-40,180,20,"Refresh",ModDataDebugPanel.onClickRefresh)
+    local w = (self.infoList:getWidth()/2)-5
+
+    local y, button = ISDebugUtils.addButton(self,"refresh",self.infoList:getX(),self.height-40, w,20,"Refresh", ModDataDebugPanel.onClickRefresh)
+    self.refreshButton = button
+
+    y, button = ISDebugUtils.addButton(self,"close",self.infoList:getX()+w+10,self.height-40, w,20, "Close", ModDataDebugPanel.onClickClose)
+    self.closeButton = button
 
     self:populateList()
 end
@@ -80,9 +85,15 @@ function ModDataDebugPanel:populateList()
         self:populateInfoList(nil) return
     end
 
-    for i, obj in ipairs(ModDataDebugPanel.modDataList) do self.tableNamesList:addItem(tostring(obj), obj) end
+    for i, obj in ipairs(ModDataDebugPanel.modDataList) do
+        self.tableNamesList:addItem(tostring(obj), obj)
+    end
     self.firstTableData=ModDataDebugPanel.modDataList[1]
     self:populateInfoList(self.firstTableData)
+
+    if self.infoList.vscroll and self.infoList:isVScrollBarVisible() then
+        self.infoList.vscroll:setX(self.infoList:getWidth()-self.infoList.vscroll:getWidth())
+    end
 end
 
 
@@ -107,9 +118,9 @@ end
 
 
 function ModDataDebugPanel:parseTable(_t, _ident)
-    if not _ident then
-        _ident = ""
-    end
+    if not _ident then _ident = "" end
+    local tM = getTextManager()
+    local stringWidth = 200
     local s
     for k,v in pairs(_t) do
         if type(v)=="table" then
@@ -120,19 +131,35 @@ function ModDataDebugPanel:parseTable(_t, _ident)
             s = tostring(_ident).."["..tostring(k).."] -> "..tostring(v)
             self.infoList:addItem(s, nil)
         end
+        if s then stringWidth = math.max(stringWidth, tM:MeasureStringX(self.infoList.font, s)+35) end
     end
+    return stringWidth
 end
 
 
 function ModDataDebugPanel:populateInfoList(obj)
     self.infoList:clear()
 
-    local modData = obj:getModData()
+    local windowWidth = 200
+    local panelWidth = 240
+
+    local modData = obj:hasModData() and obj:getModData()
     if modData then
-        self:parseTable(modData, "")
+        windowWidth = self:parseTable(modData, "")
     else
         self.infoList:addItem("Table not found.", nil)
     end
+
+    self.infoList:setWidth(windowWidth)
+    self:setWidth(panelWidth+windowWidth)
+
+    local w = (self.infoList:getWidth()/2)-5
+
+    self.refreshButton:setWidth(w)
+    self.refreshButton:setX(self.infoList:getX())
+
+    self.closeButton:setWidth(w)
+    self.closeButton:setX(self.infoList:getX()+w+10)
 end
 
 

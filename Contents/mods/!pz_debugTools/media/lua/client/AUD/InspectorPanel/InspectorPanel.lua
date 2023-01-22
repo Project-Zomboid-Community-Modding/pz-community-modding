@@ -13,7 +13,7 @@ AUD.InspectorPanel.texture_Off = getTexture("media/textures/_ValueInspector_Off.
 
 local function inspectorWindowToggle()
     if AUD.inspectorWindow and AUD.inspectorWindow:getIsVisible() then
-        AUD.inspectorWindow:close();
+        AUD.inspectorWindow:close()
     else
         if not AUD.InspectorPanel.lastPosSaved then
             AUD.InspectorPanel.lastX = Core:getInstance():getScreenWidth() - 680
@@ -23,7 +23,7 @@ local function inspectorWindowToggle()
             AUD.InspectorPanel.lastPosSaved = true
         end
 
-        AUD.inspectorWindowTabPanel = AUDInspector:new(AUD.InspectorPanel.lastX, AUD.InspectorPanel.lastY, AUD.InspectorPanel.lastWidth, AUD.InspectorPanel.lastHeight);
+        AUD.inspectorWindowTabPanel = AUDInspector:new(AUD.InspectorPanel.lastX, AUD.InspectorPanel.lastY, AUD.InspectorPanel.lastWidth, AUD.InspectorPanel.lastHeight)
         AUD.inspectorWindowTabPanel:initialise()
 	end
 end

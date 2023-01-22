@@ -12,7 +12,7 @@ AUD.LuaExplorerPanel.texture_Off = getTexture("media/textures/_LuaExplorer_Off.p
 
 local function explorerWindowToggle()
     if AUD.luaExplorerWindow and AUD.luaExplorerWindow:getIsVisible() then
-        AUD.luaExplorerWindow:close();
+        AUD.luaExplorerWindow:close()
     else
         if not AUD.LuaExplorerPanel.lastPosSaved then
             AUD.LuaExplorerPanel.lastX = Core:getInstance():getScreenWidth() - 750  --1170
@@ -22,8 +22,8 @@ local function explorerWindowToggle()
             AUD.LuaExplorerPanel.lastPosSaved = true
         end
 
-        AUD.luaFileExplorer = AUDLuaExplorer:new(AUD.LuaExplorerPanel.lastX, AUD.LuaExplorerPanel.lastY, AUD.LuaExplorerPanel.lastWidth, AUD.LuaExplorerPanel.lastHeight);
-        AUD.luaFileExplorer:initialise();
+        AUD.luaFileExplorer = AUDLuaExplorer:new(AUD.LuaExplorerPanel.lastX, AUD.LuaExplorerPanel.lastY, AUD.LuaExplorerPanel.lastWidth, AUD.LuaExplorerPanel.lastHeight)
+        AUD.luaFileExplorer:initialise()
 	end
 end
 
