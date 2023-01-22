@@ -12,7 +12,7 @@ AUD.TeleportPanel.texture_Off = getTexture("media/textures/_gps_OFF.png")
 
 local function teleportWindowToggle()
     if AUD.teleportWindow and AUD.teleportWindow:getIsVisible() then
-        AUD.teleportWindow:close();
+        AUD.teleportWindow:close()
     else
         if not AUD.TeleportPanel.lastPosSaved then
             AUD.TeleportPanel.lastX = Core:getInstance():getScreenWidth() - 450
@@ -22,8 +22,8 @@ local function teleportWindowToggle()
             AUD.TeleportPanel.lastPosSaved = true
         end
 
-        AUD.teleport = AUDTeleport:new(AUD.TeleportPanel.lastX, AUD.TeleportPanel.lastY, AUD.TeleportPanel.lastWidth, AUD.TeleportPanel.lastHeight);
-        AUD.teleport:initialise();
+        AUD.teleport = AUDTeleport:new(AUD.TeleportPanel.lastX, AUD.TeleportPanel.lastY, AUD.TeleportPanel.lastWidth, AUD.TeleportPanel.lastHeight)
+        AUD.teleport:initialise()
 	end
 end
 
