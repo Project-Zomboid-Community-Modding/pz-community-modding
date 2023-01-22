@@ -102,6 +102,7 @@ function vehicleDebugFunctions.addSpawnVehicle(UIElement)
     local func = function(target, self)
         local modal = AUDSpawnVehiclePanel:new(Core:getInstance():getScreenWidth() - 290, Core:getInstance():getScreenHeight() - 285 - 40 - 400, 250, 300, nil, ISPlayerStatsUI.onAddTrait)
         modal:initialise()
+        modal:setVisible(true)
         modal:addToUIManager()
     end
     return "Spawn vehicle", func
