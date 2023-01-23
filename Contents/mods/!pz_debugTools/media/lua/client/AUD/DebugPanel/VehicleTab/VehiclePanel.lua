@@ -27,7 +27,6 @@ function VehiclePanel:handleAddButtons(x, y)
 end
 
 
-require "DebugUIs/DebugMenu/ISDebugMenu"
 local ISDebugMenu_setupButtons = ISDebugMenu.setupButtons
 function ISDebugMenu:setupButtons()
     self:addButtonInfo("Vehicle", function() VehiclePanel.OnOpenPanel() end, "MAIN")
