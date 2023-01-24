@@ -1,7 +1,6 @@
 require "AUD/DebugPanel/ButtonPanel"
 VehiclePanel = ButtonPanelUI:derive("VehiclePanel")
 
-require "DebugUIs/DebugMenu/ISDebugMenu"
 function VehiclePanel:OnOpenPanel()
     VehiclePanel.title = "Vehicle"
     ButtonPanelUI.OnOpenPanel(VehiclePanel)
@@ -34,6 +33,7 @@ function VehiclePanel:handleAddButtons(x, y)
 end
 
 
+require "DebugUIs/DebugMenu/ISDebugMenu"
 local ISDebugMenu_setupButtons = ISDebugMenu.setupButtons
 function ISDebugMenu:setupButtons()
     self:addButtonInfo("Vehicle", function() VehiclePanel.OnOpenPanel() end, "MAIN")
