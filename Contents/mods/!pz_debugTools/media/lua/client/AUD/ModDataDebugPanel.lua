@@ -85,9 +85,21 @@ function ModDataDebugPanel:populateList()
         self:populateInfoList(nil) return
     end
 
+    local stringWidth = 200
+    local panelWidth = 240
+
+    local tM = getTextManager()
+
     for i, obj in ipairs(ModDataDebugPanel.modDataList) do
-        self.tableNamesList:addItem(tostring(obj), obj)
+        local tsObj = tostring(obj)
+        self.tableNamesList:addItem(tsObj, obj)
+
+        stringWidth = math.max(stringWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
     end
+
+    self.tableNamesList:setWidth(stringWidth)
+    self:setWidth(panelWidth+stringWidth)
+
     self.firstTableData=ModDataDebugPanel.modDataList[1]
     self:populateInfoList(self.firstTableData)
 
@@ -131,7 +143,7 @@ function ModDataDebugPanel:parseTable(_t, _ident)
             s = tostring(_ident).."["..tostring(k).."] -> "..tostring(v)
             self.infoList:addItem(s, nil)
         end
-        if s then stringWidth = math.max(stringWidth, tM:MeasureStringX(self.infoList.font, s)+35) end
+        if s then stringWidth = math.max(stringWidth, tM:MeasureStringX(self.infoList.font, s)+30) end
     end
     return stringWidth
 end
@@ -141,7 +153,6 @@ function ModDataDebugPanel:populateInfoList(obj)
     self.infoList:clear()
 
     local windowWidth = 200
-    local panelWidth = 240
 
     local modData = obj:hasModData() and obj:getModData()
     if modData then
@@ -151,7 +162,8 @@ function ModDataDebugPanel:populateInfoList(obj)
     end
 
     self.infoList:setWidth(windowWidth)
-    self:setWidth(panelWidth+windowWidth)
+    self.infoList:setX(self.tableNamesList:getX()+self.tableNamesList:getWidth()+5)
+    self:setWidth(self.tableNamesList:getWidth()+25+windowWidth)
 
     local w = (self.infoList:getWidth()/2)-5
 
