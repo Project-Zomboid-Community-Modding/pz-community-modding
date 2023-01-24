@@ -44,7 +44,6 @@ function ButtonPanelUI.OnOpenPanel(ui, x, y)
         ui.instance = ui:new(x, y, AUD.Config.Buttons.Width+(AUD.Config.Buttons.LeftIndent*2), 200)
         ui.instance:initialise()
         ui.instance:addToUIManager()
-        ui.instance:setVisible(true)
 
         local titleFont, title = UIFont.Medium, (ui.instance.title or "")
         local titleOffset = getTextManager():MeasureStringX(titleFont, title)
@@ -54,8 +53,7 @@ function ButtonPanelUI.OnOpenPanel(ui, x, y)
     end
 
     if ui.instance:getIsVisible() then
-        ui.instance:setVisible(false)
-        ui.instance:removeFromUIManager()
+        ui.instance:close()
     else
         ui.instance:setVisible(true)
         ui.instance:addToUIManager()

@@ -13,6 +13,10 @@ function ISCheatPanelUI.OnOpenPanel()
 end
 
 
+local function openOnStart() ButtonedCheatPanelUI:OnOpenPanel() end
+Events.OnCreatePlayer.Add(openOnStart)
+
+
 function ButtonedCheatPanelUI:initialise()
     ButtonPanelUI.initialise(self)
     ISLayoutManager.RegisterWindow('ButtonedCheatPanelUI', ButtonedCheatPanelUI, self)

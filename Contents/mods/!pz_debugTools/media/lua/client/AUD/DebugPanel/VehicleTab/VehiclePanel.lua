@@ -12,6 +12,9 @@ function VehiclePanel:initialise()
     ISLayoutManager.RegisterWindow('VehiclePanel', VehiclePanel, self)
 end
 
+local function openOnStart() VehiclePanel:OnOpenPanel() end
+Events.OnCreatePlayer.Add(openOnStart)
+
 local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)
 
