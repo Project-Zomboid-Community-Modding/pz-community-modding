@@ -1,11 +1,15 @@
 name: "Upload to Workshop"
 
 on:
+  schedule:
+  # 59th minute of the 4th hour UTC should be 11:59 EST - fridays(s)
+  - cron: "59 4 * * 5"
+  
   # Trigger the workflow on push or pull request,
   # but only for the main branch
   push:
     branches:
-      - main
+      - hotfix
 
 jobs:
   upload:
@@ -23,7 +27,7 @@ jobs:
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD  }}
 
       # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+      #- name: Run a multi-line script
+      #  run: |
+       #   echo Add other actions to build,
+       #   echo test, and deploy your project.
