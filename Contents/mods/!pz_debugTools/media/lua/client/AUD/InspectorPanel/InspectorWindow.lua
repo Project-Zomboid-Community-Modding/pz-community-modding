@@ -8,6 +8,15 @@ AUD.Inspector.paramsMode = "NORMAL"
 
 AUDInspector = ISTabPanel:derive("AUDInspector")
 
+function AUDInspector:RestoreLayout(name, layout)
+    ISLayoutManager.DefaultRestoreWindow(self, layout)
+end
+
+function AUDInspector:SaveLayout(name, layout)
+    ISLayoutManager.DefaultSaveWindow(self, layout)
+    ISLayoutManager.SaveWindowVisible(self, layout)
+end
+
 function AUDInspector:initialise()
     ISTabPanel.initialise(self);
 
@@ -19,12 +28,6 @@ function AUDInspector:initialise()
     AUD.inspectorWindow = self:wrapInCollapsableWindow("Inspector");
     
     local closeFunc = function(obj)
-        AUD.InspectorPanel.lastX = AUD.inspectorWindow.x
-        AUD.InspectorPanel.lastY = AUD.inspectorWindow.y
-        AUD.InspectorPanel.lastWidth = AUD.inspectorWindow.width
-        AUD.InspectorPanel.lastHeight = AUD.inspectorWindow.height - 24
-        AUD.InspectorPanel.lastPosSaved = true
-
         ISCollapsableWindow.close(obj);
         AUD.inspectorWindow:setRemoved(true)
         AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_Off)
@@ -48,6 +51,8 @@ function AUDInspector:initialise()
     AUD.inspectorWindow:addToUIManager();
 
     AUD.InspectorPanel.toolbarButton:setImage(AUD.InspectorPanel.texture_On)
+
+    ISLayoutManager.RegisterWindow('AUDInspector', AUDInspector, self)
 end
 
 

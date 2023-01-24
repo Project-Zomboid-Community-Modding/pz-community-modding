@@ -115,7 +115,7 @@ function AUDTeleportTab:onButtonRemove()
     AUD.teleport:savePoints()    
 
     AUD.teleportWindow:close();
-    AUD.teleport = AUDTeleport:new(AUD.TeleportPanel.lastX, AUD.TeleportPanel.lastY, AUD.TeleportPanel.lastWidth, AUD.TeleportPanel.lastHeight);
+    AUD.teleport = AUDTeleport:new(100, 100, 400, 250)
     AUD.teleport:initialise();
 end
 

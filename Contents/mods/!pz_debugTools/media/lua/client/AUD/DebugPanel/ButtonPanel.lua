@@ -1,6 +1,5 @@
 require "AUD/Init"
 require "DebugUIs/DebugMenu/ISDebugUtils"
-require "DebugUIs/DebugMenu/ISDebugMenu"
 
 ButtonPanelUI = ISPanel:derive("ButtonPanelUI")
 
@@ -35,15 +34,16 @@ Events.OnPlayerDeath.Add(ButtonPanelUI.OnPlayerDeath)
 
 function ButtonPanelUI.OnOpenPanel(ui, x, y)
 
-    x = x or ISDebugMenu.instance:getX()+ISDebugMenu.instance:getWidth()+(AUD.Config.Buttons.LeftIndent/2)
-    y = y or ISDebugMenu.instance:getY()
-
     if not ui.instance then
+
+        local xD, yD = AUD.getDebugMenuAdjacentPos()
+
+        x = x or xD
+        y = y or yD
 
         ui.instance = ui:new(x, y, AUD.Config.Buttons.Width+(AUD.Config.Buttons.LeftIndent*2), 200)
         ui.instance:initialise()
         ui.instance:addToUIManager()
-        ui.instance:setVisible(true)
 
         local titleFont, title = UIFont.Medium, (ui.instance.title or "")
         local titleOffset = getTextManager():MeasureStringX(titleFont, title)
@@ -53,14 +53,22 @@ function ButtonPanelUI.OnOpenPanel(ui, x, y)
     end
 
     if ui.instance:getIsVisible() then
-        ui.instance:setVisible(false)
-        ui.instance:removeFromUIManager()
+        ui.instance:close()
     else
         ui.instance:setVisible(true)
         ui.instance:addToUIManager()
-        ui.instance:setX(x)
-        ui.instance:setY(y)
     end
+end
+
+
+function ButtonPanelUI:RestoreLayout(name, layout)
+    ISLayoutManager.DefaultRestoreWindow(self, layout)
+end
+
+
+function ButtonPanelUI:SaveLayout(name, layout)
+    ISLayoutManager.DefaultSaveWindow(self, layout)
+    ISLayoutManager.SaveWindowVisible(self, layout)
 end
 
 

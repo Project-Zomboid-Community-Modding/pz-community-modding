@@ -1,12 +1,18 @@
 require "AUD/DebugPanel/ButtonPanel"
 VehiclePanel = ButtonPanelUI:derive("VehiclePanel")
 
-require "DebugUIs/DebugMenu/ISDebugMenu"
 function VehiclePanel:OnOpenPanel()
     VehiclePanel.title = "Vehicle"
     ButtonPanelUI.OnOpenPanel(VehiclePanel)
 end
 
+function VehiclePanel:initialise()
+    ButtonPanelUI.initialise(self)
+    ISLayoutManager.RegisterWindow('VehiclePanel', VehiclePanel, self)
+end
+
+local function openOnStart() VehiclePanel:OnOpenPanel() end
+Events.OnCreatePlayer.Add(openOnStart)
 
 local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)
