@@ -3,6 +3,14 @@ AUD.TeleportTable = {}
 
 AUDTeleport = ISTabPanel:derive("AUDTeleport")
 
+function AUDTeleport:RestoreLayout(name, layout)
+    ISLayoutManager.DefaultRestoreWindow(self, layout)
+end
+
+function AUDTeleport:SaveLayout(name, layout)
+    ISLayoutManager.DefaultSaveWindow(self, layout)
+    ISLayoutManager.SaveWindowVisible(self, layout)
+end
 
 function AUDTeleport:initialise()
     ISTabPanel.initialise(self);
@@ -15,12 +23,6 @@ function AUDTeleport:initialise()
     AUD.teleportWindow = self:wrapInCollapsableWindow("Teleport");
     
     local closeFunc = function(obj)
-        AUD.TeleportPanel.lastX = AUD.teleportWindow.x
-        AUD.TeleportPanel.lastY = AUD.teleportWindow.y
-        AUD.TeleportPanel.lastWidth = AUD.teleportWindow.width
-        AUD.TeleportPanel.lastHeight = AUD.teleportWindow.height - 24
-        AUD.TeleportPanel.lastPosSaved = true
-
         ISCollapsableWindow.close(obj);
         AUD.teleportWindow:setRemoved(true)
         AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_Off)
@@ -39,6 +41,8 @@ function AUDTeleport:initialise()
 
     AUD.teleportWindow:addToUIManager();
     AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_On)
+
+    ISLayoutManager.RegisterWindow('AUDTeleport', AUDTeleport, self)
 end
 
 

@@ -7,6 +7,10 @@ function VehiclePanel:OnOpenPanel()
     ButtonPanelUI.OnOpenPanel(VehiclePanel)
 end
 
+function VehiclePanel:initialise()
+    ButtonPanelUI.initialise(self)
+    ISLayoutManager.RegisterWindow('VehiclePanel', VehiclePanel, self)
+end
 
 local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)

@@ -26,6 +26,16 @@ AUD.Config.isSpawnVehicle = false
 AUD.Config.spawnVehicleScript = nil
 
 
+require "DebugUIs/DebugMenu/ISDebugMenu"
+function AUD.getDebugMenuAdjacentPos()
+
+    local x = ISDebugMenu and ISDebugMenu.instance and ISDebugMenu.instance:getX()+ISDebugMenu.instance:getWidth() or 300
+    local y = ISDebugMenu and ISDebugMenu.instance and ISDebugMenu.instance:getY() or 100
+
+    return x+5, y
+end
+
+
 local ISEquippedItem_new = ISEquippedItem.new
 function ISEquippedItem:new(x, y, width, height, chr)
     local o = ISEquippedItem_new(self, x, y, width, height, chr)
@@ -67,8 +77,7 @@ local function createButtons()
     AUD.InspectorPanel.inspectorButton()
     AUD.LuaExplorerPanel.explorerButton()
     AUD.TeleportPanel.teleportButton()
-    
-    AUD.RestoreLayout.restoreWindows()
+
 end
 
 

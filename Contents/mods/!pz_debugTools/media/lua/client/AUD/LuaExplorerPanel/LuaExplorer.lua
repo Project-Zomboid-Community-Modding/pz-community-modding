@@ -3,6 +3,14 @@ AUD.LuaExplorer = {}
 
 AUDLuaExplorer = ISTabPanel:derive("AUDLuaExplorer")
 
+function AUDLuaExplorer:RestoreLayout(name, layout)
+    ISLayoutManager.DefaultRestoreWindow(self, layout)
+end
+
+function AUDLuaExplorer:SaveLayout(name, layout)
+    ISLayoutManager.DefaultSaveWindow(self, layout)
+    ISLayoutManager.SaveWindowVisible(self, layout)
+end
 
 function AUDLuaExplorer:initialise()
     ISTabPanel.initialise(self);
@@ -15,12 +23,6 @@ function AUDLuaExplorer:initialise()
     AUD.luaExplorerWindow = self:wrapInCollapsableWindow("Lua explorer");
     
     local closeFunc = function(obj)
-        AUD.LuaExplorerPanel.lastX = AUD.luaExplorerWindow.x
-        AUD.LuaExplorerPanel.lastY = AUD.luaExplorerWindow.y
-        AUD.LuaExplorerPanel.lastWidth = AUD.luaExplorerWindow.width
-        AUD.LuaExplorerPanel.lastHeight = AUD.luaExplorerWindow.height - 24
-        AUD.LuaExplorerPanel.lastPosSaved = true
-
         ISCollapsableWindow.close(obj);
         AUD.luaExplorerWindow:setRemoved(true)
         AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_Off)
@@ -42,5 +44,7 @@ function AUDLuaExplorer:initialise()
 
     AUD.luaExplorerWindow:addToUIManager();
     AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_On)
+
+    ISLayoutManager.RegisterWindow('AUDLuaExplorer', AUDLuaExplorer, self)
 end
 

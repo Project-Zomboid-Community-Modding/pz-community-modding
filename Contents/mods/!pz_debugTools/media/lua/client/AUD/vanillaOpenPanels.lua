@@ -1,44 +1,25 @@
 require "DebugUIs/DebugMenu/ISDebugMenu"
-
-require "DebugUIs/DebugMenu/Base/ISDebugPanelBase"
-
-function ISDebugPanelBase:close()
-    self:setVisible(false)
-    self:removeFromUIManager()
-end
-
-function ISDebugPanelBase.OnOpenPanel(_class,_x, _y, _w, _h, _title)
-
-    if _class.instance and _class.instance:getIsVisible() then
-        _class.instance:close()
-        return
-    end
-
-    if _class.instance == nil then
-        local x = ISDebugMenu.instance:getX()+ISDebugMenu.instance:getWidth()+5
-        local y = ISDebugMenu.instance:getY()
-        _class.instance = _class:new(x, y, _w, _h, _title)
-        _class.instance:initialise()
-        _class.instance:instantiate()
-        _class.instance:setX(x)
-        _class.instance:setY(y)
-        ISDebugMenu.RegisterClass(_class)
-    end
-    _class.instance:addToUIManager()
-    _class.instance:setVisible(true)
-
-
-    return _class.instance
-end
-
+require "AUD/Init.lua"
 
 local function genericClose(self)
     self:setVisible(false)
     self:removeFromUIManager()
 end
 
+local function genericRestoreLayout(self, name, layout)
+    ISLayoutManager.DefaultRestoreWindow(self, layout)
+end
 
-local function genericOnOpen(_class, args, addFuncOnShow, instantiate)
+local function genericSaveLayout(self, name, layout)
+    ISLayoutManager.DefaultSaveWindow(self, layout)
+    ISLayoutManager.SaveWindowVisible(self, layout)
+end
+
+
+local function genericOnOpen(classID, args, addFuncOnShow, instantiate)
+
+    local _class = _G[classID]
+    if not _class then return end
 
     if _class.instance and _class.instance:getIsVisible() then
         _class.instance:close()
@@ -47,15 +28,20 @@ local function genericOnOpen(_class, args, addFuncOnShow, instantiate)
 
     if _class.instance == nil then
         _class.close = genericClose
-        local x = ISDebugMenu.instance:getX()+ISDebugMenu.instance:getWidth()+5
-        local y = ISDebugMenu.instance:getY()
+        _class.RestoreLayout = genericRestoreLayout
+        _class.SaveLayout = genericSaveLayout
+
+        local x, y = AUD.getDebugMenuAdjacentPos()
         local ui = _class:new(x, y, unpack(args))
         ui:initialise()
-        if instantiate then ui:instantiate() end
+        if instantiate then
+            ui:instantiate()
+            if type(instantiate) == "function" then instantiate(_class) end
+        end
         ui:setX(x)
         ui:setY(y)
         _class.instance = ui
-
+        ISLayoutManager.RegisterWindow(classID, _class, _class.instance)
     end
     _class.instance:addToUIManager()
     _class.instance:setVisible(true)
@@ -68,33 +54,44 @@ local function genericOnOpen(_class, args, addFuncOnShow, instantiate)
 end
 
 
+require "DebugUIs/DebugMenu/Climate/ClimateControlDebug"
+function ClimateControlDebug.OnOpenPanel()
+    return genericOnOpen("ClimateControlDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, ISDebugMenu.RegisterClass)
+end
+
+require "DebugUIs/DebugMenu/General/ISGeneralDebug"
+function ISGeneralDebug.OnOpenPanel()
+    return genericOnOpen("ISGeneralDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, ISDebugMenu.RegisterClass)
+end
+
+
 require "ISUI/PlayerStats/ISPlayerStatsUI"
 function ISPlayerStatsUI.OnOpenPanel()
-    return genericOnOpen(ISPlayerStatsUI, { 800, 800, getPlayer(), getPlayer() }, nil, nil)
+    return genericOnOpen("ISPlayerStatsUI", { 800, 800, getPlayer(), getPlayer() }, nil, nil)
 end
 
 
 require "ISUI/AdminPanel/ISItemsListViewer"
 function ISItemsListViewer.OnOpenPanel()
-    return genericOnOpen(ISItemsListViewer, { 850, 650 }, "setKeyboardFocus", nil)
+    return genericOnOpen("ISItemsListViewer", { 850, 650 }, "setKeyboardFocus", nil)
 end
 
 
 require "DebugUIs/DebugMenu/IsoRegions/IsoRegionsWindow"
 function IsoRegionsWindow.OnOpenPanel()
-    return genericOnOpen(IsoRegionsWindow, { 400, 400 }, nil, true)
+    return genericOnOpen("IsoRegionsWindow", { 400, 400 }, nil, true)
 end
 
 
 require "ISUI/ZombiePopulationWindow"
 function ZombiePopulationWindow.OnOpenPanel()
-    return genericOnOpen(ZombiePopulationWindow, { 400, 400 }, nil, true)
+    return genericOnOpen("ZombiePopulationWindow", { 400, 400 }, nil, true)
 end
 
 
 require "DebugUIs/StashDebug"
 function StashDebug.OnOpenPanel()
-    return genericOnOpen(StashDebug, { 400, 400 }, "populateList", nil)
+    return genericOnOpen("StashDebug", { 400, 400 }, "populateList", nil)
 end
 local StashDebug_onClick = StashDebug.onClick
 function StashDebug:onClick(button)
@@ -105,30 +102,30 @@ end
 
 require "DebugUIs/DebugMenu/Anims/ISAnimDebugMonitor"
 function ISAnimDebugMonitor.OnOpenPanel()
-    return genericOnOpen(ISAnimDebugMonitor, { 500, 750, getPlayer() })
+    return genericOnOpen("ISAnimDebugMonitor", { 500, 750, getPlayer() }, nil, nil)
 end
 
 
 require "DebugUIs/DebugMenu/GlobalModData/GlobalModData"
 function GlobalModDataDebug.OnOpenPanel()
-    return genericOnOpen(GlobalModDataDebug, { 840, 600, "Global ModData Debugger" }, nil, true)
+    return genericOnOpen("GlobalModDataDebug", { 840, 600, "Global ModData Debugger" }, nil, true)
 end
 
 
 require "DebugUIs/DebugMenu/Statistic/ISGameStatisticPanel"
 function ISGameStatisticPanel.OnOpenPanel()
-    return genericOnOpen(ISGameStatisticPanel, { 800, 800, "Statistic" }, nil, true)
+    return genericOnOpen("ISGameStatisticPanel", { 800, 800, "Statistic" }, nil, true)
 end
 
 
 require "DebugUIs/DebugMenu/WorldFlares/WorldFlaresDebug"
 function WorldFlaresDebug.OnOpenPanel()
-    return genericOnOpen(WorldFlaresDebug, { 400, 600, "Flares debugger" }, nil, true)
+    return genericOnOpen("WorldFlaresDebug", { 400, 600, "Flares debugger" }, nil, true)
 end
 
 
 require "DebugUIs/DebugMenu/radio/ZomboidRadioDebug"
 function ZomboidRadioDebug.OnOpenPanel()
     if isClient() then return end
-    return genericOnOpen(ZomboidRadioDebug, { 1000, 600, "Zomboid radio debugger" }, nil, true)
+    return genericOnOpen("ZomboidRadioDebug", { 1000, 600, "Zomboid radio debugger" }, nil, true)
 end
