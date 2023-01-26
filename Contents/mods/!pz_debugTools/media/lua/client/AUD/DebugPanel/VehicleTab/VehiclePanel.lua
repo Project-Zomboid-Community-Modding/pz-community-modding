@@ -38,8 +38,9 @@ end
 
 
 require "DebugUIs/DebugMenu/ISDebugMenu"
+require "AUD/Init"
 local ISDebugMenu_setupButtons = ISDebugMenu.setupButtons
 function ISDebugMenu:setupButtons()
-    self:addButtonInfo("Vehicle", function() VehiclePanel.OnOpenPanel() end, "MAIN")
     ISDebugMenu_setupButtons(self)
+    self:addButtonInfoAfter("Cheats", "Vehicle", function() VehiclePanel.OnOpenPanel() end, "MAIN")
 end
