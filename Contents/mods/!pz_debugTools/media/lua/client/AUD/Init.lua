@@ -36,6 +36,14 @@ function AUD.getDebugMenuAdjacentPos()
 end
 
 
+function ISDebugMenu:addButtonInfoAfter(_after, _title, _func, _tab, _marginTop)
+    self.buttons = self.buttons or {};
+    local indexFound = #self.buttons
+    for index,buttonData in pairs(self.buttons) do if buttonData.title == _after then indexFound = index end end
+    table.insert(self.buttons, indexFound+1, { title = _title, func = _func, tab = _tab, marginTop = (_marginTop or 0) })
+end
+
+
 local ISEquippedItem_new = ISEquippedItem.new
 function ISEquippedItem:new(x, y, width, height, chr)
     local o = ISEquippedItem_new(self, x, y, width, height, chr)
