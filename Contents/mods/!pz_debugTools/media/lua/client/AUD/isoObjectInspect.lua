@@ -197,10 +197,11 @@ function isoObjectInspect:parseFields(obj)
             local value = javaField:get(obj)
             local valueAsText = tostring(value)
             local valueType = valueAsText~="nil" and type(value)
+
             if valueAsText and valueType == "userdata" then
                 local reAddListBracket = (string.sub(valueAsText, 1, 1)=="[" and "[") or ""
                 local simpleClass = valueAsText:match('[^.]+$')
-                valueAsText = simpleClass~=valueAsText and reAddListBracket..valueAsText:match('[^.]+$') or valueAsText
+                valueAsText = simpleClass~=valueAsText and reAddListBracket..simpleClass or valueAsText
             end
 
             local fieldInfo = javaField:getName().."  =  "..valueAsText..(valueType and " ("..valueType..")" or "")
