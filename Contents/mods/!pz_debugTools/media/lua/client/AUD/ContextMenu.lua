@@ -1,4 +1,9 @@
-local function showModData(obj) ModDataDebugPanel.OnOpenPanel(obj) end
+local function showModData(obj, name)
+
+    print("obj"..tostring(obj)..", name:"..tostring(name))
+
+    ModDataDebugPanel.OnOpenPanel(obj, name)
+end
 
 
 local modDataContextClasses ={
@@ -17,19 +22,23 @@ local function fillModDataContextMenu(array,contextMenu)
             if instanceof(object, type) then
                 local optionName = func(object)
                 if optionName then optionName = ": "..optionName end
-                contextMenu:addOption(type..(optionName or ""), object, showModData)
+                local setName = type..(optionName or "")
+                contextMenu:addOption(setName, object, showModData, setName)
                 optionAdded = true
             end
         end
 
-        if not optionAdded then contextMenu:addOption(tostring(object:getClass()), object, showModData) end
+        if not optionAdded then
+            local objName = tostring(object:getClass())
+            contextMenu:addOption(objName, object, showModData, objName)
+        end
     end
 end
 
 
 local function AUDContextMenu(player, context, worldObjects, test)
     local sq
-    local mainMenu = context:addOptionOnTop("Inspect ModData", worldObjects, nil)
+    local mainMenu = context:addOptionOnTop("Inspect", worldObjects, nil)
     local subMenu = ISContextMenu:getNew(context)
     context:addSubMenu(mainMenu, subMenu)
 
@@ -50,7 +59,8 @@ local function AUDContextMenu(player, context, worldObjects, test)
                 customName = ": "..spriteName or tostring(object:getClass())
             end
 
-            subMenu:addOption("IsoObject"..(customName or ""), object, showModData)
+            local objName = "IsoObject"..(customName or "")
+            subMenu:addOption(objName, object, showModData, objName)
         end
     end
 
@@ -77,7 +87,7 @@ local function AUDInvContextMenu(player, context, items)
     for i,v in ipairs(items) do
 		local item = v
         if not instanceof(v, "InventoryItem") then item = v.items[1] end
-        context:addOptionOnTop("Inspect Item ModData", item, showModData)
+        context:addOptionOnTop("Inspect", item, showModData)
 	end
 end
 Events.OnFillInventoryObjectContextMenu.Add(AUDInvContextMenu)

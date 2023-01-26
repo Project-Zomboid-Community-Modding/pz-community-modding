@@ -4,18 +4,19 @@ require "AUD/Init"
 ModDataDebugPanel = ISPanel:derive("ModDataDebugPanel")
 ModDataDebugPanel.instance = nil
 ModDataDebugPanel.modDataList = {}
+ModDataDebugPanel.modDataListName = {}
 
+function ModDataDebugPanel.OnOpenPanel(obj, name)
 
-function ModDataDebugPanel.OnOpenPanel(obj)
-    if ModDataDebugPanel.instance==nil then
-        ModDataDebugPanel.modDataList = {}
+    if not ModDataDebugPanel.modDataListName[obj] then
         table.insert(ModDataDebugPanel.modDataList, obj)
+        ModDataDebugPanel.modDataListName[obj] = name
+    end
 
-        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "IsoObject ModData Debugger")
+    if ModDataDebugPanel.instance==nil then
+        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "Inspecting:")
         ModDataDebugPanel.instance:initialise()
         ModDataDebugPanel.instance:instantiate()
-    else
-        table.insert(ModDataDebugPanel.modDataList, obj)
     end
 
     ModDataDebugPanel.instance:addToUIManager()
@@ -35,7 +36,7 @@ end
 function ModDataDebugPanel:createChildren()
     ISPanel.createChildren(self)
 
-    ISDebugUtils.addLabel(self, {}, 10, 20, "IsoObject ModData Debugger", UIFont.Medium, true)
+    ISDebugUtils.addLabel(self, {}, 20, 20, "Inspecting:", UIFont.Large, true)
 
     self.tableNamesList = ISScrollingListBox:new(10, 50, 200, self.height - 100)
     self.tableNamesList:initialise()
@@ -50,39 +51,53 @@ function ModDataDebugPanel:createChildren()
     self.tableNamesList.target = self
     self:addChild(self.tableNamesList)
 
-    self.infoList = ISScrollingListBox:new(220, 50, 200, self.height - 100)
-    self.infoList:initialise()
-    self.infoList:instantiate()
-    self.infoList.itemheight = 22
-    self.infoList.selected = 0
-    self.infoList.joypadParent = self
-    self.infoList.font = UIFont.NewSmall
-    self.infoList.doDrawItem = self.drawInfoList
-    self.infoList.drawBorder = true
-    self:addChild(self.infoList)
+    self.modDataList = ISScrollingListBox:new(220, 50, 200, self.height - 100)
+    self.modDataList:initialise()
+    self.modDataList:instantiate()
+    self.modDataList.itemheight = 22
+    self.modDataList.selected = 0
+    self.modDataList.joypadParent = self
+    self.modDataList.font = UIFont.NewSmall
+    self.modDataList.doDrawItem = self.drawInfoList
+    self.modDataList.drawBorder = true
+    self:addChild(self.modDataList)
+    self.junk, self.modDataListHeader = ISDebugUtils.addLabel(self, {}, self.modDataList:getX()+5, 20, "ModData", UIFont.Medium, true)
 
-    local w = (self.infoList:getWidth()/2)-5
+    self.javaFieldsList = ISScrollingListBox:new(425, 50, 200, self.height - 100)
+    self.javaFieldsList:initialise()
+    self.javaFieldsList:instantiate()
+    self.javaFieldsList:setOnMouseDownFunction(self, self.onFieldSelected)
+    self.javaFieldsList.itemheight = 22
+    self.javaFieldsList.selected = 0
+    self.javaFieldsList.joypadParent = self
+    self.javaFieldsList.font = UIFont.NewSmall
+    self.javaFieldsList.doDrawItem = self.drawInfoList
+    self.javaFieldsList.drawBorder = true
+    self:addChild(self.javaFieldsList)
+    self.junk, self.javaFieldsHeader = ISDebugUtils.addLabel(self, {}, self.javaFieldsList:getX()+5, 20, "Java Fields", UIFont.Medium, true)
 
-    local y, button = ISDebugUtils.addButton(self,"refresh",self.infoList:getX(),self.height-40, w,20,"Refresh", ModDataDebugPanel.onClickRefresh)
+    local w = (self.tableNamesList:getWidth()/2)-5
+
+    local y, button = ISDebugUtils.addButton(self,"refresh",self.tableNamesList:getX(),self.height-40, w,20,"Refresh", ModDataDebugPanel.onClickRefresh)
     self.refreshButton = button
 
-    y, button = ISDebugUtils.addButton(self,"close",self.infoList:getX()+w+10,self.height-40, w,20, "Close", ModDataDebugPanel.onClickClose)
+    y, button = ISDebugUtils.addButton(self,"close",self.tableNamesList:getX()+w+10,self.height-40, w,20, "Close", ModDataDebugPanel.onClickClose)
     self.closeButton = button
 
-    self:populateList()
+    self:populateNameList()
 end
 
 
 function ModDataDebugPanel:onClickClose() self:close() end
-function ModDataDebugPanel:onClickRefresh() self:populateList() end
-function ModDataDebugPanel:OnTableNamesListMouseDown(item) self:populateInfoList(self.tableNamesList.items[self.tableNamesList.selected].item) end
+function ModDataDebugPanel:onClickRefresh() self:populateNameList() end
+function ModDataDebugPanel:OnTableNamesListMouseDown(item) self:populateInfoLists(self.tableNamesList.items[self.tableNamesList.selected].item) end
 
 
-function ModDataDebugPanel:populateList()
+function ModDataDebugPanel:populateNameList()
     self.tableNamesList:clear()
 
     if #ModDataDebugPanel.modDataList == 0 then
-        self:populateInfoList(nil) return
+        self:populateInfoLists(nil) return
     end
 
     local stringWidth = 200
@@ -90,8 +105,8 @@ function ModDataDebugPanel:populateList()
 
     local tM = getTextManager()
 
-    for i, obj in ipairs(ModDataDebugPanel.modDataList) do
-        local tsObj = tostring(obj)
+    for i, obj in pairs(ModDataDebugPanel.modDataList) do
+        local tsObj = ModDataDebugPanel.modDataListName[obj]
         self.tableNamesList:addItem(tsObj, obj)
 
         stringWidth = math.max(stringWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
@@ -101,11 +116,26 @@ function ModDataDebugPanel:populateList()
     self:setWidth(panelWidth+stringWidth)
 
     self.firstTableData=ModDataDebugPanel.modDataList[1]
-    self:populateInfoList(self.firstTableData)
+    self:populateInfoLists(self.firstTableData)
 
-    if self.infoList.vscroll and self.infoList:isVScrollBarVisible() then
-        self.infoList.vscroll:setX(self.infoList:getWidth()-self.infoList.vscroll:getWidth())
+    if self.modDataList.vscroll and self.modDataList:isVScrollBarVisible() then
+        self.modDataList.vscroll:setX(self.modDataList:getWidth()-self.modDataList.vscroll:getWidth())
     end
+
+    if self.javaFieldsList.vscroll and self.javaFieldsList:isVScrollBarVisible() then
+        self.javaFieldsList.vscroll:setX(self.javaFieldsList:getWidth()-self.javaFieldsList.vscroll:getWidth())
+    end
+
+    self.modDataListHeader:setX(self.modDataList:getX()+5)
+    self.javaFieldsHeader:setX(self.javaFieldsList:getX()+5)
+
+    local w = (self.tableNamesList:getWidth()/2)-5
+
+    self.refreshButton:setWidth(w)
+    self.refreshButton:setX(self.tableNamesList:getX())
+
+    self.closeButton:setWidth(w)
+    self.closeButton:setX(self.tableNamesList:getX()+w+10)
 end
 
 
@@ -136,42 +166,73 @@ function ModDataDebugPanel:parseTable(_t, _ident)
     local s
     for k,v in pairs(_t) do
         if type(v)=="table" then
-            s = tostring(_ident).."["..tostring(k).."] -> "
-            self.infoList:addItem(s, nil)
+            s = tostring(_ident).."["..tostring(k).."]  =  "
+            self.modDataList:addItem(s, nil)
             self:parseTable(v, _ident.."    ")
         else
-            s = tostring(_ident).."["..tostring(k).."] -> "..tostring(v)
-            self.infoList:addItem(s, nil)
+            s = tostring(_ident).."["..tostring(k).."]  =  "..tostring(v)
+            self.modDataList:addItem(s, nil)
         end
-        if s then stringWidth = math.max(stringWidth, tM:MeasureStringX(self.infoList.font, s)+30) end
+        if s then stringWidth = math.max(stringWidth, tM:MeasureStringX(self.modDataList.font, s)+30) end
+    end
+    return stringWidth
+end
+
+--[[
+function ModDataDebugPanel:onFieldSelected(target, onmousedown)
+    local selected = self.javaFieldsList.items[self.javaFieldsList.selected].item
+    --ModDataDebugPanel.OnOpenPanel(selected)
+    --print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
+end
+--]]
+
+
+function ModDataDebugPanel:parseFields(obj)
+    local tM = getTextManager()
+    local stringWidth = 200
+    for i = 0, getNumClassFields(obj) - 1 do
+        ---@type Field
+        local javaField = getClassField(obj, i)
+        if javaField then
+            local value = javaField:get(obj)
+            local valueAsText = tostring(value)
+            local valueType = valueAsText~="nil" and type(value)
+            if valueAsText and valueType == "userdata" then
+                local reAddListBracket = (string.sub(valueAsText, 1, 1)=="[" and "[") or ""
+                local simpleClass = valueAsText:match('[^.]+$')
+                valueAsText = simpleClass~=valueAsText and reAddListBracket..valueAsText:match('[^.]+$') or valueAsText
+            end
+
+            local fieldInfo = javaField:getName().."  =  "..valueAsText..(valueType and " ("..valueType..")" or "")
+            stringWidth = math.max(stringWidth, tM:MeasureStringX(self.javaFieldsList.font, fieldInfo)+30)
+            self.javaFieldsList:addItem(fieldInfo, value)
+        end
     end
     return stringWidth
 end
 
 
-function ModDataDebugPanel:populateInfoList(obj)
-    self.infoList:clear()
+function ModDataDebugPanel:populateInfoLists(obj)
+    self.modDataList:clear()
+    self.javaFieldsList:clear()
 
-    local windowWidth = 200
+    local modDataWidth = 200
 
     local modData = obj:hasModData() and obj:getModData()
     if modData then
-        windowWidth = self:parseTable(modData, "")
+        modDataWidth = self:parseTable(modData, "")
     else
-        self.infoList:addItem("Table not found.", nil)
+        self.modDataList:addItem("No modData found.", nil)
     end
 
-    self.infoList:setWidth(windowWidth)
-    self.infoList:setX(self.tableNamesList:getX()+self.tableNamesList:getWidth()+5)
-    self:setWidth(self.tableNamesList:getWidth()+25+windowWidth)
+    self.modDataList:setWidth(modDataWidth)
+    self.modDataList:setX(self.tableNamesList:getX()+self.tableNamesList:getWidth()+5)
 
-    local w = (self.infoList:getWidth()/2)-5
+    local fieldWidth = self:parseFields(obj)
+    self.javaFieldsList:setWidth(fieldWidth)
+    self.javaFieldsList:setX(self.modDataList:getX()+self.modDataList:getWidth()+5)
 
-    self.refreshButton:setWidth(w)
-    self.refreshButton:setX(self.infoList:getX())
-
-    self.closeButton:setWidth(w)
-    self.closeButton:setX(self.infoList:getX()+w+10)
+    self:setWidth(self.tableNamesList:getWidth()+30+modDataWidth+fieldWidth)
 end
 
 
