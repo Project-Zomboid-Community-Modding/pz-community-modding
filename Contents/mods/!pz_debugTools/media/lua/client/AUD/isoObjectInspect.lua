@@ -1,39 +1,39 @@
 require "ISUI/ISPanel"
 require "AUD/Init"
 
-ModDataDebugPanel = ISPanel:derive("ModDataDebugPanel")
-ModDataDebugPanel.instance = nil
-ModDataDebugPanel.modDataList = {}
-ModDataDebugPanel.modDataListName = {}
+isoObjectInspect = ISPanel:derive("isoObjectInspect")
+isoObjectInspect.instance = nil
+isoObjectInspect.modDataList = {}
+isoObjectInspect.modDataListName = {}
 
-function ModDataDebugPanel.OnOpenPanel(obj, name)
+function isoObjectInspect.OnOpenPanel(obj, name)
 
-    if not ModDataDebugPanel.modDataListName[obj] then
-        table.insert(ModDataDebugPanel.modDataList, obj)
-        ModDataDebugPanel.modDataListName[obj] = name
+    if not isoObjectInspect.modDataListName[obj] then
+        table.insert(isoObjectInspect.modDataList, obj)
+        isoObjectInspect.modDataListName[obj] = name
     end
 
-    if ModDataDebugPanel.instance==nil then
-        ModDataDebugPanel.instance = ModDataDebugPanel:new (100, 100, 840, 600, "Inspecting:")
-        ModDataDebugPanel.instance:initialise()
-        ModDataDebugPanel.instance:instantiate()
+    if isoObjectInspect.instance==nil then
+        isoObjectInspect.instance = isoObjectInspect:new (100, 100, 840, 600, "Inspecting:")
+        isoObjectInspect.instance:initialise()
+        isoObjectInspect.instance:instantiate()
     end
 
-    ModDataDebugPanel.instance:addToUIManager()
-    ModDataDebugPanel.instance:setVisible(true)
-    ModDataDebugPanel.instance:onClickRefresh()
+    isoObjectInspect.instance:addToUIManager()
+    isoObjectInspect.instance:setVisible(true)
+    isoObjectInspect.instance:onClickRefresh()
 
-    return ModDataDebugPanel.instance
+    return isoObjectInspect.instance
 end
 
 
-function ModDataDebugPanel:initialise()
+function isoObjectInspect:initialise()
     ISPanel.initialise(self)
     self.firstTableData = false
 end
 
 
-function ModDataDebugPanel:createChildren()
+function isoObjectInspect:createChildren()
     ISPanel.createChildren(self)
 
     ISDebugUtils.addLabel(self, {}, 20, 20, "Inspecting:", UIFont.Large, true)
@@ -47,7 +47,7 @@ function ModDataDebugPanel:createChildren()
     self.tableNamesList.font = UIFont.NewSmall
     self.tableNamesList.doDrawItem = self.drawTableNameList
     self.tableNamesList.drawBorder = true
-    self.tableNamesList.onmousedown = ModDataDebugPanel.OnTableNamesListMouseDown
+    self.tableNamesList.onmousedown = isoObjectInspect.OnTableNamesListMouseDown
     self.tableNamesList.target = self
     self:addChild(self.tableNamesList)
 
@@ -78,25 +78,25 @@ function ModDataDebugPanel:createChildren()
 
     local w = (self.tableNamesList:getWidth()/2)-5
 
-    local y, button = ISDebugUtils.addButton(self,"refresh",self.tableNamesList:getX(),self.height-40, w,20,"Refresh", ModDataDebugPanel.onClickRefresh)
+    local y, button = ISDebugUtils.addButton(self,"refresh",self.tableNamesList:getX(),self.height-40, w,20,"Refresh", isoObjectInspect.onClickRefresh)
     self.refreshButton = button
 
-    y, button = ISDebugUtils.addButton(self,"close",self.tableNamesList:getX()+w+10,self.height-40, w,20, "Close", ModDataDebugPanel.onClickClose)
+    y, button = ISDebugUtils.addButton(self,"close",self.tableNamesList:getX()+w+10,self.height-40, w,20, "Close", isoObjectInspect.onClickClose)
     self.closeButton = button
 
     self:populateNameList()
 end
 
 
-function ModDataDebugPanel:onClickClose() self:close() end
-function ModDataDebugPanel:onClickRefresh() self:populateNameList() end
-function ModDataDebugPanel:OnTableNamesListMouseDown(item) self:populateInfoLists(self.tableNamesList.items[self.tableNamesList.selected].item) end
+function isoObjectInspect:onClickClose() self:close() end
+function isoObjectInspect:onClickRefresh() self:populateNameList() end
+function isoObjectInspect:OnTableNamesListMouseDown(item) self:populateInfoLists(self.tableNamesList.items[self.tableNamesList.selected].item) end
 
 
-function ModDataDebugPanel:populateNameList()
+function isoObjectInspect:populateNameList()
     self.tableNamesList:clear()
 
-    if #ModDataDebugPanel.modDataList == 0 then
+    if #isoObjectInspect.modDataList == 0 then
         self:populateInfoLists(nil) return
     end
 
@@ -105,8 +105,8 @@ function ModDataDebugPanel:populateNameList()
 
     local tM = getTextManager()
 
-    for i, obj in pairs(ModDataDebugPanel.modDataList) do
-        local tsObj = ModDataDebugPanel.modDataListName[obj]
+    for i, obj in pairs(isoObjectInspect.modDataList) do
+        local tsObj = isoObjectInspect.modDataListName[obj]
         self.tableNamesList:addItem(tsObj, obj)
 
         stringWidth = math.max(stringWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
@@ -115,7 +115,7 @@ function ModDataDebugPanel:populateNameList()
     self.tableNamesList:setWidth(stringWidth)
     self:setWidth(panelWidth+stringWidth)
 
-    self.firstTableData=ModDataDebugPanel.modDataList[1]
+    self.firstTableData=isoObjectInspect.modDataList[1]
     self:populateInfoLists(self.firstTableData)
 
     if self.modDataList.vscroll and self.modDataList:isVScrollBarVisible() then
@@ -139,7 +139,7 @@ function ModDataDebugPanel:populateNameList()
 end
 
 
-function ModDataDebugPanel:drawTableNameList(y, item, alt)
+function isoObjectInspect:drawTableNameList(y, item, alt)
     local a = 0.9
 
     self:drawRectBorder(0, (y), self:getWidth(), self.itemheight - 1, a, self.borderColor.r, self.borderColor.g, self.borderColor.b)
@@ -154,12 +154,12 @@ function ModDataDebugPanel:drawTableNameList(y, item, alt)
 end
 
 
-function ModDataDebugPanel:formatVal(_value, _func, _func2)
+function isoObjectInspect:formatVal(_value, _func, _func2)
     return _func2 and (_func2(_func(_value))) or (_func(_value))
 end
 
 
-function ModDataDebugPanel:parseTable(_t, _ident)
+function isoObjectInspect:parseTable(_t, _ident)
     if not _ident then _ident = "" end
     local tM = getTextManager()
     local stringWidth = 200
@@ -179,15 +179,15 @@ function ModDataDebugPanel:parseTable(_t, _ident)
 end
 
 --[[
-function ModDataDebugPanel:onFieldSelected(target, onmousedown)
+function isoObjectInspect:onFieldSelected(target, onmousedown)
     local selected = self.javaFieldsList.items[self.javaFieldsList.selected].item
-    --ModDataDebugPanel.OnOpenPanel(selected)
+    --isoObjectInspect.OnOpenPanel(selected)
     --print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
 end
 --]]
 
 
-function ModDataDebugPanel:parseFields(obj)
+function isoObjectInspect:parseFields(obj)
     local tM = getTextManager()
     local stringWidth = 200
     for i = 0, getNumClassFields(obj) - 1 do
@@ -212,7 +212,7 @@ function ModDataDebugPanel:parseFields(obj)
 end
 
 
-function ModDataDebugPanel:populateInfoLists(obj)
+function isoObjectInspect:populateInfoLists(obj)
     self.modDataList:clear()
     self.javaFieldsList:clear()
 
@@ -236,7 +236,7 @@ function ModDataDebugPanel:populateInfoLists(obj)
 end
 
 
-function ModDataDebugPanel:drawInfoList(y, item, alt)
+function isoObjectInspect:drawInfoList(y, item, alt)
     local a = 0.9
 
     self:drawRectBorder(0, (y), self:getWidth(), self.itemheight - 1, a, self.borderColor.r, self.borderColor.g, self.borderColor.b)
@@ -250,16 +250,16 @@ function ModDataDebugPanel:drawInfoList(y, item, alt)
     return y + self.itemheight
 end
 
-function ModDataDebugPanel:prerender() ISPanel.prerender(self) end
-function ModDataDebugPanel:update() ISPanel.update(self) end
+function isoObjectInspect:prerender() ISPanel.prerender(self) end
+function isoObjectInspect:update() ISPanel.update(self) end
 
-function ModDataDebugPanel:close()
+function isoObjectInspect:close()
     self:setVisible(false)
     self:removeFromUIManager()
-    ModDataDebugPanel.instance = nil
+    isoObjectInspect.instance = nil
 end
 
-function ModDataDebugPanel:new(x, y, width, height, title)
+function isoObjectInspect:new(x, y, width, height, title)
     local o = {}
     o = ISPanel:new(x, y, width, height)
     setmetatable(o, self)

@@ -2,7 +2,7 @@ local function showModData(obj, name)
 
     print("obj"..tostring(obj)..", name:"..tostring(name))
 
-    ModDataDebugPanel.OnOpenPanel(obj, name)
+    isoObjectInspect.OnOpenPanel(obj, name)
 end
 
 
