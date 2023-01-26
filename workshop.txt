@@ -4,4 +4,4 @@ title=Community Patch
 description=This is a team effort, visit the github here:
 description=https://github.com/ChuckTheSheep/pz-community-patch
 tags=Build 41;Framework
-visibility=friendsOnly
+visibility=unlisted
