@@ -74,6 +74,8 @@ generic.overwrites = {
 }
 
 function generic.openOnStart()
+    if not getDebug() then return end
+
     for req,args in pairs(generic.overwrites) do
         require(req)
         local _class = _G[args[1]]

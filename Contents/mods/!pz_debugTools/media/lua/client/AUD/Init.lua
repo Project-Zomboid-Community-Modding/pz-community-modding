@@ -81,11 +81,10 @@ end
 
 
 local function createButtons()
-
+    if not getDebug() then return end
     AUD.InspectorPanel.inspectorButton()
     AUD.LuaExplorerPanel.explorerButton()
     AUD.TeleportPanel.teleportButton()
-
 end
 
 
