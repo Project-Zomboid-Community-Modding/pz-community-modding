@@ -1,4 +1,4 @@
-require "AUD/Init"
+require "InitToolBar"
 require "DebugUIs/DebugMenu/ISDebugUtils"
 
 ButtonPanelUI = ISPanel:derive("ButtonPanelUI")

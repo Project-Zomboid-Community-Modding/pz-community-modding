@@ -1,5 +1,5 @@
 require "DebugUIs/DebugMenu/ISDebugMenu"
-require "AUD/Init"
+require "InitToolBar"
 
 local generic = {}
 

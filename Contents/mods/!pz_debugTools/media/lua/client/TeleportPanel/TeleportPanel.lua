@@ -1,4 +1,5 @@
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.TeleportPanel = {}
 AUD.TeleportPanel.texture_On = getTexture("media/textures/_gps_ON.png")
 AUD.TeleportPanel.texture_Off = getTexture("media/textures/_gps_OFF.png")

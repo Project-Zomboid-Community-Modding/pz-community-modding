@@ -1,4 +1,5 @@
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.LuaExplorer = {}
 
 AUDLuaExplorer = ISTabPanel:derive("AUDLuaExplorer")

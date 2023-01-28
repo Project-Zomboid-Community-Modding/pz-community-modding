@@ -1,3 +1,5 @@
+require "ISUI/PlayerStats/ISPlayerStatsUI"
+
 local ISPlayerStatsUI_onOptionMouseDown = ISPlayerStatsUI.onOptionMouseDown
 function ISPlayerStatsUI:onOptionMouseDown(button, x, y)
 

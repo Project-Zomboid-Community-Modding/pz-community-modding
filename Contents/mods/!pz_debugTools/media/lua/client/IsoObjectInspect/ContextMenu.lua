@@ -3,6 +3,7 @@ local function showModData(obj, name)
 end
 
 
+
 local modDataContextClasses ={
     ["IsoDeadBody"] = function(object) return object:getOutfitName() end,
     ["IsoPlayer"] = function(object) return object:getUsername(true) end,
@@ -33,10 +34,11 @@ local function fillModDataContextMenu(array,contextMenu)
 end
 
 
-local function AUDContextMenu(player, context, worldObjects, test)
+local function ContextMenu(player, context, worldObjects, test)
     if not getDebug() then return end
     local sq
     local mainMenu = context:addOptionOnTop("Inspect", worldObjects, nil)
+    mainMenu.iconTexture = getTexture("media/textures/_IsoObjInspect.png")
     local subMenu = ISContextMenu:getNew(context)
     context:addSubMenu(mainMenu, subMenu)
 
@@ -78,15 +80,16 @@ local function AUDContextMenu(player, context, worldObjects, test)
     end
 
 end
-Events.OnFillWorldObjectContextMenu.Add(AUDContextMenu)
+Events.OnFillWorldObjectContextMenu.Add(ContextMenu)
 
 
-local function AUDInvContextMenu(player, context, items)
+local function InvContextMenu(player, context, items)
     if not getDebug() then return end
     for i,v in ipairs(items) do
 		local item = v
         if not instanceof(v, "InventoryItem") then item = v.items[1] end
-        context:addOptionOnTop("Inspect", item, showModData)
+        local option = context:addOptionOnTop("Inspect", item, showModData)
+        option.iconTexture = getTexture("media/textures/_IsoObjInspect.png")
 	end
 end
-Events.OnFillInventoryObjectContextMenu.Add(AUDInvContextMenu)
+Events.OnFillInventoryObjectContextMenu.Add(InvContextMenu)

@@ -1,4 +1,5 @@
-require "AUD/DebugPanel/ButtonPanel"
+require "InitToolBar"
+
 VehiclePanel = ButtonPanelUI:derive("VehiclePanel")
 
 
@@ -29,7 +30,7 @@ end
 Events.OnPlayerDeath.Add(onDeath)
 
 
-local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
+local vehicleDebugFunctions = require "VehiclePanel/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)
 
     local rows = 1
@@ -49,7 +50,7 @@ end
 
 
 require "DebugUIs/DebugMenu/ISDebugMenu"
-require "AUD/Init"
+require "InitToolBar"
 local ISDebugMenu_setupButtons = ISDebugMenu.setupButtons
 function ISDebugMenu:setupButtons()
     ISDebugMenu_setupButtons(self)

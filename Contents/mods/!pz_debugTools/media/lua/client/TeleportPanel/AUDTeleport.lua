@@ -1,4 +1,5 @@
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.TeleportTable = {}
 
 AUDTeleport = ISTabPanel:derive("AUDTeleport")

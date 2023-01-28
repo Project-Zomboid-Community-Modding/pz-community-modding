@@ -1,4 +1,5 @@
-require "AUD/DebugPanel/ButtonPanel"
+require "ButtonPanel"
+
 ButtonedCheatPanelUI = ButtonPanelUI:derive("ButtonedCheatPanelUI")
 
 function ButtonedCheatPanelUI:OnOpenPanel()

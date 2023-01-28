@@ -52,16 +52,6 @@ function ISEquippedItem:new(x, y, width, height, chr)
     return o
 end
 
-local ISEquippedItem_initialise = ISEquippedItem.initialise
-function ISEquippedItem:initialise()
-    ISEquippedItem_initialise(self)
-    if self.debugBtn then
-        self.debugBtn:setY(self.debugBtn:getY()+10)
-        self.debugBtn:setX(self.debugBtn:getX()-3)
-    end
-end
-
-
 
 function AUD.setNewButton(buttonType, audModule, onClick)
     local xMax = ISEquippedItem.instance.x-8
@@ -82,7 +72,6 @@ end
 
 local function createButtons()
     if not getDebug() then return end
-    AUD.InspectorPanel.inspectorButton()
     AUD.LuaExplorerPanel.explorerButton()
     AUD.TeleportPanel.teleportButton()
 end
