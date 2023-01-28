@@ -43,14 +43,14 @@ function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
         ui:setY(y)
         _class.instance = ui
         ISLayoutManager.RegisterWindow(classID, _class, _class.instance)
-        return
-    end
 
-    _class.instance:addToUIManager()
-    _class.instance:setVisible(true)
+    else
+        _class.instance:addToUIManager()
+        _class.instance:setVisible(true)
 
-    if addFuncOnShow and _class.instance[addFuncOnShow] then
-        _class[addFuncOnShow](_class.instance)
+        if addFuncOnShow and _class.instance[addFuncOnShow] then
+            _class[addFuncOnShow](_class.instance)
+        end
     end
 
     return _class.instance
@@ -74,7 +74,6 @@ generic.overwrites = {
 }
 
 function generic.openOnStart()
-
     for req,args in pairs(generic.overwrites) do
         require(req)
         local _class = _G[args[1]]

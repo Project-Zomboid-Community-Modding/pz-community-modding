@@ -34,6 +34,11 @@ Events.OnPlayerDeath.Add(ButtonPanelUI.OnPlayerDeath)
 
 function ButtonPanelUI.OnOpenPanel(ui, x, y)
 
+    if ui.instance and ui.instance:getIsVisible() then
+        ui.instance:close()
+        return
+    end
+
     if not ui.instance then
 
         local xD, yD = AUD.getDebugMenuAdjacentPos()
@@ -49,15 +54,13 @@ function ButtonPanelUI.OnOpenPanel(ui, x, y)
         local titleOffset = getTextManager():MeasureStringX(titleFont, title)
         ISDebugUtils.addLabel(ui.instance, {}, (ui.instance.width+titleOffset)/2, AUD.Config.Buttons.VerticalInterval*1.5, title, titleFont, false)
         ui.instance:handleAddButtons(AUD.Config.Buttons.LeftIndent, AUD.Config.Buttons.TopIndent)
-        return
-    end
 
-    if ui.instance:getIsVisible() then
-        ui.instance:close()
     else
         ui.instance:setVisible(true)
         ui.instance:addToUIManager()
     end
+
+    return ui.instance
 end
 
 
