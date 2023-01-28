@@ -17,7 +17,7 @@ end
 local function openOnStart() VehiclePanel:OnOpenPanel() end
 Events.OnCreatePlayer.Add(openOnStart)
 
-local function onDeath() VehiclePanel:close() end
+local function onDeath() if VehiclePanel.instance then VehiclePanel.instance:close() end end
 Events.OnPlayerDeath.Add(onDeath)
 
 

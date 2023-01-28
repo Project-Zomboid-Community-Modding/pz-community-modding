@@ -16,7 +16,7 @@ end
 local function openOnStart() ButtonedCheatPanelUI:OnOpenPanel() end
 Events.OnCreatePlayer.Add(openOnStart)
 
-local function onDeath() ButtonedCheatPanelUI:close() end
+local function onDeath() if ButtonedCheatPanelUI.instance then ButtonedCheatPanelUI.instance:close() end end
 Events.OnPlayerDeath.Add(onDeath)
 
 
