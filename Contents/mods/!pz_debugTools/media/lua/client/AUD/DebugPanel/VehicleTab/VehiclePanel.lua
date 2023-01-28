@@ -3,6 +3,7 @@ VehiclePanel = ButtonPanelUI:derive("VehiclePanel")
 
 
 function VehiclePanel:OnOpenPanel()
+    if not getDebug() then return end
     VehiclePanel.title = "Vehicle"
     ButtonPanelUI.OnOpenPanel(VehiclePanel)
 end
@@ -14,10 +15,17 @@ function VehiclePanel:initialise()
 end
 
 
-local function openOnStart() VehiclePanel:OnOpenPanel() end
+local function openOnStart()
+    if not getDebug() then return end
+    VehiclePanel:OnOpenPanel()
+end
 Events.OnCreatePlayer.Add(openOnStart)
 
-local function onDeath() if VehiclePanel.instance then VehiclePanel.instance:close() end end
+local function onDeath()
+    if VehiclePanel.instance then
+        VehiclePanel.instance:close()
+    end
+end
 Events.OnPlayerDeath.Add(onDeath)
 
 

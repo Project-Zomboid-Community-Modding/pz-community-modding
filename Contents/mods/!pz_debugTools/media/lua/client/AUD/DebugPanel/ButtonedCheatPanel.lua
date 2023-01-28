@@ -2,6 +2,7 @@ require "AUD/DebugPanel/ButtonPanel"
 ButtonedCheatPanelUI = ButtonPanelUI:derive("ButtonedCheatPanelUI")
 
 function ButtonedCheatPanelUI:OnOpenPanel()
+    if not getDebug() then return end
     ButtonedCheatPanelUI.title = "Cheats"
     ButtonPanelUI.OnOpenPanel(ButtonedCheatPanelUI)
 end
@@ -13,10 +14,17 @@ function ISCheatPanelUI.OnOpenPanel()
 end
 
 
-local function openOnStart() ButtonedCheatPanelUI:OnOpenPanel() end
+local function openOnStart()
+    if not getDebug() then return end
+    ButtonedCheatPanelUI:OnOpenPanel()
+end
 Events.OnCreatePlayer.Add(openOnStart)
 
-local function onDeath() if ButtonedCheatPanelUI.instance then ButtonedCheatPanelUI.instance:close() end end
+local function onDeath()
+    if ButtonedCheatPanelUI.instance then
+        ButtonedCheatPanelUI.instance:close()
+    end
+end
 Events.OnPlayerDeath.Add(onDeath)
 
 
