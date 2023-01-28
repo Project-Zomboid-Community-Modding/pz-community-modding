@@ -17,6 +17,9 @@ end
 local function openOnStart() VehiclePanel:OnOpenPanel() end
 Events.OnCreatePlayer.Add(openOnStart)
 
+local function onDeath() VehiclePanel:close() end
+Events.OnPlayerDeath.Add(onDeath)
+
 
 local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)

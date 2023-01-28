@@ -16,6 +16,9 @@ end
 local function openOnStart() ButtonedCheatPanelUI:OnOpenPanel() end
 Events.OnCreatePlayer.Add(openOnStart)
 
+local function onDeath() ButtonedCheatPanelUI:close() end
+Events.OnPlayerDeath.Add(onDeath)
+
 
 function ButtonedCheatPanelUI:initialise()
     ButtonPanelUI.initialise(self)

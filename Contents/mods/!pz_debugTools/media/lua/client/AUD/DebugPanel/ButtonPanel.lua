@@ -28,9 +28,6 @@ function ButtonPanelUI:addButton(setFunction, title, specialFuncAndArgs, x, y, w
     self:addChild(btn)
 end
 
-function ButtonPanelUI.OnPlayerDeath(playerObj) self:close() end
-Events.OnPlayerDeath.Add(ButtonPanelUI.OnPlayerDeath)
-
 
 function ButtonPanelUI.OnOpenPanel(ui, x, y)
 
