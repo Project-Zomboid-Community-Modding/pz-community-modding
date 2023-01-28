@@ -34,6 +34,7 @@ end
 
 
 local function AUDContextMenu(player, context, worldObjects, test)
+    if not getDebug() then return end
     local sq
     local mainMenu = context:addOptionOnTop("Inspect", worldObjects, nil)
     local subMenu = ISContextMenu:getNew(context)
@@ -81,6 +82,7 @@ Events.OnFillWorldObjectContextMenu.Add(AUDContextMenu)
 
 
 local function AUDInvContextMenu(player, context, items)
+    if not getDebug() then return end
     for i,v in ipairs(items) do
 		local item = v
         if not instanceof(v, "InventoryItem") then item = v.items[1] end
