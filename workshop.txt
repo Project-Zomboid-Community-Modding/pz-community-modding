@@ -1,7 +1,7 @@
 version=1
 id=2909488957
-title=Community Projects
+title=Community Modding Projects
 description=This is a team effort, visit the github here:
-description=https://github.com/ChuckTheSheep/pz-community-patch
+description=https://github.com/ChuckTheSheep/pz-community-modding
 tags=Build 41;Framework
 visibility=unlisted
