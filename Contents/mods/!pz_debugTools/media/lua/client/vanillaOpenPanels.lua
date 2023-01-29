@@ -22,15 +22,16 @@ function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
     local _class = _G[classID]
     if not _class then return end
 
+    _class.close = generic.Close
+    _class.RestoreLayout = generic.RestoreLayout
+    _class.SaveLayout = generic.SaveLayout
+
     if _class.instance and _class.instance:getIsVisible() then
         _class.instance:close()
         return
     end
 
     if _class.instance == nil then
-        _class.close = generic.Close
-        _class.RestoreLayout = generic.RestoreLayout
-        _class.SaveLayout = generic.SaveLayout
 
         local x, y = AUD.getDebugMenuAdjacentPos()
         local ui = _class:new(x, y, unpack(args))
@@ -59,7 +60,7 @@ end
 
 generic.overwrites = {
     ["DebugUIs/DebugMenu/Climate/ClimateControlDebug"] = {"ClimateControlDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, ISDebugMenu.RegisterClass},
-    ["DebugUIs/DebugMenu/General/ISGeneralDebug"] = {"ISGeneralDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, ISDebugMenu.RegisterClass},
+    ["DebugUIs/DebugMenu/General/ISGeneralDebug"] = {"ISGeneralDebug", { 800, 600, "GENERAL DEBUGGERS" }},
     ["ISUI/PlayerStats/ISPlayerStatsUI"] = {"ISPlayerStatsUI", { 800, 800, getPlayer, getPlayer }},
     ["ISUI/AdminPanel/ISItemsListViewer"] = {"ISItemsListViewer", { 850, 650 }, "setKeyboardFocus"},
     ["DebugUIs/DebugMenu/IsoRegions/IsoRegionsWindow"] = {"IsoRegionsWindow", { 400, 400 }, nil, true},
