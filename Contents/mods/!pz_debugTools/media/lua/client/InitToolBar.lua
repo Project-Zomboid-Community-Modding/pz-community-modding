@@ -1,5 +1,3 @@
-require "ISUI/ISEquippedItem"
-
 AUD = {}
 AUD.Config = {}
 
@@ -44,6 +42,7 @@ function ISDebugMenu:addButtonInfoAfter(_after, _title, _func, _tab, _marginTop)
 end
 
 
+require "ISUI/ISEquippedItem"
 local ISEquippedItem_new = ISEquippedItem.new
 function ISEquippedItem:new(x, y, width, height, chr)
     local o = ISEquippedItem_new(self, x, y, width, height, chr)
@@ -52,12 +51,14 @@ function ISEquippedItem:new(x, y, width, height, chr)
     return o
 end
 
+
 local ISEquippedItem_initialise = ISEquippedItem.initialise
 function ISEquippedItem:initialise()
     ISEquippedItem_initialise(self)
     if self.debugBtn then
         self.debugBtn:setX(self.debugBtn:getX()-3)
         self.debugBtn:setY(self.debugBtn:getY()+5)
+        self.debugBtn:forceImageSize(40, 40)
     end
 end
 
@@ -66,11 +67,11 @@ end
 function AUD.setNewButton(buttonType, audModule, onClick)
     local xMax = ISEquippedItem.instance.x-5
     local yMax = ISEquippedItem.instance:getBottom()+5
-
     ---@type Texture
     local texture = audModule.texture_Off
-    
-    audModule.toolbarButton = buttonType:new(xMax, yMax, texture:getHeight(), texture:getWidth(), "", nil, onClick)
+    local textureW, textureH = texture:getWidth(), texture:getHeight()
+    audModule.toolbarButton = buttonType:new(xMax, yMax, textureW, textureH, "", nil, onClick)
+    audModule.toolbarButton:forceImageSize(textureW, textureH)
     audModule.toolbarButton:setImage(texture)
     audModule.toolbarButton:setDisplayBackground(false)
     audModule.toolbarButton.borderColor = {r=1, g=1, b=1, a=0.1}
