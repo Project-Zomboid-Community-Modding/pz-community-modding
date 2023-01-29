@@ -52,9 +52,19 @@ function ISEquippedItem:new(x, y, width, height, chr)
     return o
 end
 
+local ISEquippedItem_initialise = ISEquippedItem.initialise
+function ISEquippedItem:initialise()
+    ISEquippedItem_initialise(self)
+    if self.debugBtn then
+        self.debugBtn:setX(self.debugBtn:getX()-3)
+        self.debugBtn:setY(self.debugBtn:getY()+5)
+    end
+end
+
+
 
 function AUD.setNewButton(buttonType, audModule, onClick)
-    local xMax = ISEquippedItem.instance.x-8
+    local xMax = ISEquippedItem.instance.x-5
     local yMax = ISEquippedItem.instance:getBottom()+5
 
     ---@type Texture
