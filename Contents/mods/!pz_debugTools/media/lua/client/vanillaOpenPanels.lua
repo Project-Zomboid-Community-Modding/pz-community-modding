@@ -17,6 +17,11 @@ function generic.SaveLayout(self, name, layout)
     ISLayoutManager.SaveWindowVisible(self, layout)
 end
 
+
+---@param classID string used with _G[classID] to fetch `_class`
+---@param args table list of arguments to pass into _class:new()
+---@param addFuncOnShow function function to run after show with `_class.instance` as the only argument
+---@param instantiate boolean|function if true|function runs `instantiate` first, if a function will be ran with _class as an argument after
 function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
 
     local _class = _G[classID]
@@ -58,6 +63,7 @@ function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
 end
 
 
+---table of classes, arguments, and additional functions
 generic.overwrites = {
     ["DebugUIs/DebugMenu/Climate/ClimateControlDebug"] = {"ClimateControlDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, ISDebugMenu.RegisterClass},
     ["DebugUIs/DebugMenu/General/ISGeneralDebug"] = {"ISGeneralDebug", { 800, 600, "GENERAL DEBUGGERS" }},
@@ -73,6 +79,7 @@ generic.overwrites = {
     ["DebugUIs/DebugMenu/WorldFlares/WorldFlaresDebug"] = {"WorldFlaresDebug", { 400, 600, "Flares debugger" }, nil, true},
     ["DebugUIs/DebugMenu/radio/ZomboidRadioDebug"] = {"ZomboidRadioDebug", { 1000, 600, "Zomboid radio debugger" }, nil, true},
 }
+
 
 function generic.openOnStart()
     if not getDebug() then return end
