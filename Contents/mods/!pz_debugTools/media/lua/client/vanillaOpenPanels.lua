@@ -44,6 +44,7 @@ function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
         ui:setY(y)
         _class.instance = ui
         ISLayoutManager.RegisterWindow(classID, _class, _class.instance)
+        ISDebugMenu.RegisterClass(_class);
 
     else
         _class.instance:addToUIManager()
