@@ -1,4 +1,5 @@
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.TeleportTable = {}
 
 AUDTeleport = ISTabPanel:derive("AUDTeleport")
@@ -13,24 +14,24 @@ function AUDTeleport:SaveLayout(name, layout)
 end
 
 function AUDTeleport:initialise()
-    ISTabPanel.initialise(self);
+    ISTabPanel.initialise(self)
 
-    self:setAnchorBottom(true);
-    self:setAnchorRight(true);
-    self.target = self;
+    self:setAnchorBottom(true)
+    self:setAnchorRight(true)
+    self.target = self
     self:setEqualTabWidth(true)
     self:setCenterTabs(true)
-    AUD.teleportWindow = self:wrapInCollapsableWindow("Teleport");
+    AUD.teleportWindow = self:wrapInCollapsableWindow("Teleport")
     
     local closeFunc = function(obj)
-        ISCollapsableWindow.close(obj);
+        ISCollapsableWindow.close(obj)
         AUD.teleportWindow:setRemoved(true)
         AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_Off)
     end
     
     AUD.teleportWindow.close = closeFunc
     AUD.teleportWindow.closeButton.onmousedown = closeFunc
-    AUD.teleportWindow:setResizable(true);
+    AUD.teleportWindow:setResizable(true)
 
     -- All tab
     AUD.TeleportTable.All = AUDTeleportTab:new(0, 48, AUD.teleportWindow:getWidth(), AUD.teleportWindow:getHeight() - AUD.teleportWindow.nested.tabHeight)
@@ -39,7 +40,7 @@ function AUDTeleport:initialise()
 
     self:loadPoints()
 
-    AUD.teleportWindow:addToUIManager();
+    AUD.teleportWindow:addToUIManager()
     AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_On)
 
     ISLayoutManager.RegisterWindow('AUDTeleport', AUDTeleport, self)
@@ -49,15 +50,15 @@ end
 function AUDTeleport:savePoints()
     local writeFile = getFileWriter("AUDTeleportPoints.txt", true, false)
     for category, tab in pairs(AUD.TeleportTable) do
-        writeFile:write("CATEGORY" .. "\r\n");
-        writeFile:write(category .. "\r\n");
+        writeFile:write("CATEGORY" .. "\r\n")
+        writeFile:write(category .. "\r\n")
         for i=1, #tab.fileList.items do
             local item = tab.fileList.items[i]
 
-            writeFile:write(item.text .. "\r\n");
-            writeFile:write(item.item[1] .. "\r\n");
-            writeFile:write(item.item[2] .. "\r\n");
-            writeFile:write(item.item[3] .. "\r\n");
+            writeFile:write(item.text .. "\r\n")
+            writeFile:write(item.item[1] .. "\r\n")
+            writeFile:write(item.item[2] .. "\r\n")
+            writeFile:write(item.item[3] .. "\r\n")
         end
     end
     writeFile:close()

@@ -1,4 +1,5 @@
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.LuaExplorer = {}
 
 AUDLuaExplorer = ISTabPanel:derive("AUDLuaExplorer")
@@ -13,24 +14,24 @@ function AUDLuaExplorer:SaveLayout(name, layout)
 end
 
 function AUDLuaExplorer:initialise()
-    ISTabPanel.initialise(self);
+    ISTabPanel.initialise(self)
 
-    self:setAnchorBottom(true);
-    self:setAnchorRight(true);
-    self.target = self;
+    self:setAnchorBottom(true)
+    self:setAnchorRight(true)
+    self.target = self
     self:setEqualTabWidth(true)
     self:setCenterTabs(true)
-    AUD.luaExplorerWindow = self:wrapInCollapsableWindow("Lua explorer");
+    AUD.luaExplorerWindow = self:wrapInCollapsableWindow("Lua explorer")
     
     local closeFunc = function(obj)
-        ISCollapsableWindow.close(obj);
+        ISCollapsableWindow.close(obj)
         AUD.luaExplorerWindow:setRemoved(true)
         AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_Off)
     end
     
     AUD.luaExplorerWindow.close = closeFunc
     AUD.luaExplorerWindow.closeButton.onmousedown = closeFunc
-    AUD.luaExplorerWindow:setResizable(true);
+    AUD.luaExplorerWindow:setResizable(true)
 
     -- Favorite tab
     AUD.LuaExplorer.favTab = AUDLuaExplorerTab:new(0, 48, AUD.luaExplorerWindow:getWidth(), AUD.luaExplorerWindow:getHeight() - AUD.luaExplorerWindow.nested.tabHeight)
@@ -42,7 +43,7 @@ function AUDLuaExplorer:initialise()
     AUD.LuaExplorer.allTab:initialise("ALL")
     AUD.luaExplorerWindow.nested:addView("All", AUD.LuaExplorer.allTab)
 
-    AUD.luaExplorerWindow:addToUIManager();
+    AUD.luaExplorerWindow:addToUIManager()
     AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_On)
 
     ISLayoutManager.RegisterWindow('AUDLuaExplorer', AUDLuaExplorer, self)

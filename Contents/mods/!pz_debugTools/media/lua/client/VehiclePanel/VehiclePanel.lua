@@ -1,24 +1,33 @@
-require "AUD/DebugPanel/ButtonPanel"
+require "InitToolBar"
+require "ButtonPanel"
+
 VehiclePanel = ButtonPanelUI:derive("VehiclePanel")
 
 
 function VehiclePanel:OnOpenPanel()
+    if not getDebug() then return end
     VehiclePanel.title = "Vehicle"
-    ButtonPanelUI.OnOpenPanel(VehiclePanel)
+    ButtonPanelUI.OnOpenPanel("VehiclePanel")
 end
 
 
-function VehiclePanel:initialise()
-    ButtonPanelUI.initialise(self)
-    ISLayoutManager.RegisterWindow('VehiclePanel', VehiclePanel, self)
+local function openOnStart()
+    if not getDebug() then return end
+    VehiclePanel:OnOpenPanel()
 end
-
-
-local function openOnStart() VehiclePanel:OnOpenPanel() end
 Events.OnCreatePlayer.Add(openOnStart)
 
 
-local vehicleDebugFunctions = require "AUD/DebugPanel/VehicleTab/VehicleFunctions"
+local function onDeath()
+    if VehiclePanel.instance then
+        VehiclePanel.instance:close()
+        VehiclePanel.instance = nil
+    end
+end
+Events.OnPlayerDeath.Add(onDeath)
+
+
+local vehicleDebugFunctions = require "VehiclePanel/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)
 
     local rows = 1
@@ -38,7 +47,7 @@ end
 
 
 require "DebugUIs/DebugMenu/ISDebugMenu"
-require "AUD/Init"
+
 local ISDebugMenu_setupButtons = ISDebugMenu.setupButtons
 function ISDebugMenu:setupButtons()
     ISDebugMenu_setupButtons(self)

@@ -1,11 +1,12 @@
-require "AUD/DebugPanel/ButtonPanel"
+require "ButtonPanel"
+
 ButtonedCheatPanelUI = ButtonPanelUI:derive("ButtonedCheatPanelUI")
 
 function ButtonedCheatPanelUI:OnOpenPanel()
+    if not getDebug() then return end
     ButtonedCheatPanelUI.title = "Cheats"
-    ButtonPanelUI.OnOpenPanel(ButtonedCheatPanelUI)
+    ButtonPanelUI.OnOpenPanel("ButtonedCheatPanelUI")
 end
-
 
 require "DebugUIs/DebugMenu/General/ISCheatPanelUI"
 function ISCheatPanelUI.OnOpenPanel()
@@ -13,14 +14,20 @@ function ISCheatPanelUI.OnOpenPanel()
 end
 
 
-local function openOnStart() ButtonedCheatPanelUI:OnOpenPanel() end
+local function openOnStart()
+    if not getDebug() then return end
+    ButtonedCheatPanelUI:OnOpenPanel()
+end
 Events.OnCreatePlayer.Add(openOnStart)
 
 
-function ButtonedCheatPanelUI:initialise()
-    ButtonPanelUI.initialise(self)
-    ISLayoutManager.RegisterWindow('ButtonedCheatPanelUI', ButtonedCheatPanelUI, self)
+local function onDeath()
+    if ButtonedCheatPanelUI.instance then
+        ButtonedCheatPanelUI.instance:close()
+        ButtonedCheatPanelUI.instance = nil
+    end
 end
+Events.OnPlayerDeath.Add(onDeath)
 
 
 local function forceInitCheatPanel()
