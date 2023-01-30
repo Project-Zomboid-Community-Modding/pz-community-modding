@@ -22,6 +22,10 @@ Events.OnCreatePlayer.Add(openOnStart)
 
 
 local function onDeath()
+    if ISCheatPanelUI.instance then
+        ISCheatPanelUI.instance:close()
+        ISCheatPanelUI.instance = nil
+    end
     if ButtonedCheatPanelUI.instance then
         ButtonedCheatPanelUI.instance:close()
         ButtonedCheatPanelUI.instance = nil
