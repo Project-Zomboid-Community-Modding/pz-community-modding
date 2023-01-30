@@ -54,6 +54,10 @@ function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
             _class[addFuncOnShow](_class.instance)
         end
     end
+    if _class.closedOnDeath then
+        _class.closedOnDeath = nil
+        return generic.OnOpen(classID, args, addFuncOnShow, instantiate)
+    end
 
     return _class.instance
 end
@@ -98,6 +102,7 @@ function generic.OnPlayerDeath(playerObj)
         require(req)
         local _class = _G[args[1]]
         if _class and _class.instance then
+            _class.closedOnDeath = _class.instance:isReallyVisible() or nil
             _class.instance:close()
             _class.instance = nil
         end
