@@ -43,7 +43,7 @@ function AUDTeleport:initialise()
     AUD.teleportWindow:addToUIManager()
     AUD.TeleportPanel.toolbarButton:setImage(AUD.TeleportPanel.texture_On)
 
-    ISLayoutManager.RegisterWindow('AUDTeleport', AUDTeleport, self)
+    ISLayoutManager.RegisterWindow('AUDTeleport', AUDTeleport, AUD.teleportWindow)
 end
 
 
