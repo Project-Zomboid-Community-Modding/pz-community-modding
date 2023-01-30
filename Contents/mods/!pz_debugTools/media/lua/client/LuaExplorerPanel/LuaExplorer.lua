@@ -46,6 +46,6 @@ function AUDLuaExplorer:initialise()
     AUD.luaExplorerWindow:addToUIManager()
     AUD.LuaExplorerPanel.toolbarButton:setImage(AUD.LuaExplorerPanel.texture_On)
 
-    ISLayoutManager.RegisterWindow('AUDLuaExplorer', AUDLuaExplorer, self)
+    --ISLayoutManager.RegisterWindow('AUDLuaExplorer', AUDLuaExplorer, self)
 end
 
