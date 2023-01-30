@@ -29,7 +29,10 @@ function ButtonPanelUI:addButton(setFunction, title, specialFuncAndArgs, x, y, w
 end
 
 
-function ButtonPanelUI.OnOpenPanel(ui, x, y)
+function ButtonPanelUI.OnOpenPanel(uiID, x, y)
+
+    local ui = _G[uiID]
+    if not ui then return end
 
     if ui.instance and ui.instance:getIsVisible() then
         ui.instance:close()
@@ -45,8 +48,7 @@ function ButtonPanelUI.OnOpenPanel(ui, x, y)
 
         ui.instance = ui:new(x, y, AUD.Config.Buttons.Width+(AUD.Config.Buttons.LeftIndent*2), 200)
         ui.instance:initialise()
-        ui.instance:addToUIManager()
-
+        ISLayoutManager.RegisterWindow(uiID, ui, ui.instance)
         local titleFont, title = UIFont.Medium, (ui.instance.title or "")
         local titleOffset = getTextManager():MeasureStringX(titleFont, title)
         ISDebugUtils.addLabel(ui.instance, {}, (ui.instance.width+titleOffset)/2, AUD.Config.Buttons.VerticalInterval*1.5, title, titleFont, false)

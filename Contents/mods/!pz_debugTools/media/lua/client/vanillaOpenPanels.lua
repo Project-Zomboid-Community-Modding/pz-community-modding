@@ -21,7 +21,7 @@ end
 ---@param classID string used with _G[classID] to fetch `_class`
 ---@param args table list of arguments to pass into _class:new()
 ---@param addFuncOnShow function function to run after show with `_class.instance` as the only argument
----@param instantiate boolean|function if true|function runs `instantiate` first, if a function will be ran with _class as an argument after
+---@param instantiate boolean if true runs `instantiate`
 function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
 
     local _class = _G[classID]
@@ -41,15 +41,11 @@ function generic.OnOpen(classID, args, addFuncOnShow, instantiate)
         local x, y = AUD.getDebugMenuAdjacentPos()
         local ui = _class:new(x, y, unpack(args))
         ui:initialise()
-        if instantiate then
-            ui:instantiate()
-            if type(instantiate) == "function" then instantiate(_class) end
-        end
+        if instantiate then ui:instantiate() end
         ui:setX(x)
         ui:setY(y)
         _class.instance = ui
         ISLayoutManager.RegisterWindow(classID, _class, _class.instance)
-
     else
         _class.instance:addToUIManager()
         _class.instance:setVisible(true)
@@ -65,8 +61,8 @@ end
 
 ---table of classes, arguments, and additional functions
 generic.overwrites = {
-    ["DebugUIs/DebugMenu/Climate/ClimateControlDebug"] = {"ClimateControlDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, ISDebugMenu.RegisterClass},
-    ["DebugUIs/DebugMenu/General/ISGeneralDebug"] = {"ISGeneralDebug", { 800, 600, "GENERAL DEBUGGERS" }},
+    ["DebugUIs/DebugMenu/Climate/ClimateControlDebug"] = {"ClimateControlDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, true},
+    ["DebugUIs/DebugMenu/General/ISGeneralDebug"] = {"ISGeneralDebug", { 800, 600, "GENERAL DEBUGGERS" }, nil, true},
     ["ISUI/PlayerStats/ISPlayerStatsUI"] = {"ISPlayerStatsUI", { 800, 800, getPlayer, getPlayer }},
     ["ISUI/AdminPanel/ISItemsListViewer"] = {"ISItemsListViewer", { 850, 650 }, "setKeyboardFocus"},
     ["DebugUIs/DebugMenu/IsoRegions/IsoRegionsWindow"] = {"IsoRegionsWindow", { 400, 400 }, nil, true},
@@ -95,6 +91,19 @@ function generic.openOnStart()
     end
 end
 Events.OnCreatePlayer.Add(generic.openOnStart)
+
+
+function generic.OnPlayerDeath(playerObj)
+    for req,args in pairs(generic.overwrites) do
+        require(req)
+        local _class = _G[args[1]]
+        if _class and _class.instance then
+            _class.instance:close()
+            _class.instance = nil
+        end
+    end
+end
+Events.OnPlayerDeath.Add(generic.OnPlayerDeath)
 
 
 local StashDebug_onClick = StashDebug.onClick
