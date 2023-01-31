@@ -18,15 +18,6 @@ end
 Events.OnCreatePlayer.Add(openOnStart)
 
 
-local function onDeath()
-    if VehiclePanel.instance then
-        VehiclePanel.instance:close()
-        VehiclePanel.instance = nil
-    end
-end
-Events.OnPlayerDeath.Add(onDeath)
-
-
 local vehicleDebugFunctions = require "VehiclePanel/VehicleFunctions"
 function VehiclePanel:handleAddButtons(x, y)
 

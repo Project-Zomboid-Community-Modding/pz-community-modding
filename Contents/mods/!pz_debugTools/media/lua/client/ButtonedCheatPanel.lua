@@ -26,10 +26,6 @@ local function onDeath()
         ISCheatPanelUI.instance:close()
         ISCheatPanelUI.instance = nil
     end
-    if ButtonedCheatPanelUI.instance then
-        ButtonedCheatPanelUI.instance:close()
-        ButtonedCheatPanelUI.instance = nil
-    end
 end
 Events.OnPlayerDeath.Add(onDeath)
 
