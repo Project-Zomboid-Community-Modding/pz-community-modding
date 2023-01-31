@@ -1,7 +1,7 @@
 --local util = require "Util_Functions_Community_client.lua"
 local util = {}
 
-function util.markAllStasBuildingshOnMap(show,clear)
+function util.markAllStashBuildingsOnMap(show,clear)
     if show then ISWorldMap.ShowWorldMap(0)
     elseif not ISWorldMap_instance then ISWorldMap.ShowWorldMap(0)
     end
