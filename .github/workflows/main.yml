@@ -22,6 +22,7 @@ jobs:
           #publishedFileID -- workshop ID
           publishedFileID: 2909488957
           #changelog: 'log of changes'
+          path: Contents
         env:
           STEAM_ACCOUNT_NAME: ${{ secrets.STEAM_USERNAME }}
           STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD  }}
