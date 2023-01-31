@@ -2,9 +2,10 @@
 local util = {}
 
 function util.markAllStasBuildingshOnMap(show,clear)
-    if show then ISWorldMap.ShowWorldMap(0) end
-    --if not ISWorldMap_instance then ISWorldMap.ShowWorldMap(0) end
-    --local mapApi = ISWorldMap_instance.mapAPI
+    if show then ISWorldMap.ShowWorldMap(0)
+    elseif not ISWorldMap_instance then ISWorldMap.ShowWorldMap(0)
+    end
+
     local symbols = ISWorldMap_instance.mapAPI:getSymbolsAPI()
     if clear then
         symbols:clear()
