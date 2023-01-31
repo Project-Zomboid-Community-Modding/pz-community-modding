@@ -6,7 +6,7 @@ on:
   - cron: "59 4 * * 5"
   
   # Trigger the workflow on push or pull request,
-  # but only for the main branch
+  # but only for the following branch
   push:
     branches:
       - hotfix
