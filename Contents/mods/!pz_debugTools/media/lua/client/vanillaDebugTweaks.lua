@@ -22,3 +22,14 @@ function ISPlayerStatsUI:onOptionMouseDown(button, x, y)
 
     ISPlayerStatsUI_onOptionMouseDown(self, button, x, y)
 end
+
+--some debug panels expand beyond the limits of screen (Lootzed,Server Statistic(still too big for 720p),?)
+require "ISUI/ISUIElement"
+local ISUIElement_initialise = ISUIElement.initialise
+function ISUIElement:initialise()
+    local screenH = getCore():getScreenHeight()
+    if self.height > screenH then
+        self:setHeightAndParentHeight(screenH)
+    end
+    return ISUIElement_initialise(self)
+end
