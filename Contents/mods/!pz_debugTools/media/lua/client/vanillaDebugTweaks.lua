@@ -27,7 +27,7 @@ end
 require "ISUI/ISUIElement"
 local ISUIElement_initialise = ISUIElement.initialise
 function ISUIElement:initialise()
-    local screenH = getCore():getScreenHeight() * 0.9
+    local screenH = math.floor(getCore():getScreenHeight() * 0.9)
     if self.height > screenH then
         self:setHeightAndParentHeight(screenH)
     end
