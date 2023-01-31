@@ -1,5 +1,5 @@
 require "ISUI/ISPanel"
-require "AUD/Init"
+require "InitToolBar"
 
 isoObjectInspect = ISPanel:derive("isoObjectInspect")
 isoObjectInspect.instance = nil

@@ -1,4 +1,5 @@
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.LuaExplorerPanel = {}
 AUD.LuaExplorerPanel.texture_On = getTexture("media/textures/_LuaExplorer_On.png")
 AUD.LuaExplorerPanel.texture_Off = getTexture("media/textures/_LuaExplorer_Off.png")

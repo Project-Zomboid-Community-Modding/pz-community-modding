@@ -1,4 +1,4 @@
-require("AUD/Init")
+require "InitToolBar"
 
 local vehicleDebugFunctions = {}
 

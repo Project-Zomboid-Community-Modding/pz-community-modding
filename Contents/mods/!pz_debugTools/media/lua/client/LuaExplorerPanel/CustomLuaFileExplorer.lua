@@ -1,5 +1,6 @@
 require "ISUI/ISCollapsableWindow"
-require("AUD/Init")
+require "InitToolBar"
+
 AUD.FileExplorer = {}
 AUD.FileExplorer.FavFileList = {}
 
