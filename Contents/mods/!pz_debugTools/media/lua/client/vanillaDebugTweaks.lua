@@ -1,5 +1,5 @@
+--- When adding XP in the playerStats debug window the dropdown list starts at [1] - this makes it jump to the selected skill
 require "ISUI/PlayerStats/ISPlayerStatsUI"
-
 local ISPlayerStatsUI_onOptionMouseDown = ISPlayerStatsUI.onOptionMouseDown
 function ISPlayerStatsUI:onOptionMouseDown(button, x, y)
 
