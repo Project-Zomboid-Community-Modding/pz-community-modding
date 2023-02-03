@@ -122,7 +122,7 @@ function isoObjectInspect:populateNameList()
         self.tableNamesList:addItem(tsObj, obj)
         namesWidth = math.max(namesWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
     end
-    math.min(400, namesWidth)
+    namesWidth = math.min(400, namesWidth)
     self.tableNamesList:setWidth(namesWidth)
 
     if #isoObjectInspect.dataListObj <= 0 then
@@ -254,12 +254,12 @@ function isoObjectInspect:populateInfoLists(obj)
     self.inspectingObjectHeader:setName(objectName)
 
     local modDataWidth = self:parseModData(obj)
-    math.min(400, modDataWidth)
+    modDataWidth = math.min(400, modDataWidth)
     self.modDataList:setWidth(modDataWidth)
     self.modDataList:setX(self.tableNamesList:getX()+self.tableNamesList:getWidth()+5)
 
     local fieldWidth = self:parseFields(obj)
-    math.min(400, fieldWidth)
+    fieldWidth = math.min(400, fieldWidth)
     self.javaFieldsList:setWidth(fieldWidth)
     self.javaFieldsList:setX(self.modDataList:getX()+self.modDataList:getWidth()+5)
 
