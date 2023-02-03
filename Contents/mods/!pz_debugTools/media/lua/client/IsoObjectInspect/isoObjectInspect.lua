@@ -14,13 +14,13 @@ function isoObjectInspect.OnOpenPanel(obj, name)
     if not isoObjectInspect.dataListName[obj] then
         table.insert(isoObjectInspect.dataListObj, obj)
         toSelect = #isoObjectInspect.dataListObj
+        isoObjectInspect.dataListName[obj] = name
     else
         for index,storedObj in pairs(isoObjectInspect.dataListObj) do if storedObj == obj then toSelect = index end end
     end
-    isoObjectInspect.dataListName[obj] = name
 
     if isoObjectInspect.instance==nil then
-        isoObjectInspect.instance = isoObjectInspect:new(100, 100, 840, 600, "Inspect")
+        isoObjectInspect.instance = isoObjectInspect:new(100, 100, 840, 640, "Inspect")
         isoObjectInspect.instance:initialise()
         isoObjectInspect.instance:instantiate()
     end
@@ -43,9 +43,10 @@ end
 function isoObjectInspect:createChildren()
     ISPanel.createChildren(self)
 
-    ISDebugUtils.addLabel(self, {}, 20, 20, "Inspecting:", UIFont.Large, true)
-
-    self.tableNamesList = ISScrollingListBox:new(10, 50, 150, self.height - 100)
+    self.junk, self.inspectingHeader = ISDebugUtils.addLabel(self, {}, 20, 10, "Inspecting:", UIFont.Large, true)
+    self.inspectingHeader:setColor(0.9,0.9,0.9)
+    
+    self.tableNamesList = ISScrollingListBox:new(10, 65, 150, self.height - 100)
     self.tableNamesList:initialise()
     self.tableNamesList:instantiate()
     self.tableNamesList.itemheight = 22
@@ -57,8 +58,10 @@ function isoObjectInspect:createChildren()
     self.tableNamesList.onmousedown = isoObjectInspect.OnTableNamesListMouseDown
     self.tableNamesList.target = self
     self:addChild(self.tableNamesList)
+    self.junk, self.tableNamesListHeader = ISDebugUtils.addLabel(self, {}, self.tableNamesList:getX()+5, 40, "Objects", UIFont.Medium, true)
+    self.tableNamesListHeader:setColor(0.7,0.7,0.7)
 
-    self.modDataList = ISScrollingListBox:new(220, 50, 150, self.height - 100)
+    self.modDataList = ISScrollingListBox:new(220, 65, 150, self.height - 100)
     self.modDataList:initialise()
     self.modDataList:instantiate()
     self.modDataList.itemheight = 22
@@ -68,9 +71,10 @@ function isoObjectInspect:createChildren()
     self.modDataList.doDrawItem = self.drawInfoList
     self.modDataList.drawBorder = true
     self:addChild(self.modDataList)
-    self.junk, self.modDataListHeader = ISDebugUtils.addLabel(self, {}, self.modDataList:getX()+5, 20, "ModData", UIFont.Medium, true)
+    self.junk, self.modDataListHeader = ISDebugUtils.addLabel(self, {}, self.modDataList:getX()+5, 40, "ModData", UIFont.Medium, true)
+    self.modDataListHeader:setColor(0.7,0.7,0.7)
 
-    self.javaFieldsList = ISScrollingListBox:new(425, 50, 150, self.height - 100)
+    self.javaFieldsList = ISScrollingListBox:new(425, 65, 150, self.height - 100)
     self.javaFieldsList:initialise()
     self.javaFieldsList:instantiate()
     self.javaFieldsList:setOnMouseDownFunction(self, self.onFieldSelected)
@@ -81,14 +85,15 @@ function isoObjectInspect:createChildren()
     self.javaFieldsList.doDrawItem = self.drawInfoList
     self.javaFieldsList.drawBorder = true
     self:addChild(self.javaFieldsList)
-    self.junk, self.javaFieldsHeader = ISDebugUtils.addLabel(self, {}, self.javaFieldsList:getX()+5, 20, "Java Fields", UIFont.Medium, true)
+    self.junk, self.javaFieldsHeader = ISDebugUtils.addLabel(self, {}, self.javaFieldsList:getX()+5, 40, "Java Fields", UIFont.Medium, true)
+    self.javaFieldsHeader:setColor(0.7,0.7,0.7)
 
     local w = (self.tableNamesList:getWidth()/2)-5
 
-    local y, button = ISDebugUtils.addButton(self,"refresh",self.tableNamesList:getX(),self.height-40, w,20,"Refresh", isoObjectInspect.onClickRefresh)
+    local y, button = ISDebugUtils.addButton(self,"refresh",self.tableNamesList:getX(),self.height-30, w,20,"Refresh", isoObjectInspect.onClickRefresh)
     self.refreshButton = button
 
-    y, button = ISDebugUtils.addButton(self,"close",self.tableNamesList:getX()+w+10,self.height-40, w,20, "Close", isoObjectInspect.onClickClose)
+    y, button = ISDebugUtils.addButton(self,"close",self.tableNamesList:getX()+w+10,self.height-30, w,20, "Close", isoObjectInspect.onClickClose)
     self.closeButton = button
 
     self:populateNameList()
@@ -114,6 +119,7 @@ function isoObjectInspect:populateNameList()
         self.tableNamesList:addItem(tsObj, obj)
         namesWidth = math.max(namesWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
     end
+    math.min(400, namesWidth)
     self.tableNamesList:setWidth(namesWidth)
 
     if #isoObjectInspect.dataListObj <= 0 then
@@ -124,6 +130,7 @@ function isoObjectInspect:populateNameList()
 
     self:setWidth(panelsWidth+namesWidth+30)
 
+    self.tableNamesListHeader:setX(self.tableNamesList:getX()+5)
     self.modDataListHeader:setX(self.modDataList:getX()+5)
     self.javaFieldsHeader:setX(self.javaFieldsList:getX()+5)
 
@@ -180,8 +187,8 @@ end
 --setOnMouseDownFunction
 function isoObjectInspect:onFieldSelected(target, onmousedown)
     local selected = self.javaFieldsList.items[self.javaFieldsList.selected]
-    if not selected or type(selected.item)~="userdata" then return end
-    isoObjectInspect.OnOpenPanel(selected.item, tostring(selected.item))
+    if not selected or not selected.referenceLink then return end
+    isoObjectInspect.OnOpenPanel(selected.item, selected.refName)
     print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
 end
 
@@ -201,12 +208,15 @@ function isoObjectInspect:parseFields(obj)
             if valueAsText and valueType == "userdata" then
                 local reAddListBracket = (string.sub(valueAsText, 1, 1)=="[" and "[") or ""
                 local simpleClass = valueAsText:match('[^.]+$')
-                valueAsText = simpleClass~=valueAsText and reAddListBracket..simpleClass or valueAsText
+                valueAsText = simpleClass and simpleClass~=valueAsText and reAddListBracket..simpleClass or valueAsText
+                if string.sub(valueAsText, 1, 1)=="[" or string.find(valueAsText,"%$") then valueType = "?" end
             end
 
             local fieldInfo = javaField:getName().."  =  "..valueAsText..(valueType and " ("..valueType..")" or "")
             stringWidth = math.max(stringWidth, tM:MeasureStringX(self.javaFieldsList.font, fieldInfo)+30)
             local addedItem = self.javaFieldsList:addItem(fieldInfo, value)
+            addedItem.referenceLink = valueType=="userdata"
+            addedItem.refName = valueAsText
         end
     end
     return stringWidth
@@ -217,6 +227,9 @@ function isoObjectInspect:populateInfoLists(obj)
     self.modDataList:clear()
     self.javaFieldsList:clear()
 
+    local title = obj and isoObjectInspect.dataListName[obj] or ""
+    self.inspectingHeader:setName("Inspecting: "..title)
+
     local modDataWidth = 150
     local modData = obj and instanceof(obj, "IsoObject") and obj:hasModData() and obj:getModData()
     if modData then
@@ -225,10 +238,12 @@ function isoObjectInspect:populateInfoLists(obj)
         self.modDataList:addItem("No modData found.", nil)
     end
 
+    math.min(400, modDataWidth)
     self.modDataList:setWidth(modDataWidth)
     self.modDataList:setX(self.tableNamesList:getX()+self.tableNamesList:getWidth()+5)
 
     local fieldWidth = self:parseFields(obj)
+    math.min(400, fieldWidth)
     self.javaFieldsList:setWidth(fieldWidth)
     self.javaFieldsList:setX(self.modDataList:getX()+self.modDataList:getWidth()+5)
 
