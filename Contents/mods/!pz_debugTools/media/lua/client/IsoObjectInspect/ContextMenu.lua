@@ -88,7 +88,7 @@ local function InvContextMenu(player, context, items)
     for i,v in ipairs(items) do
 		local item = v
         if not instanceof(v, "InventoryItem") then item = v.items[1] end
-        local option = context:addOptionOnTop("Inspect", item, showModData)
+        local option = context:addOptionOnTop("Inspect", item, showModData, item:getType())
         option.iconTexture = getTexture("media/textures/_IsoObjInspect.png")
 	end
 end
