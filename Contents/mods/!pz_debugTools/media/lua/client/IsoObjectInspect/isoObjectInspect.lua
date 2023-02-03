@@ -167,8 +167,20 @@ function isoObjectInspect:formatVal(_value, _func, _func2)
 end
 
 
-function isoObjectInspect:parseTable(_t, _ident)
-    if not _ident then _ident = "" end
+function isoObjectInspect:parseModData(obj)
+    local modDataWidth = 150
+    local modData = obj and instanceof(obj, "IsoObject") and obj:hasModData() and obj:getModData()
+    if modData then
+        modDataWidth = self:recursiveTableParse(modData)
+    else
+        self.modDataList:addItem("No modData found.", nil)
+    end
+    return modDataWidth
+end
+
+
+function isoObjectInspect:recursiveTableParse(_t, _ident)
+    _ident = _ident or ""
     local tM = getTextManager()
     local stringWidth = 150
     local s
@@ -176,7 +188,7 @@ function isoObjectInspect:parseTable(_t, _ident)
         if type(v)=="table" then
             s = tostring(_ident).."["..tostring(k).."]  =  "
             self.modDataList:addItem(s, nil)
-            self:parseTable(v, _ident.."    ")
+            self:recursiveTableParse(v, _ident.."    ")
         else
             s = tostring(_ident).."["..tostring(k).."]  =  "..tostring(v)
             self.modDataList:addItem(s, nil)
@@ -199,8 +211,16 @@ end
 function isoObjectInspect:parseFields(obj)
     local tM = getTextManager()
     local stringWidth = 150
+
     if not obj then return stringWidth end
-    for i = 0, getNumClassFields(obj) - 1 do
+    local numClassFields = getNumClassFields(obj)
+
+    if numClassFields <= 0 then
+        self.javaFieldsList:addItem("No java fields found.", nil)
+        return stringWidth
+    end
+
+    for i = 0, numClassFields - 1 do
         ---@type Field
         local javaField = getClassField(obj, i)
         if javaField then
@@ -233,14 +253,7 @@ function isoObjectInspect:populateInfoLists(obj)
     local objectName = obj and isoObjectInspect.dataListName[obj] or ""
     self.inspectingObjectHeader:setName(objectName)
 
-    local modDataWidth = 150
-    local modData = obj and instanceof(obj, "IsoObject") and obj:hasModData() and obj:getModData()
-    if modData then
-        modDataWidth = self:parseTable(modData, "")
-    else
-        self.modDataList:addItem("No modData found.", nil)
-    end
-
+    local modDataWidth = self:parseModData(obj)
     math.min(400, modDataWidth)
     self.modDataList:setWidth(modDataWidth)
     self.modDataList:setX(self.tableNamesList:getX()+self.tableNamesList:getWidth()+5)
