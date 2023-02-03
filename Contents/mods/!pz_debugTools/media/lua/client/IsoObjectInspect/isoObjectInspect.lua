@@ -43,9 +43,12 @@ end
 function isoObjectInspect:createChildren()
     ISPanel.createChildren(self)
 
-    self.junk, self.inspectingHeader = ISDebugUtils.addLabel(self, {}, 20, 10, "Inspecting:", UIFont.Large, true)
-    self.inspectingHeader:setColor(0.9,0.9,0.9)
-    
+    self.junk, self.inspectingTitleHeader = ISDebugUtils.addLabel(self, {}, 15, 8, "Inspecting:", UIFont.Large, true)
+    self.inspectingTitleHeader:setColor(0.9,0.9,0.9)
+
+    self.junk, self.inspectingObjectHeader = ISDebugUtils.addLabel(self, {}, self.inspectingTitleHeader:getX()+self.inspectingTitleHeader:getWidth()+10, 10, "", UIFont.Medium, true)
+    self.inspectingObjectHeader:setColor(0.8,0.8,0.8)
+
     self.tableNamesList = ISScrollingListBox:new(10, 65, 150, self.height - 100)
     self.tableNamesList:initialise()
     self.tableNamesList:instantiate()
@@ -227,8 +230,8 @@ function isoObjectInspect:populateInfoLists(obj)
     self.modDataList:clear()
     self.javaFieldsList:clear()
 
-    local title = obj and isoObjectInspect.dataListName[obj] or ""
-    self.inspectingHeader:setName("Inspecting: "..title)
+    local objectName = obj and isoObjectInspect.dataListName[obj] or ""
+    self.inspectingObjectHeader:setName(objectName)
 
     local modDataWidth = 150
     local modData = obj and instanceof(obj, "IsoObject") and obj:hasModData() and obj:getModData()
