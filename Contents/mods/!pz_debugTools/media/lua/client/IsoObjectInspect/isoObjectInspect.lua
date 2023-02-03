@@ -1,24 +1,31 @@
 require "ISUI/ISPanel"
 require "InitToolBar"
 
+
+
 isoObjectInspect = ISPanel:derive("isoObjectInspect")
 isoObjectInspect.instance = nil
-isoObjectInspect.modDataList = {}
-isoObjectInspect.modDataListName = {}
+isoObjectInspect.dataListObj = {}
+isoObjectInspect.dataListName = {}
 
 function isoObjectInspect.OnOpenPanel(obj, name)
 
-    if not isoObjectInspect.modDataListName[obj] then
-        table.insert(isoObjectInspect.modDataList, obj)
-        isoObjectInspect.modDataListName[obj] = name
+    local toSelect = 1
+    if not isoObjectInspect.dataListName[obj] then
+        table.insert(isoObjectInspect.dataListObj, obj)
+        toSelect = #isoObjectInspect.dataListObj
+    else
+        for index,storedObj in pairs(isoObjectInspect.dataListObj) do if storedObj == obj then toSelect = index end end
     end
+    isoObjectInspect.dataListName[obj] = name
 
     if isoObjectInspect.instance==nil then
-        isoObjectInspect.instance = isoObjectInspect:new (100, 100, 840, 600, "Inspecting:")
+        isoObjectInspect.instance = isoObjectInspect:new(100, 100, 840, 600, "Inspect")
         isoObjectInspect.instance:initialise()
         isoObjectInspect.instance:instantiate()
     end
 
+    isoObjectInspect.instance.tableNamesList.selected = toSelect
     isoObjectInspect.instance:addToUIManager()
     isoObjectInspect.instance:setVisible(true)
     isoObjectInspect.instance:onClickRefresh()
@@ -38,7 +45,7 @@ function isoObjectInspect:createChildren()
 
     ISDebugUtils.addLabel(self, {}, 20, 20, "Inspecting:", UIFont.Large, true)
 
-    self.tableNamesList = ISScrollingListBox:new(10, 50, 200, self.height - 100)
+    self.tableNamesList = ISScrollingListBox:new(10, 50, 150, self.height - 100)
     self.tableNamesList:initialise()
     self.tableNamesList:instantiate()
     self.tableNamesList.itemheight = 22
@@ -51,7 +58,7 @@ function isoObjectInspect:createChildren()
     self.tableNamesList.target = self
     self:addChild(self.tableNamesList)
 
-    self.modDataList = ISScrollingListBox:new(220, 50, 200, self.height - 100)
+    self.modDataList = ISScrollingListBox:new(220, 50, 150, self.height - 100)
     self.modDataList:initialise()
     self.modDataList:instantiate()
     self.modDataList.itemheight = 22
@@ -63,7 +70,7 @@ function isoObjectInspect:createChildren()
     self:addChild(self.modDataList)
     self.junk, self.modDataListHeader = ISDebugUtils.addLabel(self, {}, self.modDataList:getX()+5, 20, "ModData", UIFont.Medium, true)
 
-    self.javaFieldsList = ISScrollingListBox:new(425, 50, 200, self.height - 100)
+    self.javaFieldsList = ISScrollingListBox:new(425, 50, 150, self.height - 100)
     self.javaFieldsList:initialise()
     self.javaFieldsList:instantiate()
     self.javaFieldsList:setOnMouseDownFunction(self, self.onFieldSelected)
@@ -90,41 +97,32 @@ end
 
 function isoObjectInspect:onClickClose() self:close() end
 function isoObjectInspect:onClickRefresh() self:populateNameList() end
-function isoObjectInspect:OnTableNamesListMouseDown(item) self:populateInfoLists(self.tableNamesList.items[self.tableNamesList.selected].item) end
+function isoObjectInspect:OnTableNamesListMouseDown(item) self:populateNameList() end
 
 
 function isoObjectInspect:populateNameList()
+    local selectedBefore = self.tableNamesList.selected
     self.tableNamesList:clear()
+    self.tableNamesList.selected = selectedBefore
 
-    if #isoObjectInspect.modDataList == 0 then
-        self:populateInfoLists(nil) return
-    end
-
-    local stringWidth = 200
-    local panelWidth = 240
+    local namesWidth = 150
+    local panelsWidth = 300
 
     local tM = getTextManager()
-
-    for i, obj in pairs(isoObjectInspect.modDataList) do
-        local tsObj = isoObjectInspect.modDataListName[obj]
+    for i, obj in pairs(isoObjectInspect.dataListObj) do
+        local tsObj = isoObjectInspect.dataListName[obj]
         self.tableNamesList:addItem(tsObj, obj)
+        namesWidth = math.max(namesWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
+    end
+    self.tableNamesList:setWidth(namesWidth)
 
-        stringWidth = math.max(stringWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
+    if #isoObjectInspect.dataListObj <= 0 then
+        self:populateInfoLists(nil)
+    else
+        panelsWidth = self:populateInfoLists(isoObjectInspect.dataListObj[self.tableNamesList.selected])
     end
 
-    self.tableNamesList:setWidth(stringWidth)
-    self:setWidth(panelWidth+stringWidth)
-
-    self.firstTableData=isoObjectInspect.modDataList[1]
-    self:populateInfoLists(self.firstTableData)
-
-    if self.modDataList.vscroll and self.modDataList:isVScrollBarVisible() then
-        self.modDataList.vscroll:setX(self.modDataList:getWidth()-self.modDataList.vscroll:getWidth())
-    end
-
-    if self.javaFieldsList.vscroll and self.javaFieldsList:isVScrollBarVisible() then
-        self.javaFieldsList.vscroll:setX(self.javaFieldsList:getWidth()-self.javaFieldsList.vscroll:getWidth())
-    end
+    self:setWidth(panelsWidth+namesWidth+30)
 
     self.modDataListHeader:setX(self.modDataList:getX()+5)
     self.javaFieldsHeader:setX(self.javaFieldsList:getX()+5)
@@ -162,7 +160,7 @@ end
 function isoObjectInspect:parseTable(_t, _ident)
     if not _ident then _ident = "" end
     local tM = getTextManager()
-    local stringWidth = 200
+    local stringWidth = 150
     local s
     for k,v in pairs(_t) do
         if type(v)=="table" then
@@ -178,18 +176,20 @@ function isoObjectInspect:parseTable(_t, _ident)
     return stringWidth
 end
 
---[[
+
+--setOnMouseDownFunction
 function isoObjectInspect:onFieldSelected(target, onmousedown)
-    local selected = self.javaFieldsList.items[self.javaFieldsList.selected].item
-    --isoObjectInspect.OnOpenPanel(selected)
-    --print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
+    local selected = self.javaFieldsList.items[self.javaFieldsList.selected]
+    if not selected or type(selected.item)~="userdata" then return end
+    isoObjectInspect.OnOpenPanel(selected.item, tostring(selected.item))
+    print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
 end
---]]
 
 
 function isoObjectInspect:parseFields(obj)
     local tM = getTextManager()
-    local stringWidth = 200
+    local stringWidth = 150
+    if not obj then return stringWidth end
     for i = 0, getNumClassFields(obj) - 1 do
         ---@type Field
         local javaField = getClassField(obj, i)
@@ -206,7 +206,7 @@ function isoObjectInspect:parseFields(obj)
 
             local fieldInfo = javaField:getName().."  =  "..valueAsText..(valueType and " ("..valueType..")" or "")
             stringWidth = math.max(stringWidth, tM:MeasureStringX(self.javaFieldsList.font, fieldInfo)+30)
-            self.javaFieldsList:addItem(fieldInfo, value)
+            local addedItem = self.javaFieldsList:addItem(fieldInfo, value)
         end
     end
     return stringWidth
@@ -217,9 +217,8 @@ function isoObjectInspect:populateInfoLists(obj)
     self.modDataList:clear()
     self.javaFieldsList:clear()
 
-    local modDataWidth = 200
-
-    local modData = obj:hasModData() and obj:getModData()
+    local modDataWidth = 150
+    local modData = obj and instanceof(obj, "IsoObject") and obj:hasModData() and obj:getModData()
     if modData then
         modDataWidth = self:parseTable(modData, "")
     else
@@ -233,7 +232,7 @@ function isoObjectInspect:populateInfoLists(obj)
     self.javaFieldsList:setWidth(fieldWidth)
     self.javaFieldsList:setX(self.modDataList:getX()+self.modDataList:getWidth()+5)
 
-    self:setWidth(self.tableNamesList:getWidth()+30+modDataWidth+fieldWidth)
+    return modDataWidth+fieldWidth
 end
 
 
@@ -251,13 +250,25 @@ function isoObjectInspect:drawInfoList(y, item, alt)
     return y + self.itemheight
 end
 
-function isoObjectInspect:prerender() ISPanel.prerender(self) end
-function isoObjectInspect:update() ISPanel.update(self) end
+function isoObjectInspect:prerender()
+    ISPanel.prerender(self)
+    if self.modDataList.vscroll and self.modDataList:isVScrollBarVisible() then
+        self.modDataList.vscroll:setX(self.modDataList:getWidth()-self.modDataList.vscroll:getWidth())
+    end
+
+    if self.javaFieldsList.vscroll and self.javaFieldsList:isVScrollBarVisible() then
+        self.javaFieldsList.vscroll:setX(self.javaFieldsList:getWidth()-self.javaFieldsList.vscroll:getWidth())
+    end
+end
+
+function isoObjectInspect:update()
+    ISPanel.update(self)
+end
 
 function isoObjectInspect:close()
     self:setVisible(false)
     self:removeFromUIManager()
-    isoObjectInspect.instance = nil
+    --isoObjectInspect.instance = nil
 end
 
 function isoObjectInspect:new(x, y, width, height, title)
