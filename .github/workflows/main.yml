@@ -3,7 +3,7 @@ name: "Upload to Workshop"
 on:
   schedule:
   # 59th minute of the 4th hour UTC should be 11:59 EST - fridays(s)
-  - cron: "59 4 * * 5"
+  - cron: "59 4 * * 6"
   
   # Trigger the workflow on push or pull request,
   # but only for the following branch
