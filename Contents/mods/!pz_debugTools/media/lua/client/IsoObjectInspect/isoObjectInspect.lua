@@ -169,7 +169,7 @@ end
 
 function isoObjectInspect:parseModData(obj)
     local modDataWidth = 150
-    local modData = obj and instanceof(obj, "IsoObject") and obj:hasModData() and obj:getModData()
+    local modData = obj and obj:hasModData() and obj:getModData()
     if modData then
         modDataWidth = self:recursiveTableParse(modData)
     else
