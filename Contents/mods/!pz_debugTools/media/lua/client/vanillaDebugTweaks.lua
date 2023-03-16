@@ -9,7 +9,7 @@ function ISPlayerStatsUI:onOptionMouseDown(button, x, y)
         modal:addToUIManager()
         table.insert(ISPlayerStatsUI.instance.windows, modal)
 
-        if self.selectedPerk.perk then
+        if self.selectedPerk and self.selectedPerk.perk then
             for n,perk in pairs(modal.perkList) do
                 if perk == self.selectedPerk.perk then
                     modal.combo.selected = n
