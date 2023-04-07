@@ -82,3 +82,9 @@ function ISUIElement:initialise()
     ISUIElement_initialise(self)
     Events.OnResolutionChange.Add(function() ISUIElement.fitOnScreen(self) end)
 end
+
+local debug = require "!!!communityPatchDebugTools - shared"
+
+---add more buttons
+require "DebugUIs/ISSpawnVehicleUI"
+debug.Vehicles.patchISSpawnVehicleUI(ISSpawnVehicleUI)
