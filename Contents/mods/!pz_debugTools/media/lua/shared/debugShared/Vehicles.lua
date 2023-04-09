@@ -76,28 +76,30 @@ function Vehicles.unlock(vehicle)
     end
 end
 
-function Vehicles.printAllParts(v)
+--example to test all parts
+function Vehicles.testAllParts(v,test)
+    if not v then return end
     local vehicle
-    if v and instanceof(v,"BaseVehicle") then vehicle = v
-    elseif v and type(v) == "string" then vehicle = Vehicles.getLast(v)
-    elseif instanceof(zxtestVehicle, "BaseVehicle") then vehicle = zxtestVehicle
+    if instanceof(v,"BaseVehicle") then vehicle = v
+    elseif type(v) == "string" then vehicle = Vehicles.getLast(v)
     end
     if not vehicle then return end
 
-    print("zxDebug Vehicle Parts")
-    local part
-    local printTable = {}
-    for i = 0, vehicle:getPartCount() do
-        part = vehicle:getPartByIndex(i)
-        if part ~= nil then
-            print(string.format("Part id:%d, %s, \t", i, part:getId()),part:getCondition())
-            --local door = part:getDoor()
-            --if door then
-            --    print("door ",door:isOpen())
-            --    door:setOpen(true)
-            --end
+    if not (test and type(test) == "function") then
+        test = function(i,part)
+            if part ~= nil then
+                return string.format("\nid:%d | %s | condition: %d", i, part:getId(), part:getCondition())
+            else
+                return string.format("\nid:%d | no part", i)
+            end
         end
     end
+
+    local printTable = {[1]=string.format("\n/*** %s Parts ***/",vehicle:getScriptName() or "")}
+    for i = 0, vehicle:getPartCount() - 1 do
+        printTable[i+2] = test(i,vehicle:getPartByIndex(i))
+    end
+    print(table.concat(printTable))
 end
 
 function Vehicles.patchISSpawnVehicleUI(ISSpawnVehicleUI)
@@ -105,7 +107,6 @@ function Vehicles.patchISSpawnVehicleUI(ISSpawnVehicleUI)
     local function reload(ui,button) Vehicles.reload(ui:getVehicle()) end
     local function addButton(ui,x,y,w,h,text,target,fn)
         local button = ISButton:new(x,y,w,h,text,target,fn)
-        --button:setX(x)
         button.anchorTop = false
         button.anchorBottom = true
         button.borderColor = {r=1, g=1, b=1, a=0.1}
