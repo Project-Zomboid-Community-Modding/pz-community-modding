@@ -56,7 +56,7 @@ local function ContextMenu(player, context, worldObjects, test)
                 customName = ": "..customName
             else
                 local spriteName = objectSprite and objectSprite:getName()
-                customName = ": "..spriteName or tostring(object:getClass())
+                customName = ": ".. (spriteName or tostring(object:getClass()))
             end
 
             local objName = "IsoObject"..(customName or "")
