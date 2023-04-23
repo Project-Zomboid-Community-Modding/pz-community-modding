@@ -9,7 +9,7 @@ on:
   # but only for the following branch
   push:
     branches:
-      - hotfix
+      - '*hotfix*'
 
 jobs:
   upload:
