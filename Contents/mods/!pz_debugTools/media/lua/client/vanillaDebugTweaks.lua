@@ -1,3 +1,5 @@
+local ceDebug = require "!!!communityPatchDebugTools - shared"
+
 --- When adding XP in the playerStats debug window the dropdown list starts at [1] - this makes it jump to the selected skill
 require "ISUI/PlayerStats/ISPlayerStatsUI"
 local ISPlayerStatsUI_onOptionMouseDown = ISPlayerStatsUI.onOptionMouseDown
@@ -81,4 +83,51 @@ local ISUIElement_initialise = ISUIElement.initialise
 function ISUIElement:initialise()
     ISUIElement_initialise(self)
     Events.OnResolutionChange.Add(function() ISUIElement.fitOnScreen(self) end)
+end
+
+
+do
+    --[[ add more buttons ]]
+    require "DebugUIs/ISSpawnVehicleUI"
+    local Vehicles = ceDebug.Vehicles
+
+    local function removeAll() Vehicles.removeAll() end
+    local function reload(ui,button) Vehicles.reload(ui:getVehicle()) end
+    local function addButton(ui,x,y,w,h,text,target,fn)
+        local button = ISButton:new(x,y,w,h,text,target,fn)
+        button.anchorTop = false
+        button.anchorBottom = true
+        button.borderColor = {r=1, g=1, b=1, a=0.1}
+        button:initialise()
+        ui:addChild(button)
+        return button
+    end
+
+    local initialise = ISSpawnVehicleUI.initialise
+    ISSpawnVehicleUI.initialise = function(self)
+        initialise(self)
+
+        local height = self:getHeight()
+
+        self:setHeight(height+35)
+        for i,v in ipairs({ self.getKey,self.repair }) do --self.spawn,self.close
+            v:setY(v:getY()-35)
+        end
+
+        local x,y,w,h = 10,height - 65,80,25
+        local x1 = 110
+        self.zxReload = addButton(self, x, y, w, h, getText("Reload"), self, reload)
+        self.zxRemoveAll = addButton(self,x1, y, w, h, getText("Remove All"), self, removeAll)
+    end
+end
+
+do
+    --[[ bugfix ]]
+    require "Vehicles/ISUI/ISVehicleMechanics"
+    local close = ISVehicleMechanics.close
+    ISVehicleMechanics.close = function(self)
+        if self.usedHood and (not self.vehicle or not self.vehicle:getSquare() or self.vehicle:getSquare():getMovingObjects():indexOf(self.vehicle) < 0) then self.usedHood = nil end
+        if self.vehicle ~= nil and not self.vehicle:getSquare() then self.vehicle = nil end
+        return close(self)
+    end
 end
