@@ -61,7 +61,7 @@ function Vehicles.removeAll(scriptName)
         end
     end
 end
-debug.serverCommands["Vehicles.removeAll"] = function(player,args) Vehicles.removeAll(args[1]) end
+debug.serverCommands["Vehicles.removeAll"] = function(player,args) Vehicles.removeAll(args and args[1]) end
 
 function Vehicles.unlock(vehicle)
     for seat=1,vehicle:getMaxPassengers() do
