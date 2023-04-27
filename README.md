@@ -3,7 +3,7 @@
 ####
 ![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessage.png)
 
-![https://steamcommunity.com/sharedfiles/filedetails/?id=2909488957](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/steamWorkshop.png)
+[![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/steamWorkshop.png)](https://steamcommunity.com/sharedfiles/filedetails/?id=2909488957)
 
 ###
 ## Workflow
