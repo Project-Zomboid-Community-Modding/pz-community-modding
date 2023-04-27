@@ -1,11 +1,9 @@
-![banner](https://raw.githubusercontent.com/ChuckTheSheep/pz-community-patch/main/images/bannerTrim.png)
+![banner](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerTrim.png)
 ####
 ####
-### Message:
-<b>First and foremost this project is dedicated to the players, modders, developers, and anyone else that makes Project Zomboid what it is - the ultimate zombie survival RPG.</b>
+![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessage.png)
 
-####
-### This community project is a team effort to centralize quality of life changes or fixes, utility functions, and making the available Lua files easier to work with in respect to both compatibility and modability.
+![https://steamcommunity.com/sharedfiles/filedetails/?id=2909488957](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/steamWorkshop.png)
 
 ###
 ## Workflow
