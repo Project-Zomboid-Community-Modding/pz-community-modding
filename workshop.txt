@@ -1,7 +1,11 @@
 version=1
 id=2909488957
 title=Community Modding Projects
+description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerTrimShort.png][/img]
+description=
+description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessage.png][/img]
+description=
 description=This is a team effort, visit the github here:
-description=https://github.com/ChuckTheSheep/pz-community-modding
+description=[url=https://github.com/Project-Zomboid-Community-Modding/pz-community-modding][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/github.png[/img][/url]
 tags=Build 41;Framework
 visibility=unlisted
