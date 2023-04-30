@@ -9,7 +9,7 @@
 
 </p>
 
-<p>
+<br>
 
 ## Workflow
 #### Everything will be developed alongside the most recent version of PZ (including any IWBUMS/open beta branches).
@@ -24,6 +24,3 @@
 ### Update Policy:
 - Workshop update weekly or daily if hotfix are required.
 - Readme can be updated without creating new branches.
-
-</p>
-
