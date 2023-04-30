@@ -5,6 +5,6 @@ description=[url=https://github.com/Project-Zomboid-Community-Modding/pz-communi
 description=
 description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessageSteam.png][/img]
 description=
-description=[url=https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_debugTools][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBannerSteam.png[/img][/url][url=https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_frameworks][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBannerSteam.png[/img][/url][url=https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_patch][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBannerSteam.png[/img][/url]
+description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBannerSteam.png]
 tags=Build 41;Framework;Misc
 visibility=unlisted
