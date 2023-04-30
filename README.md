@@ -1,6 +1,6 @@
 <p align="center">
 
-<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerTrimShort.png" width=64%> [<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/steamWorkshop.png" width=34%>](https://steamcommunity.com/sharedfiles/filedetails/?id=2909488957)
+<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerTrimShort.png" width=65%> [<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/steamWorkshop.png" width=33%>](https://steamcommunity.com/sharedfiles/filedetails/?id=2909488957)
 
 
 ![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessage.png)
