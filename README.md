@@ -3,9 +3,12 @@
 
 ![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessage.png)
 
+<p>
+
 [<img align="left" src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBanner.png" width=32%>](https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_debugTools)  [<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBanner.png" width=32%>](https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_frameworks)  [<img align="right" src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBanner.png" width=32%>](https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_patch)
 
-###
+</p>
+
 ## Workflow
 #### Everything will be developed alongside the most recent version of PZ (including any IWBUMS/open beta branches).
 
