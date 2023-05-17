@@ -3,6 +3,8 @@
 ---this is done before reloading the Lua
 ---checks needs to happen after reload and before MainScreen.continueLatestSaveAux
 
+if isClient() or isServer() then return end
+
 local function WorldFix(challenge)
     local world = getWorld()
     local worldWorld = world:getWorld()
