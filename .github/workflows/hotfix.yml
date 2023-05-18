@@ -1,0 +1,25 @@
+name: "HOTFIX to Workshop"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JJ/github-pr-contains-action@releases/v10
+      - uses: actions/checkout@v2
+      - uses: AnarkisGaming/workshop@v1
+        with:
+          github-token: ${{ github.token }}
+          bodyContains: '`hotfix`'
+          appID: 108600
+          #publishedFileID -- workshop ID
+          publishedFileID: 2909488957
+          #changelog: 'log of changes'
+          path: Contents
+        env:
+          STEAM_ACCOUNT_NAME: ${{ secrets.STEAM_USERNAME }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD  }}
