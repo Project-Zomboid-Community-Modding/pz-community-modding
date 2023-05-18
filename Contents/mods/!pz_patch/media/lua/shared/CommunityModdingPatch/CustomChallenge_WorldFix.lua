@@ -26,4 +26,5 @@ local function onResetLua(reason)
         end
     end
 end
+
 Events.OnResetLua.Add(onResetLua)
