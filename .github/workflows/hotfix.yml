@@ -6,15 +6,14 @@ on:
       - main
 
 jobs:
-  upload:
+  hotfix:
     runs-on: ubuntu-latest
     steps:
-      - uses: JJ/github-pr-contains-action@releases/v10
+      - uses: gandarez/check-pr-body-action@v1.0.3
       - uses: actions/checkout@v2
       - uses: AnarkisGaming/workshop@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          bodyContains: '`hotfix`'
+          contains: '`hotfix`'
           appID: 108600
           #publishedFileID -- workshop ID
           publishedFileID: 2909488957
