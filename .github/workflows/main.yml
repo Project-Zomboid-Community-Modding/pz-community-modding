@@ -9,6 +9,8 @@ on:
   # but only for the following branch
   push:
     branches:
+      #- main
+      # https://github.com/marketplace/actions/check-pull-request-rewiew-comments
       - '*hotfix*'
 
 jobs:
