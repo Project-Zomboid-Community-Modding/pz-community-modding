@@ -8,12 +8,18 @@ on:
 jobs:
   hotfix:
     runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [12.x]
+    
     steps:
-      - uses: gandarez/check-pr-body-action@v1.0.3
       - uses: actions/checkout@v2
+      - uses: sitezen/pr-comment-checker@v1.0.1
+        with:
+          pr_description_should_contain: '`hotfix`'
       - uses: AnarkisGaming/workshop@v1
         with:
-          contains: '`hotfix`'
           appID: 108600
           #publishedFileID -- workshop ID
           publishedFileID: 2909488957
