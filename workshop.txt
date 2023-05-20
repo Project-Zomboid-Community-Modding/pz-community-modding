@@ -5,6 +5,8 @@ description=[url=https://github.com/Project-Zomboid-Community-Modding/pz-communi
 description=
 description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessageSteam.png][/img]
 description=
+description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerUpload.png][/img]
+description=
 description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBannerSteam.png]
 tags=Build 41;Framework;Misc
 visibility=unlisted
