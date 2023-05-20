@@ -4,7 +4,9 @@
 
 
 ![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerMessage.png)
-
+  
+![](https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerUploadGithub.png)
+  
 [<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBanner.png" width=31.5%>](https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_debugTools)[<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBanner.png" width=31.5%>](https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_frameworks)[<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBanner.png" width=31.5%>](https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/tree/main/Contents/mods/!pz_patch)
 
 </p>
