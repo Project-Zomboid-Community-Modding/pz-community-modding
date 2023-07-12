@@ -8,5 +8,8 @@ description=
 description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerUpload.png][/img]
 description=
 description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBannerSteam.png]
+description=
+description=
+description=[h3]Copyright 2023 ZomboidModders. This item is not authorized for posting on Steam, except under the Steam account named ZomboidModders.[/h3]
 tags=Build 41;Framework;Misc
 visibility=unlisted
