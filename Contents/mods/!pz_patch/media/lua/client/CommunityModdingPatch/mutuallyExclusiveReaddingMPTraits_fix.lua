@@ -1,5 +1,5 @@
 ---https://github.com/Project-Zomboid-Community-Modding/pz-community-modding/issues/60
-
+---Credit to Diakon5 (Daikon454) & Chuck (chuck)
 require "OptionScreens/CharacterCreationProfession"
 --(trait:isRemoveInMP() and not isClient()
 local mutualyExclusive = CharacterCreationProfession.mutualyExclusive
