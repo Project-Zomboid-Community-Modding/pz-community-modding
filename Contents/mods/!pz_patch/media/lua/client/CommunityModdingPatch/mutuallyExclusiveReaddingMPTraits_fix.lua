@@ -10,7 +10,7 @@ function CharacterCreationProfession:mutualyExclusive(trait, bAdd)
         local exclusiveTrait = trait:getMutuallyExclusiveTraits():get(i)
         exclusiveTrait = TraitFactory.getTrait(exclusiveTrait)
 
-        if exclusiveTrait:isRemoveInMP() and not isClient() then
+        if exclusiveTrait:isRemoveInMP() and isClient() then
             if exclusiveTrait:getCost() > 0 then
                 self.listboxTrait:removeItem(exclusiveTrait:getLabel())
             else
