@@ -90,6 +90,7 @@ local function InvContextMenu(player, context, items)
         if not instanceof(v, "InventoryItem") then item = v.items[1] end
         local option = context:addOptionOnTop("Inspect", item, showModData, item:getType())
         option.iconTexture = getTexture("media/textures/_IsoObjInspect.png")
+        break
 	end
 end
 Events.OnFillInventoryObjectContextMenu.Add(InvContextMenu)
