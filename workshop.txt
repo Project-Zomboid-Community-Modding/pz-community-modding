@@ -14,4 +14,4 @@ description=
 description=
 description=[h3]Copyright 2023 ZomboidModders. This item is not authorized for posting on Steam, except under the Steam account named ZomboidModders.[/h3]
 tags=Build 41;Framework;Misc
-visibility=unlisted
+visibility=public
