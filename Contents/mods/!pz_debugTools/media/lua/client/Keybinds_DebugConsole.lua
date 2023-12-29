@@ -1,7 +1,7 @@
 --- Toggle lua console on Main Screen (not in-game)
 --- GameWindow changes visibility early on key press
 --- Create the console, add it to ui and bring to top
---[[
+
 if not getDebug() then return end
 
 local Patch = {}
@@ -33,4 +33,3 @@ Events.OnMainMenuEnter.Add(Patch.OnMainMenuEnter)
 -- Events.OnKeyStartPressed.Add(Patch.OnKeyStartPressed)
 
 return Patch
---]]
