@@ -20,7 +20,7 @@ function SaveModule:load()
     self.custom_load(self.modDataTable.keep)
 end
 
-function SaveModule:save(new_datas)
+function SaveModule:save()
     self.modDataTable.keep = self.custom_save()    
 end
 
