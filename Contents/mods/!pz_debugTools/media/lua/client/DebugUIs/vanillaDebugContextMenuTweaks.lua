@@ -1,6 +1,7 @@
 require "DebugUIs/DebugContextMenu"
 require "ISUI/ISWorldObjectContextMenu"
 
+---Adds several new options regarding zombies and bodies.
 
 function DebugContextMenu.GetAllDeadBodies(playerObj)
 
