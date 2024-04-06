@@ -84,7 +84,8 @@ function DebugContextMenu.OnUnselectZombie() DebugContextMenu.selectedZombie = n
 
 ---@param context ISContextMenu
 local function tweakedDebugMenu(player, context, worldobjects, test)
-
+    if not getDebug() then return end
+    
     local playerObj = getSpecificPlayer(player)
 
     local square = nil
