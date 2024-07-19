@@ -45,7 +45,7 @@ local function ContextMenu(player, context, worldObjects, test)
     for i,object in ipairs(worldObjects) do
         local square = object:getSquare()
         if square and sq == nil then sq = square end
-        if instanceof(object, "IsoObject") and (not instanceof(object, "IsoWorldInventoryObject")) then
+        --if instanceof(object, "IsoObject") then
 
             local objectSprite = object:getSprite()
             local props = objectSprite and objectSprite:getProperties()
@@ -61,7 +61,7 @@ local function ContextMenu(player, context, worldObjects, test)
 
             local objName = "IsoObject"..(customName or "")
             subMenu:addOption(objName, object, showModData, objName)
-        end
+        --end
     end
 
     if sq ~= nil then
