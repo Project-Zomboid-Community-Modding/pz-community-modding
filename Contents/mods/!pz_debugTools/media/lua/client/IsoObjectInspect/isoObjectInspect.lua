@@ -204,7 +204,7 @@ function isoObjectInspect:onFieldSelected(target, onmousedown)
     local selected = self.javaFieldsList.items[self.javaFieldsList.selected]
     if not selected or not selected.referenceLink then return end
     isoObjectInspect.OnOpenPanel(selected.item, selected.refName)
-    print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
+    --print("selected: "..tostring(selected.text).." = "..tostring(selected.item))
 end
 
 
