@@ -10,7 +10,7 @@ require "recipecode"
 --	end
 --end
 
---The function below is localized in the `recipecode` file.
+--The function above is localized in the `recipecode` file.
 --Which means if someone wants to make use of it they'd need to copy it over.
 
 --+ On top of that the internal call for `getItemsByType` builds an array.
