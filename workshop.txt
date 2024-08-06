@@ -7,7 +7,7 @@ description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Mod
 description=
 description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/bannerUpload.png][/img]
 description=
-description=[img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBannerSteam.png][img=https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBannerSteam.png]
+description=[url=https://steamcommunity.com/workshop/filedetails/discussion/2909488957/4509877496946058146/][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/debugBannerSteam.png[/img][/url][url=https://steamcommunity.com/workshop/filedetails/discussion/2909488957/4509877496946058146/][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/frameworksBannerSteam.png[/img][/url][url=https://steamcommunity.com/workshop/filedetails/discussion/2909488957/4509877496946058146/][img]https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/main/images/patchBannerSteam.png[/img][/url]
 description=
 description=[url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner2.png[/img][/url]
 description=
