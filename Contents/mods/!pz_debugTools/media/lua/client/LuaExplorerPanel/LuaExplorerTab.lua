@@ -28,7 +28,13 @@ function AUDLuaExplorerTab:initialise(category)
     self.fileList.anchorRight = true;
     self.fileList.anchorBottom = true;
     self.fileList:initialise();
-    self.fileList:setOnMouseDoubleClick(self, CustomLuaFileExplorerList.onMouseDoubleClickFile);
+    if self.fileCategory == "MOD" then
+        -- reload a mod folder on double click
+        self.fileList:setOnMouseDoubleClick(self, self.onButtonMod);
+    else
+        -- reload a mod file on double click
+        self.fileList:setOnMouseDoubleClick(self, self.onMouseDoubleClickFile);
+    end
     self.fileList:setFont(UIFont.Small, 3)
     self:addChild(self.fileList);
 
@@ -38,13 +44,15 @@ function AUDLuaExplorerTab:initialise(category)
     self.textEntry:setClearButton(true)
     self.textEntry:setText("");
 
-    if self.fileCategory == "FAV" then
+    if self.fileCategory ~= "ALL" then
         self.textEntry.onTextChange = function() 
             AUD.luaFileExplorer:activateView("All")
             AUD.LuaExplorer.allTab.textEntry:focus()
             AUD.LuaExplorer.allTab.textEntry:setText(AUD.LuaExplorer.favTab.textEntry:getInternalText())
             AUD.LuaExplorer.favTab.textEntry:setText("")
             AUD.LuaExplorer.favTab.textEntry:unfocus()
+            AUD.LuaExplorer.modTab.textEntry:setText("")
+            AUD.LuaExplorer.modTab.textEntry:unfocus()
         end
     end
 
@@ -59,8 +67,10 @@ function AUDLuaExplorerTab:initialise(category)
     local button
     if self.fileCategory == "ALL" then
         button = ISButton:new(0, 0, 50, self.fileList.itemheight, "+", self, self.onButtonAdd)
-    else
+    elseif self.fileCategory == "FAV" then
         button = ISButton:new(0, 0, 50, self.fileList.itemheight, "-", self, self.onButtonRemove)
+    elseif self.fileCategory == "MOD" then
+        button = ISButton:new(0, 0, 50, self.fileList.itemheight, "Reload", self, self.onButtonMod)
     end
 
     button:initialise()
@@ -86,6 +96,7 @@ end
 
 function AUDLuaExplorerTab:fill()
     self.fileList:clear();
+    local c = getLoadedLuaCount();
 
     if self.fileCategory == "FAV" then
         for i=1, #AUD.FileExplorer.FavFileList do 
@@ -93,9 +104,43 @@ function AUDLuaExplorerTab:fill()
             local name = getShortenedFilename(path)
             self.fileList:addItem(name, path)
         end
-    else
-        local c = getLoadedLuaCount();
+    elseif self.fileCategory == "MOD" then
 
+
+        function getModName(path) --Return the name of the mod folder
+            local segments = {}
+            for segment in string.gmatch(path, "[^/]+") do
+                table.insert(segments, segment)
+            end
+            
+            for i, segment in ipairs(segments) do
+                if segment == "mods" then
+                    return segments[i + 1]
+                end
+            end
+            return
+        end
+
+        local modList = {}
+        for i = 0, c - 1 do
+            local path = getLoadedLua(i);
+            local name = getModName(path);
+            if name ~= nil then -- name is nil if the file is from the base game. Preventing reload of base all at once.
+                if modList[name] == nil then
+                    modList[name] = {name = name, paths = path}
+                else
+                    modList[name].paths = modList[name].paths .. "|" .. path
+                end
+            end
+        end
+        table.sort(modList, function(a, b) return a.name < b.name end) --Sort by mod name
+        for k,v in pairs(modList) do
+            if modList[k].paths == nil then return end
+            if modList[k].name == nil then return end
+            -- name = mod folder name, paths = all files in the mod folder as a string separated by "|" e.g. "path1|path2|path3"
+            self.fileList:addItem(modList[k].name, modList[k].paths)
+        end
+    else -- ALL
         for i = 0, c-1 do
             local path = getLoadedLua(i);
             local name = getShortenedFilename(path);
@@ -181,9 +226,28 @@ function AUDLuaExplorerTab:onButtonRemove()
     self:fill()
 end
 
+-- Reload all files in the mod folder
+function AUDLuaExplorerTab:onButtonMod()
+    if self.buttonSelectRow == -1 then return end
+    local item = self.fileList.items[self.buttonSelectRow]
+    if not item then return end
+    local paths = {}
 
-
-
+    -- Split the string into a table of strings using a string delimiter
+    function splitString(inputString, delimiter)
+        local result = {}
+        for match in (inputString .. delimiter):gmatch("(.-)" .. delimiter) do
+            table.insert(result, match)
+        end
+        return result
+    end
+    --return all a mod folder's files as a table of strings. e.g. {"path1", "path2", "path3"}
+    paths = splitString(item.item, "|")
+    for i = 1, #paths do
+        --reload each file
+        reloadLuaFile(paths[i])
+    end
+end
 
 -----------------
 
@@ -208,17 +272,4 @@ function AUD.FileExplorer.WriteFavFileList()
 	writeFile:close()
 end
 
-
 AUD.FileExplorer.FavFileList = AUD.FileExplorer.ReadFavFileList()
-
-
-
-
-
-
-
-
-
-
-
-

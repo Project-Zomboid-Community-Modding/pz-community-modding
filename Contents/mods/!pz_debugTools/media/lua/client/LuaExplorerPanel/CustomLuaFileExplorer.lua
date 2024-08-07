@@ -3,6 +3,7 @@ require "InitToolBar"
 
 AUD.FileExplorer = {}
 AUD.FileExplorer.FavFileList = {}
+AUD.FileExplorer.ModList = {}
 
 CustomLuaFileExplorerList = ISScrollingListBox:derive("CustomLuaFileExplorerList")
 

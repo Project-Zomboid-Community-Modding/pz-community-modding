@@ -38,6 +38,11 @@ function AUDLuaExplorer:initialise()
     AUD.LuaExplorer.favTab:initialise("FAV")
     AUD.luaExplorerWindow.nested:addView("Favorite", AUD.LuaExplorer.favTab)
 
+    -- Mods tab
+    AUD.LuaExplorer.modTab = AUDLuaExplorerTab:new(0, 48, AUD.luaExplorerWindow:getWidth(), AUD.luaExplorerWindow:getHeight() - AUD.luaExplorerWindow.nested.tabHeight)
+    AUD.LuaExplorer.modTab:initialise("MOD")
+    AUD.luaExplorerWindow.nested:addView("Mods", AUD.LuaExplorer.modTab)
+
     -- All tab
     AUD.LuaExplorer.allTab = AUDLuaExplorerTab:new(0, 48, AUD.luaExplorerWindow:getWidth(), AUD.luaExplorerWindow:getHeight() - AUD.luaExplorerWindow.nested.tabHeight)
     AUD.LuaExplorer.allTab:initialise("ALL")
