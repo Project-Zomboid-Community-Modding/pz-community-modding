@@ -4,3 +4,4 @@
 - Fixes fitness action exploit.
 - Fixes mutually exclusive traits in MP from being re-added
 - Fixes the game-mode not getting reset when exiting from a save.
+- Adds an error warning whenever `getDisplayName` for an item script fails.
