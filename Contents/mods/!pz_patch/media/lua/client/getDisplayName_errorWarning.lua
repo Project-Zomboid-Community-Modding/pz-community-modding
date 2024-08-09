@@ -11,8 +11,8 @@ function patchClassMethod.create(original_function)
             if not patchClassMethod.parsedNames[tostring(self)] then
                 patchClassMethod.parsedNames[tostring(self)] = true
                 print("ERROR: script `getDisplayName` failed: ", self)
-                return "ERROR"
             end
+            return "ERROR"
         end
 
         return results
