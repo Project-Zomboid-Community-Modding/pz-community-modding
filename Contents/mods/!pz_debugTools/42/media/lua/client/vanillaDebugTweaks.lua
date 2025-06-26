@@ -50,7 +50,7 @@ function ISUIElement.fitToParent(self, oldW, oldH, newW, newH)
 end
 
 function ISUIElement.fitOnScreen(self)
-    if self:getParent() then return end
+    if not self or self:getParent() then return end
 
     self.oldX = self.oldX or self.x
     local maxX = getCore():getScreenWidth()
