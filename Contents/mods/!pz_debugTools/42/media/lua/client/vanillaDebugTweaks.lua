@@ -84,24 +84,11 @@ function ISUIElement:initialise()
 end
 
 
-do
-    --[[ bugfix ]]
-    require "Vehicles/ISUI/ISVehicleMechanics"
-    local close = ISVehicleMechanics.close
-    ISVehicleMechanics.close = function(self)
-        if self.usedHood and (not self.vehicle or not self.vehicle:getSquare() or self.vehicle:getSquare():getMovingObjects():indexOf(self.vehicle) < 0) then self.usedHood = nil end
-        if self.vehicle ~= nil and not self.vehicle:getSquare() then self.vehicle = nil end
-        return close(self)
-    end
-end
-
-
-do
-    ---ISItemsListViewer doesn't show icons for mod items because getTexture returns nil
-    ---trygetTexture needs nil check compared to original
-    local original = getTexture
-    getTexture  = function(fileName)
-        if fileName == nil then return nil end
-        return original(fileName) or Texture.trygetTexture(fileName)
-    end
+--[[ bugfix ]]
+---ISItemsListViewer doesn't show icons for mod items because getTexture returns nil
+---trygetTexture needs nil check compared to original
+local original = getTexture
+function getTexture(fileName)
+    if fileName == nil then return nil end
+    return original(fileName) or Texture.trygetTexture(fileName)
 end
