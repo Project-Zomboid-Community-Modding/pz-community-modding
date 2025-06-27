@@ -119,7 +119,7 @@ function isoObjectInspect:populateNameList()
     local tM = getTextManager()
     for i, obj in pairs(isoObjectInspect.dataListObj) do
         local tsObj = isoObjectInspect.dataListName[obj]
-        self.tableNamesList:addItem(tsObj, obj)
+        self.tableNamesList:addItem(tsObj, obj, tostring(tsObj))
         namesWidth = math.max(namesWidth, tM:MeasureStringX(self.tableNamesList.font, tsObj)+35)
     end
     namesWidth = math.min(400, namesWidth)
@@ -187,11 +187,11 @@ function isoObjectInspect:recursiveTableParse(_t, _ident)
     for k,v in pairs(_t) do
         if type(v)=="table" then
             s = tostring(_ident).."["..tostring(k).."]  =  "
-            self.modDataList:addItem(s, nil)
+            self.modDataList:addItem(s, nil, tostring(s))
             self:recursiveTableParse(v, _ident.."    ")
         else
             s = tostring(_ident).."["..tostring(k).."]  =  "..tostring(v)
-            self.modDataList:addItem(s, nil)
+            self.modDataList:addItem(s, nil, tostring(s))
         end
         if s then stringWidth = math.max(stringWidth, tM:MeasureStringX(self.modDataList.font, s)+30) end
     end
@@ -237,7 +237,7 @@ function isoObjectInspect:parseFields(obj)
 
             local fieldInfo = javaField:getName().."  =  "..valueAsText..(valueType and " ("..valueType..")" or "")
             stringWidth = math.max(stringWidth, tM:MeasureStringX(self.javaFieldsList.font, fieldInfo)+30)
-            local addedItem = self.javaFieldsList:addItem(fieldInfo, value)
+            local addedItem = self.javaFieldsList:addItem(fieldInfo, value, tostring(fieldInfo))
             addedItem.referenceLink = valueType=="userdata"
             addedItem.refName = valueAsText
         end
