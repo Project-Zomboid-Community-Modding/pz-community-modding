@@ -10,14 +10,12 @@ TeleportPointList = ISScrollingListBox:derive("TeleportPointList")
 
 function TeleportPointList:onMouseDoubleClickFile(item)
     if not item then return end
-
-    local player = getSpecificPlayer(0)
-    if not player then return end
-    if isClient() then
-        SendCommandToServer("/teleportto " .. tostring(item[1]) .. "," .. tostring(item[2]) .. ",0")
-    else
-        player:teleportTo(item[1], item[2], 0.0)
-    end
+    local pl = getPlayer()
+    pl:setX(item[1])
+    pl:setY(item[2])
+    pl:setLx(item[1])
+    pl:setLy(item[2])
+    pl:setZ(item[3])
 end
 
 
