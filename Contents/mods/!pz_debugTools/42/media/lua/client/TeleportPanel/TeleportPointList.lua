@@ -14,9 +14,9 @@ function TeleportPointList:onMouseDoubleClickFile(item)
     local player = getSpecificPlayer(0)
     if not player then return end
     if isClient() then
-        SendCommandToServer("/teleportto " .. tostring(item[1]) .. "," .. tostring(item[2]) .. ",0")
+        SendCommandToServer("/teleportto " .. tostring(item[1]) .. "," .. tostring(item[2]) .. "," .. item[3])
     else
-        player:teleportTo(item[1], item[2], 0.0)
+        player:teleportTo(item[1], item[2], item[3])
     end
 end
 
