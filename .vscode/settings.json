@@ -1,0 +1,19 @@
+{
+    "Lua.workspace.library": [
+        "/home/simon/.steam/debian-installation/steamapps/workshop/content/108600/3378285185/mods/StarlitLibrary/42/media/lua",
+        "${addons}/umbrella-unstable/module/library"
+    ],
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.runtime.path": [
+        "?.lua",
+        "?/init.lua",
+        "server/?.lua"
+    ],
+    "Lua.completion.requireSeparator": "/",
+    "Lua.runtime.builtin": {
+        "debug": "disable",
+        "io": "disable",
+        "package": "disable"
+    },
+    "Lua.workspace.checkThirdParty": false
+}
