@@ -46,7 +46,7 @@ require "ISUI/ISEquippedItem"
 local ISEquippedItem_new = ISEquippedItem.new
 function ISEquippedItem:new(x, y, width, height, chr)
     local o = ISEquippedItem_new(self, x, y, width, height, chr)
-    o.debugIcon = getTexture("media/textures/_mainMenuButton_Off.png")
+    o.debugIconOff = getTexture("media/textures/_mainMenuButton_Off.png")
     o.debugIconOn = getTexture("media/textures/_mainMenuButton_On.png")
     return o
 end
