@@ -1,9 +1,10 @@
-require "InitToolBar"
+local AUD = require "InitToolBar"
+local AUDLuaExplorerTab = require "LuaExplorerPanel/LuaExplorerTab"
 
 AUD.LuaExplorer = {}
 
-AUDLuaExplorer = ISTabPanel:derive("AUDLuaExplorer")
-
+---@class AUDLuaExplorer : ISTabPanel
+local AUDLuaExplorer = ISTabPanel:derive("AUDLuaExplorer")
 function AUDLuaExplorer:RestoreLayout(name, layout)
     ISLayoutManager.DefaultRestoreWindow(self, layout)
 end

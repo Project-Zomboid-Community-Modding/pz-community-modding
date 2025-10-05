@@ -1,4 +1,5 @@
-require "InitToolBar"
+local AUD = require "InitToolBar"
+local AUDLuaExplorer = require "LuaExplorerPanel/LuaExplorer"
 
 AUD.LuaExplorerPanel = {}
 AUD.LuaExplorerPanel.texture_On = getTexture("media/textures/_LuaExplorer_On.png")

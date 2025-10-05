@@ -111,17 +111,17 @@ debugScenarios.AUDExampleDebugScenario = {
 		visual:setSkinTextureIndex(2);
 		playerObj:resetModel();
 
-		clothe = inv:AddItem("Base.Tshirt_DefaultTEXTURE_TINT");
+		local clothes = inv:AddItem("Base.Tshirt_DefaultTEXTURE_TINT");
 		local color = ImmutableColor.new(0.25, 0.36, 0.36, 1)
-		clothe:getVisual():setTint(color);
-		playerObj:setWornItem(clothe:getBodyLocation(), clothe);
-		clothe = inv:AddItem("Base.Trousers_Denim");
-		clothe:getVisual():setTextureChoice(1);
-		playerObj:setWornItem(clothe:getBodyLocation(), clothe);
-		clothe = inv:AddItem("Base.Socks_Ankle");
-		playerObj:setWornItem(clothe:getBodyLocation(), clothe);
-		clothe = inv:AddItem("Base.Shoes_Black");
-		playerObj:setWornItem(clothe:getBodyLocation(), clothe);
+		clothes:getVisual():setTint(color);
+		playerObj:setWornItem(clothes:getBodyLocation(), clothes);
+		clothes = inv:AddItem("Base.Trousers_Denim");
+		clothes:getVisual():setTextureChoice(1);
+		playerObj:setWornItem(clothes:getBodyLocation(), clothes);
+		clothes = inv:AddItem("Base.Socks_Ankle");
+		playerObj:setWornItem(clothes:getBodyLocation(), clothes);
+		clothes = inv:AddItem("Base.Shoes_Black");
+		playerObj:setWornItem(clothes:getBodyLocation(), clothes);
 		--------------------------------------
 
 		-- Skills

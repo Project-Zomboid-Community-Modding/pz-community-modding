@@ -1,5 +1,5 @@
 require "ISUI/ISPanel"
-require "InitToolBar"
+local AUD = require "InitToolBar"
 
 
 

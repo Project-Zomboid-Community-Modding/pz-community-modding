@@ -1,11 +1,12 @@
 require "ISUI/ISCollapsableWindow"
-require "InitToolBar"
+local AUD = require "InitToolBar"
 
 AUD.FileExplorer = {}
 AUD.FileExplorer.FavFileList = {}
 AUD.FileExplorer.ModList = {}
 
-CustomLuaFileExplorerList = ISScrollingListBox:derive("CustomLuaFileExplorerList")
+---@class CustomLuaFileExplorerList : ISScrollingListBox
+local CustomLuaFileExplorerList = ISScrollingListBox:derive("CustomLuaFileExplorerList")
 
 
 function CustomLuaFileExplorerList:onMouseDoubleClickFile(item)
@@ -59,3 +60,4 @@ end
 
 AUD.FileExplorer.FavFileList = AUD.FileExplorer.ReadFavFileList()
 
+return CustomLuaFileExplorerList

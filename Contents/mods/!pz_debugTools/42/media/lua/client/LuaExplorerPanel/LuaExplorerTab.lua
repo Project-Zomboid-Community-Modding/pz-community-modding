@@ -1,11 +1,15 @@
 local AUD = require "InitToolBar"
+local CustomLuaFileExplorerList = require "LuaExplorerPanel/CustomLuaFileExplorer"
 
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 
-AUDLuaExplorerTab = ISPanelJoypad:derive("AUDLuaExplorerTab")
+---@class AUDLuaExplorerTab : ISPanelJoypad
+---@field fileCategory string
+---@field fileList CustomLuaFileExplorerList
+local AUDLuaExplorerTab = ISPanelJoypad:derive("AUDLuaExplorerTab")
 
 function AUDLuaExplorerTab:initialise(category)
-    ISPanelJoypad.initialise(self);
+    ISPanelJoypad.initialise(self)
 
     self.fileCategory = category
 
@@ -18,31 +22,31 @@ function AUDLuaExplorerTab:initialise(category)
     self:setScrollChildren(true)
     self:addScrollBars()
 
-    self.borderColor = {r=0, g=0, b=0, a=0};
+    self.borderColor = {r=0, g=0, b=0, a=0}
 
     local th = 0--self:titleBarHeight()
     local rh = 0--self:resizeWidgetHeight()
     local entryHgt = FONT_HGT_SMALL + 2 * 2
 
-    self.fileList = CustomLuaFileExplorerList:new(0, th + entryHgt, self.width, self.height - th - rh - entryHgt*2 - 4);
-    self.fileList.anchorRight = true;
-    self.fileList.anchorBottom = true;
-    self.fileList:initialise();
+    self.fileList = CustomLuaFileExplorerList:new(0, th + entryHgt, self.width, self.height - th - rh - entryHgt*2 - 4)
+    self.fileList.anchorRight = true
+    self.fileList.anchorBottom = true
+    self.fileList:initialise()
     if self.fileCategory == "MOD" then
         -- reload a mod folder on double click
-        self.fileList:setOnMouseDoubleClick(self, self.onButtonMod);
+        self.fileList:setOnMouseDoubleClick(self, self.onButtonMod)
     else
         -- reload a mod file on double click
-        self.fileList:setOnMouseDoubleClick(self, self.onMouseDoubleClickFile);
+        self.fileList:setOnMouseDoubleClick(self, self.onMouseDoubleClickFile)
     end
     self.fileList:setFont(UIFont.Small, 3)
-    self:addChild(self.fileList);
+    self:addChild(self.fileList)
 
-    self.textEntry = ISTextEntryBox:new("", 0, th, self.width, entryHgt);
-    self.textEntry:initialise();
-    self.textEntry:instantiate();
+    self.textEntry = ISTextEntryBox:new("", 0, th, self.width, entryHgt)
+    self.textEntry:initialise()
+    self.textEntry:instantiate()
     self.textEntry:setClearButton(true)
-    self.textEntry:setText("");
+    self.textEntry:setText("")
 
     if self.fileCategory ~= "ALL" then
         self.textEntry.onTextChange = function() 
@@ -56,13 +60,13 @@ function AUDLuaExplorerTab:initialise(category)
         end
     end
 
-    self:addChild(self.textEntry);
-    self.lastText = self.textEntry:getInternalText();
+    self:addChild(self.textEntry)
+    self.lastText = self.textEntry:getInternalText()
 
    
 
 
-    self:fill();
+    self:fill()
 
     local button
     if self.fileCategory == "ALL" then
@@ -95,8 +99,8 @@ end
 
 
 function AUDLuaExplorerTab:fill()
-    self.fileList:clear();
-    local c = getLoadedLuaCount();
+    self.fileList:clear()
+    local c = getLoadedLuaCount()
 
     if self.fileCategory == "FAV" then
         for i=1, #AUD.FileExplorer.FavFileList do 
@@ -123,8 +127,8 @@ function AUDLuaExplorerTab:fill()
 
         local modList = {}
         for i = 0, c - 1 do
-            local path = getLoadedLua(i);
-            local name = getModName(path);
+            local path = getLoadedLua(i)
+            local name = getModName(path)
             if name ~= nil then -- name is nil if the file is from the base game. Preventing reload of base all at once.
                 if modList[name] == nil then
                     modList[name] = {name = name, paths = path}
@@ -142,15 +146,17 @@ function AUDLuaExplorerTab:fill()
         end
     else -- ALL
         for i = 0, c-1 do
-            local path = getLoadedLua(i);
-            local name = getShortenedFilename(path);
+            local path = getLoadedLua(i)
+            local name = getShortenedFilename(path)
             if string.trim(self.textEntry:getInternalText()) == nil or string.contains(string.lower(name), string.lower(string.trim(self.textEntry:getInternalText()))) then
-                self.fileList:addItem(name, path);
+                self.fileList:addItem(name, path)
             end
         end
     end
 end
 
+---User double clicks a file entry in the list
+---@param item string
 function AUDLuaExplorerTab:onMouseDoubleClickFile(item)
     if not item then return end
     reloadLuaFile(item)
@@ -158,14 +164,14 @@ end
 
 
 function AUDLuaExplorerTab:update()
-    local text = string.trim(self.textEntry:getInternalText());
+    local text = string.trim(self.textEntry:getInternalText())
 
     if text ~= self.lastText then
-       self:fill();
-       self.lastText = text;
+       self:fill()
+       self.lastText = text
     end
 
-    self:updateReloadButton();
+    self:updateReloadButton()
 end
 
 function AUDLuaExplorerTab:doDrawItem(y, item, alt)
@@ -173,14 +179,14 @@ function AUDLuaExplorerTab:doDrawItem(y, item, alt)
     if y + item.height + self:getYScroll() <= 0 then return y + item.height end
 
     if self.selected == item.index then
-        self:drawRect(0, (y), self:getWidth(), self.itemheight-1, 0.3, 0.7, 0.35, 0.15);
+        self:drawRect(0, (y), self:getWidth(), self.itemheight-1, 0.3, 0.7, 0.35, 0.15)
 
     end
-    self:drawRectBorder(0, (y), self:getWidth(), self.itemheight, 0.5, self.borderColor.r, self.borderColor.g, self.borderColor.b);
+    self:drawRectBorder(0, (y), self:getWidth(), self.itemheight, 0.5, self.borderColor.r, self.borderColor.g, self.borderColor.b)
     
-    self:drawText(item.text, 15, y + (item.height - self.fontHgt) / 2, 0.9, 0.9, 0.9, 0.9, UIFont.Small);
-    y = y + self.itemheight;
-    return y;
+    self:drawText(item.text, 15, y + (item.height - self.fontHgt) / 2, 0.9, 0.9, 0.9, 0.9, UIFont.Small)
+    y = y + self.itemheight
+    return y
 end
 
 
@@ -267,9 +273,11 @@ end
 function AUD.FileExplorer.WriteFavFileList()
     local writeFile = getFileWriter("AUD_DebugLuaFilesList.txt", true, false)
 	for i = 1, #AUD.FileExplorer.FavFileList do
-		writeFile:write(AUD.FileExplorer.FavFileList[i].."\r\n");
+		writeFile:write(AUD.FileExplorer.FavFileList[i].."\r\n")
 	end
 	writeFile:close()
 end
 
 AUD.FileExplorer.FavFileList = AUD.FileExplorer.ReadFavFileList()
+
+return AUDLuaExplorerTab

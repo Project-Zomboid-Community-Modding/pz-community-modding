@@ -1,4 +1,4 @@
-require "InitToolBar"
+local AUD = require "InitToolBar"
 
 AUD.TeleportPanel = {}
 AUD.TeleportPanel.texture_On = getTexture("media/textures/_gps_ON.png")

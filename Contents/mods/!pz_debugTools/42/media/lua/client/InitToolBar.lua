@@ -1,4 +1,4 @@
-AUD = {}
+local AUD = {}
 AUD.Config = {}
 
 
