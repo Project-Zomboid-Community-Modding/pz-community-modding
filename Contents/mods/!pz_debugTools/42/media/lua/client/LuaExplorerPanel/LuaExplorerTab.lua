@@ -1,4 +1,4 @@
-require "InitToolBar"
+local AUD = require "InitToolBar"
 
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 
