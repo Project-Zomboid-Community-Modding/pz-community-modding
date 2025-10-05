@@ -60,6 +60,7 @@ end
 ---Override to save x y position when closed
 function ISCheatPanelUI:setVisible(bVisible)
     -- if hiding and instance exists, save x y position
+    ---@TODO: save with mod data instead for a persistent save across sessions and Lua reloads ?
     if not bVisible and ISCheatPanelUI.instance then
         ISCheatPanelUI.persistentData = {
             x = ISCheatPanelUI.instance.x,
