@@ -42,11 +42,13 @@ function ISDebugMenu:addButtonInfoAfter(_after, _title, _func, _tab, _marginTop)
 end
 
 
+---Hook to the left bar UI which has the inventory, health, etc and replace the debug icon with our own button
 require "ISUI/ISEquippedItem"
 local ISEquippedItem_new = ISEquippedItem.new
 function ISEquippedItem:new(x, y, width, height, chr)
     local o = ISEquippedItem_new(self, x, y, width, height, chr)
-    o.debugIcon = getTexture("media/textures/_mainMenuButton_Off.png")
+    -- replace debug icon with our own button texture
+    o.debugIconOff = getTexture("media/textures/_mainMenuButton_Off.png")
     o.debugIconOn = getTexture("media/textures/_mainMenuButton_On.png")
     return o
 end
@@ -90,7 +92,4 @@ end
 
 Events.OnCreatePlayer.Add(createButtons)
 
-
-
-
-
+return AUD
