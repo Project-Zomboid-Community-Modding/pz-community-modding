@@ -17,15 +17,16 @@ local colors = {
 ---Override to make width fit parent ISCheatPanelUI
 function ISTickBoxCheatPanel:setWidthToFit()
     local iSCheatPanelUI = self.parent --[[@as ISCheatPanelUI]]
-	self.width = iSCheatPanelUI.width - UI_BORDER_SPACING*2
+	self.width = iSCheatPanelUI.width - (UI_BORDER_SPACING+1)*2 -- we completely override the width calculation with our own here
+    ---@TODO: adapt width based on maximum size of options like the original function
 end
 
 ---Override to center options and change colors and placements
 function ISTickBoxCheatPanel:render()
     -- get the option box sizes
     local iSCheatPanelUI = self.parent --[[@as ISCheatPanelUI]]
-    local h = self.boxSize
-    local w = iSCheatPanelUI.width - (UI_BORDER_SPACING+1)*2
+    local h = self.boxSize -- was the previous option height
+    local w = self.width -- use the tick box full width
 
     -- mostly kept from the original function
 	local y = 0
@@ -35,14 +36,16 @@ function ISTickBoxCheatPanel:render()
 	local textDY = (self.itemHgt - self.fontHgt) / 2
 	local boxDY = 0
 	self._textColor = self._textColor or { r = 1, g = 1, b = 1, a = 1 }
+
+    -- iterate through options and draw the options
     for i,v in ipairs(self.options) do
         -- get the option state
         local disabled = not self:isSelected(i)
-        local over = self:isMouseOver() and (self.mouseOverOption == c)
+        local hover = self:isMouseOver() and (self.mouseOverOption == c)
 
         -- select the box color based on the option state
         local boxColor
-        if over then
+        if hover then
             boxColor = disabled and colors.hoverDisabled or colors.hoverEnabled
         else
             boxColor = disabled and colors.disabled or colors.enabled
@@ -67,7 +70,7 @@ function ISTickBoxCheatPanel:render()
 		c = c + 1
     end
 
-    -- this handles the tooltip, kept from the original function
+    -- this handles the tooltip, kept from the original function, nothing changed here
     if self:isMouseOver() and self.mouseOverOption and self.mouseOverOption ~= 0 and self.tooltip then
         local text = self.tooltip
         if not self.tooltipUI then

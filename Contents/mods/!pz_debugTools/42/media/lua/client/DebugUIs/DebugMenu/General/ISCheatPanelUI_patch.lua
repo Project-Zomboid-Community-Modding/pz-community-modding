@@ -7,25 +7,22 @@ It goes in pair with ISTickBoxCheatPanel.lua
 
 ]]--
 
+---CACHE VALUES
 local ISTickBoxCheatPanel = require "ISUI/ISTickBoxCheatPanel"
-
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 local FONT_HGT_MEDIUM = getTextManager():getFontHeight(UIFont.Medium)
 local UI_BORDER_SPACING = 10
 local BUTTON_HGT = FONT_HGT_SMALL + 6
 
--- ISCheatPanelUI.instance = nil
-
+-- init persistentData
 ISCheatPanelUI.persistentData = ISCheatPanelUI.persistentData or {}
 
 ---Override to replace with our own ISTickBox (ISTickBoxCheatPanel) and change a bit the close button
 function ISCheatPanelUI:initialise()
-    self.backgroundColor = {r=0, g=0, b=0, a=0.5}
-    self.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
-
     ISPanel.initialise(self)
     local btnWid = 100
 
+    -- button is now "Close" instead of "Save" and changed its color
     self.ok = ISButton:new((self:getWidth()-btnWid)/2, self:getHeight() - UI_BORDER_SPACING - BUTTON_HGT - 1, btnWid, BUTTON_HGT, getText("IGUI_RadioClose"), self, ISCheatPanelUI.onClick)
     self.ok.internal = "SAVE"
     self.ok.anchorTop = false
@@ -37,6 +34,7 @@ function ISCheatPanelUI:initialise()
     -- self.ok:enableAcceptColor()
     self:addChild(self.ok)
 
+    -- here we use our custom ISTickBoxCheatPanel
     self.tickBox = ISTickBoxCheatPanel:new(UI_BORDER_SPACING+1, UI_BORDER_SPACING+FONT_HGT_MEDIUM+1, self.width - (UI_BORDER_SPACING+1)*2, BUTTON_HGT, "Admin Powers", self, self.onTicked)
     self.tickBox.choicesColor = {r=1, g=1, b=1, a=1}
     self.tickBox:setFont(UIFont.Small)
@@ -61,6 +59,7 @@ end
 
 ---Override to save x y position when closed
 function ISCheatPanelUI:setVisible(bVisible)
+    -- if hiding and instance exists, save x y position
     if not bVisible and ISCheatPanelUI.instance then
         ISCheatPanelUI.persistentData = {
             x = ISCheatPanelUI.instance.x,
@@ -78,12 +77,15 @@ end
 
 ---Override to close and open cheat menu from the ISDebugMenu Cheat button instead of the ok save button
 function ISCheatPanelUI.OnOpenPanel()
-    if ISCheatPanelUI.instance==nil then
+    -- creates a new instance of non exists
+    if not ISCheatPanelUI.instance then
         local x,y = ISCheatPanelUI.persistentData.x, ISCheatPanelUI.persistentData.y
         ISCheatPanelUI.instance = ISCheatPanelUI:new(x, y, 212+(getCore():getOptionFontSizeReal()*35), 350, getPlayer())
         ISCheatPanelUI.instance:initialise()
         ISCheatPanelUI.instance:addToUIManager()
         ISCheatPanelUI.instance:setVisible(true)
+
+    -- hide instance if already open
     else
         ISCheatPanelUI.instance:setVisible(false)
         ISCheatPanelUI.instance:removeFromUIManager()
@@ -102,7 +104,7 @@ function ISCheatPanelUI:new(x, y, width, height, player)
     setmetatable(o, self)
     self.__index = self
     o.borderColor = {r=0.4, g=0.4, b=0.4, a=1}
-    o.backgroundColor = {r=0, g=0, b=0, a=0.8}
+    o.backgroundColor = {r=0, g=0, b=0, a=0.5}
     o.width = width
     o.height = height
     o.player = player
