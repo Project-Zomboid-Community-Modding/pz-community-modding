@@ -1,5 +1,5 @@
 require "DebugUIs/ISSpawnVehicleUI.lua"
-require "InitToolBar"
+local AUD = require "InitToolBar"
 require "DebugUIs/DebugMenu/ISDebugMenu"
 
 local ISDebugMenu_setupButtons = ISDebugMenu.setupButtons

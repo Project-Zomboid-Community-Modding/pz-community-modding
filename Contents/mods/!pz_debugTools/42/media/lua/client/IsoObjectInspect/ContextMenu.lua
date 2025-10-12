@@ -5,7 +5,8 @@ end
 
 
 local modDataContextClasses ={
-    ["IsoDeadBody"] = function(object) return object:getOutfitName() end,
+    --- @TODO: make a better patch to handle IsoAnimal dead bodies not having HumanVisual, which throws an error internal in getOutfitName
+    ["IsoDeadBody"] = function(object) if object:getHumanVisual() then return object:getOutfitName() end return nil end,
     ["IsoPlayer"] = function(object) return object:getUsername(true) end,
     ["IsoZombie"] = function(object) return object:getOutfitName() end,
     ["BaseVehicle"] = function(object) return object:getScript():getName() end,

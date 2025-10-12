@@ -1,5 +1,5 @@
 require "ISUI/ISCollapsableWindow"
-require "InitToolBar"
+local AUD = require "InitToolBar"
 
 AUD.TeleportPointExplorer = {}
 AUD.TeleportPointExplorer.FavFileList = {}

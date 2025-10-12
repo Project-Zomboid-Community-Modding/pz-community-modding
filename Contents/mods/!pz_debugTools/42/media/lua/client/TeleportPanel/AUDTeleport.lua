@@ -1,4 +1,4 @@
-require "InitToolBar"
+local AUD = require "InitToolBar"
 
 AUD.TeleportTable = {}
 

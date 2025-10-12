@@ -1,11 +1,15 @@
-require "InitToolBar"
+local AUD = require "InitToolBar"
+local CustomLuaFileExplorerList = require "LuaExplorerPanel/CustomLuaFileExplorer"
 
 local FONT_HGT_SMALL = getTextManager():getFontHeight(UIFont.Small)
 
-AUDLuaExplorerTab = ISPanelJoypad:derive("AUDLuaExplorerTab")
+---@class LuaExplorerTab : ISPanelJoypad
+---@field fileCategory string
+---@field fileList CustomLuaFileExplorerList
+local LuaExplorerTab = ISPanelJoypad:derive("LuaExplorerTab")
 
-function AUDLuaExplorerTab:initialise(category)
-    ISPanelJoypad.initialise(self);
+function LuaExplorerTab:initialise(category)
+    ISPanelJoypad.initialise(self)
 
     self.fileCategory = category
 
@@ -18,31 +22,31 @@ function AUDLuaExplorerTab:initialise(category)
     self:setScrollChildren(true)
     self:addScrollBars()
 
-    self.borderColor = {r=0, g=0, b=0, a=0};
+    self.borderColor = {r=0, g=0, b=0, a=0}
 
     local th = 0--self:titleBarHeight()
     local rh = 0--self:resizeWidgetHeight()
     local entryHgt = FONT_HGT_SMALL + 2 * 2
 
-    self.fileList = CustomLuaFileExplorerList:new(0, th + entryHgt, self.width, self.height - th - rh - entryHgt*2 - 4);
-    self.fileList.anchorRight = true;
-    self.fileList.anchorBottom = true;
-    self.fileList:initialise();
+    self.fileList = CustomLuaFileExplorerList:new(0, th + entryHgt, self.width, self.height - th - rh - entryHgt*2 - 4)
+    self.fileList.anchorRight = true
+    self.fileList.anchorBottom = true
+    self.fileList:initialise()
     if self.fileCategory == "MOD" then
         -- reload a mod folder on double click
-        self.fileList:setOnMouseDoubleClick(self, self.onButtonMod);
+        self.fileList:setOnMouseDoubleClick(self, self.onButtonMod)
     else
         -- reload a mod file on double click
-        self.fileList:setOnMouseDoubleClick(self, self.onMouseDoubleClickFile);
+        self.fileList:setOnMouseDoubleClick(self, self.onMouseDoubleClickFile)
     end
     self.fileList:setFont(UIFont.Small, 3)
-    self:addChild(self.fileList);
+    self:addChild(self.fileList)
 
-    self.textEntry = ISTextEntryBox:new("", 0, th, self.width, entryHgt);
-    self.textEntry:initialise();
-    self.textEntry:instantiate();
+    self.textEntry = ISTextEntryBox:new("", 0, th, self.width, entryHgt)
+    self.textEntry:initialise()
+    self.textEntry:instantiate()
     self.textEntry:setClearButton(true)
-    self.textEntry:setText("");
+    self.textEntry:setText("")
 
     if self.fileCategory ~= "ALL" then
         self.textEntry.onTextChange = function() 
@@ -56,19 +60,32 @@ function AUDLuaExplorerTab:initialise(category)
         end
     end
 
-    self:addChild(self.textEntry);
-    self.lastText = self.textEntry:getInternalText();
+    self:addChild(self.textEntry)
+    self.lastText = self.textEntry:getInternalText()
 
    
 
 
-    self:fill();
+    self:fill()
 
     local button
     if self.fileCategory == "ALL" then
         button = ISButton:new(0, 0, 50, self.fileList.itemheight, "+", self, self.onButtonAdd)
     elseif self.fileCategory == "FAV" then
         button = ISButton:new(0, 0, 50, self.fileList.itemheight, "-", self, self.onButtonRemove)
+
+        local halfheight = self.fileList.itemheight/2
+        local w = 50
+        local x = self.width - w*2 - 15*2
+        self.upButton = ISButton:new(x, 0, w, halfheight, "/\\", self, self.onButtonUp)
+        self.upButton:initialise()
+        self.fileList:addChild(self.upButton)
+        self.upButton:setVisible(false)
+
+        self.downButton = ISButton:new(x, halfheight, w, halfheight, "\\/", self, self.onButtonDown)
+        self.downButton:initialise()
+        self.fileList:addChild(self.downButton)
+        self.downButton:setVisible(false)
     elseif self.fileCategory == "MOD" then
         button = ISButton:new(0, 0, 50, self.fileList.itemheight, "Reload", self, self.onButtonMod)
     end
@@ -94,9 +111,9 @@ end
 
 
 
-function AUDLuaExplorerTab:fill()
-    self.fileList:clear();
-    local c = getLoadedLuaCount();
+function LuaExplorerTab:fill()
+    self.fileList:clear()
+    local c = getLoadedLuaCount()
 
     if self.fileCategory == "FAV" then
         for i=1, #AUD.FileExplorer.FavFileList do 
@@ -123,8 +140,8 @@ function AUDLuaExplorerTab:fill()
 
         local modList = {}
         for i = 0, c - 1 do
-            local path = getLoadedLua(i);
-            local name = getModName(path);
+            local path = getLoadedLua(i)
+            local name = getModName(path)
             if name ~= nil then -- name is nil if the file is from the base game. Preventing reload of base all at once.
                 if modList[name] == nil then
                     modList[name] = {name = name, paths = path}
@@ -142,65 +159,77 @@ function AUDLuaExplorerTab:fill()
         end
     else -- ALL
         for i = 0, c-1 do
-            local path = getLoadedLua(i);
-            local name = getShortenedFilename(path);
+            local path = getLoadedLua(i)
+            local name = getShortenedFilename(path)
             if string.trim(self.textEntry:getInternalText()) == nil or string.contains(string.lower(name), string.lower(string.trim(self.textEntry:getInternalText()))) then
-                self.fileList:addItem(name, path);
+                self.fileList:addItem(name, path)
             end
         end
     end
 end
 
-function AUDLuaExplorerTab:onMouseDoubleClickFile(item)
+---User double clicks a file entry in the list
+---@param item string
+function LuaExplorerTab:onMouseDoubleClickFile(item)
     if not item then return end
     reloadLuaFile(item)
 end
 
 
-function AUDLuaExplorerTab:update()
-    local text = string.trim(self.textEntry:getInternalText());
+function LuaExplorerTab:update()
+    local text = string.trim(self.textEntry:getInternalText())
 
     if text ~= self.lastText then
-       self:fill();
-       self.lastText = text;
+       self:fill()
+       self.lastText = text
     end
 
-    self:updateReloadButton();
+    self:updateReloadButton()
 end
 
-function AUDLuaExplorerTab:doDrawItem(y, item, alt)
+function LuaExplorerTab:doDrawItem(y, item, alt)
     if y + self:getYScroll() >= self.height then return y + item.height end
     if y + item.height + self:getYScroll() <= 0 then return y + item.height end
 
     if self.selected == item.index then
-        self:drawRect(0, (y), self:getWidth(), self.itemheight-1, 0.3, 0.7, 0.35, 0.15);
+        self:drawRect(0, (y), self:getWidth(), self.itemheight-1, 0.3, 0.7, 0.35, 0.15)
 
     end
-    self:drawRectBorder(0, (y), self:getWidth(), self.itemheight, 0.5, self.borderColor.r, self.borderColor.g, self.borderColor.b);
+    self:drawRectBorder(0, (y), self:getWidth(), self.itemheight, 0.5, self.borderColor.r, self.borderColor.g, self.borderColor.b)
     
-    self:drawText(item.text, 15, y + (item.height - self.fontHgt) / 2, 0.9, 0.9, 0.9, 0.9, UIFont.Small);
-    y = y + self.itemheight;
-    return y;
+    self:drawText(item.text, 15, y + (item.height - self.fontHgt) / 2, 0.9, 0.9, 0.9, 0.9, UIFont.Small)
+    y = y + self.itemheight
+    return y
 end
 
 
 
-function AUDLuaExplorerTab:updateReloadButton()
+function LuaExplorerTab:updateReloadButton()
     local x,y = self.fileList:getMouseX(), self.fileList:getMouseY()
     local row = self.fileList:isMouseOver() and self.fileList:rowAt(x, y) or -1
     if row == self.buttonSelectRow then return end
     if row == -1 then
         self.buttonSelect:setVisible(false)
+        if self.fileCategory == "FAV" then
+            self.upButton:setVisible(false)
+            self.downButton:setVisible(false)
+        end
     else
         self.buttonSelect:setVisible(true)
         self.buttonSelect:setX(self.width - self.buttonSelect.width - 15)
         local itemY = self.fileList:topOfItem(row)
         self.buttonSelect:setY(itemY + self.fileList:getYScroll())
+        if self.fileCategory == "FAV" then
+            self.upButton:setVisible(true)
+            self.upButton:setY(itemY + self.fileList:getYScroll())
+            self.downButton:setVisible(true)
+            self.downButton:setY(itemY + self.fileList:getYScroll() + self.upButton.height)
+        end
     end
     self.buttonSelectRow = row
 end
 
-function AUDLuaExplorerTab:onButtonAdd()
+function LuaExplorerTab:onButtonAdd()
     if self.buttonSelectRow == -1 then return end
     local item = self.fileList.items[self.buttonSelectRow]
     if not item then return end
@@ -211,7 +240,7 @@ function AUDLuaExplorerTab:onButtonAdd()
     AUD.LuaExplorer.favTab:fill()
 end
 
-function AUDLuaExplorerTab:onButtonRemove()
+function LuaExplorerTab:onButtonRemove()
     if self.buttonSelectRow == -1 then return end
     local item = self.fileList.items[self.buttonSelectRow]
     if not item then return end
@@ -227,7 +256,7 @@ function AUDLuaExplorerTab:onButtonRemove()
 end
 
 -- Reload all files in the mod folder
-function AUDLuaExplorerTab:onButtonMod()
+function LuaExplorerTab:onButtonMod()
     if self.buttonSelectRow == -1 then return end
     local item = self.fileList.items[self.buttonSelectRow]
     if not item then return end
@@ -249,6 +278,54 @@ function AUDLuaExplorerTab:onButtonMod()
     end
 end
 
+function LuaExplorerTab:onButtonUp()
+    -- verify an item is selected
+    local item = self.fileList.items[self.buttonSelectRow]
+    if not item then return end
+
+    -- find the option in the fav list
+    local currentItem, pos
+    for i=1, #AUD.FileExplorer.FavFileList do
+        if AUD.FileExplorer.FavFileList[i] == item.item then
+            -- skip if at the bottom already
+            if i == 1 then return end
+            -- remove from current position and cache item
+            pos = i
+            currentItem = table.remove(AUD.FileExplorer.FavFileList, i)
+            break
+        end
+    end
+
+    -- set new position
+    table.insert(AUD.FileExplorer.FavFileList, pos-1, currentItem)
+    AUD.FileExplorer.WriteFavFileList()
+    self:fill()
+end
+
+function LuaExplorerTab:onButtonDown()
+    -- verify an item is selected
+    local item = self.fileList.items[self.buttonSelectRow]
+    if not item then return end
+
+    -- find the option in the fav list
+    local currentItem, pos
+    for i=1, #AUD.FileExplorer.FavFileList do
+        if AUD.FileExplorer.FavFileList[i] == item.item then
+            -- skip if at the bottom already
+            if i == #AUD.FileExplorer.FavFileList then return end
+            -- remove from current position and cache item
+            pos = i
+            currentItem = table.remove(AUD.FileExplorer.FavFileList, i)
+            break
+        end
+    end
+
+    -- set new position
+    table.insert(AUD.FileExplorer.FavFileList, pos+1, currentItem)
+    AUD.FileExplorer.WriteFavFileList()
+    self:fill()
+end
+
 -----------------
 
 function AUD.FileExplorer.ReadFavFileList()
@@ -267,9 +344,11 @@ end
 function AUD.FileExplorer.WriteFavFileList()
     local writeFile = getFileWriter("AUD_DebugLuaFilesList.txt", true, false)
 	for i = 1, #AUD.FileExplorer.FavFileList do
-		writeFile:write(AUD.FileExplorer.FavFileList[i].."\r\n");
+		writeFile:write(AUD.FileExplorer.FavFileList[i].."\r\n")
 	end
 	writeFile:close()
 end
 
 AUD.FileExplorer.FavFileList = AUD.FileExplorer.ReadFavFileList()
+
+return LuaExplorerTab
