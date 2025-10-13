@@ -13,5 +13,5 @@ description=[url=https://discord.gg/SReMnbV4V7][img]https://raw.githubuserconten
 description=
 description=
 description=[h3]Copyright 2023 ZomboidModders. This item is not authorized for posting on Steam, except under the Steam account named ZomboidModders.[/h3]
-tags=Build 41;Framework;Misc
+tags=Build 41;Build 42;Framework;Misc
 visibility=public
