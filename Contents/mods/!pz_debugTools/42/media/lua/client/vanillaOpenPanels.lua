@@ -101,8 +101,8 @@ function generic.openOnStart()
 
         for i,arg in pairs(args[2]) do if type(arg)=="function" then args[2][i] = arg() end end
 
-        _class.OnOpenPanel = function() return generic.OnOpen(unpack(args)) end
-        _class.OnOpenPanel()
+        -- _class.OnOpenPanel = function() return generic.OnOpen(unpack(args)) end
+        -- _class.OnOpenPanel()
     end
 end
 Events.OnCreatePlayer.Add(generic.openOnStart)

@@ -35,6 +35,10 @@ local function fillModDataContextMenu(array,contextMenu)
 end
 
 
+---@param player integer
+---@param context ISContextMenu
+---@param worldObjects IsoObject[]
+---@param test boolean
 local function ContextMenu(player, context, worldObjects, test)
     if not getDebug() then return end
     local sq
@@ -51,13 +55,13 @@ local function ContextMenu(player, context, worldObjects, test)
             local objectSprite = object:getSprite()
             local props = objectSprite and objectSprite:getProperties()
 
-            local customName = props and props:Is("CustomName") and props:Val("CustomName")
+            local customName = props and props:has("CustomName") and props:get("CustomName")
             if customName then
-                if props:Is("GroupName") then customName = props:Val("GroupName").." "..customName end
+                if props:has("GroupName") then customName = props:get("GroupName").." "..customName end
                 customName = ": "..customName
             else
                 local spriteName = objectSprite and objectSprite:getName()
-                customName = ": ".. (spriteName or tostring(object:getClass()))
+                customName = ": ".. (spriteName or tostring(object:getType()))
             end
 
             local objName = "IsoObject"..(customName or "")
