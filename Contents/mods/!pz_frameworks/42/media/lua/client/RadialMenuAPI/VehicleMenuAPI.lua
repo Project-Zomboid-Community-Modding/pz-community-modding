@@ -116,7 +116,7 @@ VehicleMenuAPI.registerSlice("Hotwire", function(menu, player, vehicle)
 		not SandboxVars.VehicleEasyUse and
 		not vehicle:isKeysInIgnition() and
 		not player:getInventory():haveThisKeyId(vehicle:getKeyId()) then
-		if ((player:getPerkLevel(Perks.Electricity) >= 1 and player:getPerkLevel(Perks.Mechanics) >= 2) or player:HasTrait("Burglar")) then
+		if ((player:getPerkLevel(Perks.Electricity) >= 1 and player:getPerkLevel(Perks.Mechanics) >= 2) or player:hasTrait(CharacterTrait.BURGLAR)) then
 			menu:addSlice(getText("ContextMenu_VehicleHotwire"), getTexture("media/ui/vehicles/vehicle_ignitionON.png"), ISVehicleMenu.onHotwire, player)
 		else
 			menu:addSlice(getText("ContextMenu_VehicleHotwireSkill"), getTexture("media/ui/vehicles/vehicle_ignitionOFF.png"), nil, player)
@@ -215,7 +215,7 @@ VehicleMenuAPI.registerSlice("Sleep", function(menu, player, vehicle)
 		local sleepNeeded = not isClient() or getServerOptions():getBoolean("SleepNeeded")
 
 		local isZombies = player:getStats():getNumVisibleZombies() > 0 or player:getStats():getNumChasingZombies() > 0 or player:getStats():getNumVeryCloseZombies() > 0
-		if sleepNeeded and (player:getStats():getFatigue() <= 0.3) then
+		if sleepNeeded and (player:getStats():get(CharacterStat.FATIGUE) <= 0.3) then
 			menu:addSlice(getText("IGUI_Sleep_NotTiredEnough"), getTexture("media/ui/vehicles/vehicle_sleep.png"), nil, player, vehicle)
 			doSleep = false
 		elseif not vehicle:isStopped() then
@@ -232,11 +232,11 @@ VehicleMenuAPI.registerSlice("Sleep", function(menu, player, vehicle)
 				-- Sleeping pills counter those sleeping problems
 			elseif player:getSleepingTabletEffect() < 2000 then
 				-- In pain, can still sleep if really tired
-				if player:getMoodles():getMoodleLevel(MoodleType.Pain) >= 2 and player:getStats():getFatigue() <= 0.85 then
+				if player:getMoodles():getMoodleLevel(MoodleType.PAIN) >= 2 and player:getStats():get(CharacterStat.FATIGUE) <= 0.85 then
 					menu:addSlice(getText("ContextMenu_PainNoSleep"), getTexture("media/ui/vehicles/vehicle_sleep.png"), nil, player, vehicle)
 					doSleep = false
 					-- In panic
-				elseif player:getMoodles():getMoodleLevel(MoodleType.Panic) >= 1 then
+				elseif player:getMoodles():getMoodleLevel(MoodleType.PANIC) >= 1 then
 					menu:addSlice(getText("ContextMenu_PanicNoSleep"), getTexture("media/ui/vehicles/vehicle_sleep.png"), nil, player, vehicle)
 					doSleep = false
 					-- tried to sleep not so long ago
