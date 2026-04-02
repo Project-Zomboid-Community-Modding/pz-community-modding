@@ -1,3 +1,6 @@
+if not ISCheatPanelUI then return end
+---Soft patch protection for .15-
+
 --[[
 
 Overrides parts of ISCheatPanelUI to use our own ISTickBoxCheatPanel, to customize the UI in a nicer way.
