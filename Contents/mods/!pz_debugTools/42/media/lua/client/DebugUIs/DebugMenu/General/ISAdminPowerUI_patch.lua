@@ -17,21 +17,30 @@ function ISAdminPowerUI:initialise()
     self.cancel:setX(self:getWidth() / 2 - self.cancel.width / 2)
 end
 
+local _original_updateAdminPower = ISAdminPowerUI.updateAdminPower
+function ISAdminPowerUI:updateAdminPower()
+    _original_updateAdminPower(self)
+    self.ok:setVisible(false)
+    self.cancel:setX(self:getWidth() / 2 - self.cancel.width / 2)
+end
+
 ---Applies the change for whichever option was just ticked, then syncs the player.
 ---@param index integer
 ---@param selected boolean
 function ISAdminPowerUI:onTicked(index, selected)
     local adminPowerUI = self.parent
     if adminPowerUI.player:isDead() then return end
-    local setFunction = self == adminPowerUI.tickBoxLeft and adminPowerUI.setFunctionLeft or adminPowerUI.setFunctionRight
-    if setFunction[index] then
-        setFunction[index](adminPowerUI, selected)
+    local options = self == adminPowerUI.tickBoxLeft and adminPowerUI.optionsLeft or adminPowerUI.optionsRight
+    local option = options[index]
+    if option then
+        option:setValue(selected)
         sendPlayerExtraInfo(adminPowerUI.player)
     end
 end
 
 function ISAdminPowerUI:onClick(button)
     if button.internal == "SAVE" or button.internal == "CLOSE" then
+        self:saveOptions()
         self:setVisible(false)
         self:removeFromUIManager()
     end
@@ -49,13 +58,18 @@ function ISAdminPowerUI:setVisible(bVisible)
     end
 end
 
----Override to apply x y position.
+---Override to refresh options on every open and restore the saved x y position.
 function ISAdminPowerUI.OnOpenPanel()
-    if ISAdminPowerUI.instance==nil then
-        local x, y = ISAdminPowerUI.persistentData.x, ISAdminPowerUI.persistentData.y
-        ISAdminPowerUI.instance = ISAdminPowerUI:new(x, y, 212 + (getCore():getOptionFontSizeReal() * 35), 350, getPlayer())
+    if ISAdminPowerUI.instance == nil then
+        ISAdminPowerUI.instance = ISAdminPowerUI:new(0, 0, 212 + (getCore():getOptionFontSizeReal() * 35), 350, getPlayer())
         ISAdminPowerUI.instance:initialise()
+        local x, y = ISAdminPowerUI.persistentData.x, ISAdminPowerUI.persistentData.y
+        if x and y then
+            ISAdminPowerUI.instance:setX(x)
+            ISAdminPowerUI.instance:setY(y)
+        end
     end
+    ISAdminPowerUI.instance:updateAdminPower()
     ISAdminPowerUI.instance:addToUIManager()
     ISAdminPowerUI.instance:setVisible(true)
     return ISAdminPowerUI.instance
