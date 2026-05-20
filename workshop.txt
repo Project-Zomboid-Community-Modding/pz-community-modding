@@ -12,6 +12,6 @@ description=
 description=[url=https://discord.gg/SReMnbV4V7][img]https://raw.githubusercontent.com/Chuckleberry-Finn/chuckImages/main/PZmodCommBanner2.png[/img][/url]
 description=
 description=
-description=[h3]Copyright 2023 ZomboidModders. This item is not authorized for posting on Steam, except under the Steam account named ZomboidModders.[/h3]
+description=[h3]Copyright 2026 ZomboidModders. This item is not authorized for posting on Steam, except under the Steam account named ZomboidModders.[/h3]
 tags=Build 41;Build 42;Framework;Misc
 visibility=public
