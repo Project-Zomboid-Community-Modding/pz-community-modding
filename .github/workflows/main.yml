@@ -2,21 +2,24 @@ name: "Upload to Workshop"
 
 on:
   schedule:
-  # 59th minute of the 4th hour UTC should be 11:59 EST - fridays(s)
-  - cron: "59 4 * * 6"
-  
+    # 59th minute of the 4th hour UTC = 11:59 EST Friday
+    - cron: "59 4 * * 6"
+  workflow_dispatch:
+
+concurrency:
+  group: workshop-upload
+  cancel-in-progress: false
+
 jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: AnarkisGaming/workshop@v1
         with:
           appID: 108600
-          #publishedFileID -- workshop ID
-          publishedFileID: 2909488957
-          #changelog: 'log of changes'
+          publishedFileID: 3397561666
           path: Contents
         env:
           STEAM_ACCOUNT_NAME: ${{ secrets.STEAM_USERNAME }}
-          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD  }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}

@@ -6,26 +6,27 @@ on:
       - main
     types:
       - closed
+  workflow_dispatch:
+
+concurrency:
+  group: workshop-upload
+  cancel-in-progress: false
 
 jobs:
   hotfix:
-    if: github.event.pull_request.merged == true
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
-    
     steps:
-      - uses: actions/checkout@v2
-
+      - uses: actions/checkout@v4
       - uses: sitezen/pr-comment-checker@v1.0.1
+        if: github.event_name == 'pull_request'
         with:
           pr_description_should_contain: '`hotfix`'
-          
       - uses: AnarkisGaming/workshop@v1
         with:
           appID: 108600
-          #publishedFileID -- workshop ID
-          publishedFileID: 2909488957
-          #changelog: 'log of changes'
+          publishedFileID: 3397561666
           path: Contents
         env:
           STEAM_ACCOUNT_NAME: ${{ secrets.STEAM_USERNAME }}
-          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD  }}
+          STEAM_PASSWORD: ${{ secrets.STEAM_PASSWORD }}
