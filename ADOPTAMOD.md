@@ -18,5 +18,5 @@ Repositories setup will be subject to review from volunteers in the community, w
 <br>
 
 <p align="center">
-<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/refs/heads/main/images/adoptamodShort.png" width=50%>
+<img src="https://raw.githubusercontent.com/Project-Zomboid-Community-Modding/pz-community-modding/refs/heads/main/images/adoptamodShort.png" width=95%>
 </p>
