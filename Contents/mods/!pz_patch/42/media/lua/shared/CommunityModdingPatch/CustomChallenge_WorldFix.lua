@@ -18,7 +18,8 @@ end
 local function onResetLua(reason)
     if reason == "continueSave" and not getCore():isChallenge() then
         local gameMode = getCore():getGameMode()
-        for i,challenge in ipairs(LastStandChallenge) do
+        if not LastStandChallenge then return end
+        for i, challenge in ipairs(LastStandChallenge) do
             if challenge.gameMode == gameMode then
                 WorldFix(challenge)
                 break
