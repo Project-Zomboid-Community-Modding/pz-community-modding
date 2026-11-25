@@ -3,22 +3,36 @@ local VehicleMenuAPI = {}
 
 local sliceTableInside = {}
 local sliceTableOutside = {}
+local sliceOrderInside = {}
+local sliceOrderOutside = {}
+
+local function register(sliceTable, sliceOrder, sliceName, sliceFunction)
+	if not sliceTable[sliceName] then table.insert(sliceOrder, sliceName) end
+	sliceTable[sliceName] = sliceFunction
+end
+
+local function unregister(sliceTable, sliceOrder, sliceName)
+	sliceTable[sliceName] = nil
+	for i = #sliceOrder, 1, -1 do
+		if sliceOrder[i] == sliceName then table.remove(sliceOrder, i) end
+	end
+end
 
 
 function VehicleMenuAPI.registerSlice(sliceName, sliceFunction)
-	sliceTableInside[sliceName] = sliceFunction
+	register(sliceTableInside, sliceOrderInside, sliceName, sliceFunction)
 end
 
 function VehicleMenuAPI.unregisterSlice(sliceName)
-	sliceTableInside[sliceName] = nil
+	unregister(sliceTableInside, sliceOrderInside, sliceName)
 end
 
 function VehicleMenuAPI.registerSliceOutside(sliceName, sliceFunction)
-	sliceTableOutside[sliceName] = sliceFunction
+	register(sliceTableOutside, sliceOrderOutside, sliceName, sliceFunction)
 end
 
 function VehicleMenuAPI.unregisterSliceOutside(sliceName)
-	sliceTableOutside[sliceName] = nil
+	unregister(sliceTableOutside, sliceOrderOutside, sliceName)
 end
 
 --modified version of the default ISVehicleMenu.showRadialMenu allowing editing of the radial menu
@@ -42,8 +56,8 @@ function ISVehicleMenu.showRadialMenu(playerObj)
 		return
 	end
 
-	for _, f in pairs(sliceTableInside) do
-		f(menu, playerObj, vehicle)
+	for _, sliceName in ipairs(sliceOrderInside) do
+		sliceTableInside[sliceName](menu, playerObj, vehicle)
 	end
 
 	menu:center()
@@ -70,10 +84,12 @@ function ISVehicleMenu.showRadialMenuOutside(playerObj)
 
 	local vehicle = ISVehicleMenu.getVehicleToInteractWith(playerObj)
 	if vehicle then
-		for _, f in pairs(sliceTableOutside) do
-			f(menu, playerObj, vehicle)
+		for _, sliceName in ipairs(sliceOrderOutside) do
+			sliceTableOutside[sliceName](menu, playerObj, vehicle)
 		end
 	end
+
+	if menu:isEmpty() then return end
 
 	menu:center()
 	menu:display(Joypad.DPadUp)
@@ -239,12 +255,15 @@ VehicleMenuAPI.registerSlice("Sleep", function(menu, player, vehicle)
 				elseif player:getMoodles():getMoodleLevel(MoodleType.PANIC) >= 1 then
 					menu:addSlice(getText("ContextMenu_PanicNoSleep"), getTexture("media/ui/vehicles/vehicle_sleep.png"), nil, player, vehicle)
 					doSleep = false
+				elseif player:getMoodles():getMoodleLevel(MoodleType.NOXIOUS_SMELL) >= 1 then
+					menu:addSlice(getText("ContextMenu_SmellNoSleep"), getTexture("media/ui/vehicles/vehicle_sleep.png"), nil, player, vehicle)
+					doSleep = false
 					-- tried to sleep not so long ago
 				end
 			end
 		end
 		if doSleep then
-			menu:addSlice(getText("ContextMenu_Sleep"), getTexture("media/ui/vehicles/vehicle_sleep.png"), ISVehicleMenu.onSleep, player, vehicle);
+			menu:addSlice(getText("ContextMenu_Sleep"), getTexture("media/ui/vehicles/vehicle_sleep.png"), ISVehicleMenu.onSleep, player, vehicle)
 		end
 	end
 end)
@@ -260,7 +279,7 @@ end)
 
 VehicleMenuAPI.registerSliceOutside("AnimalTrailer", function(menu, player, vehicle)
 	if vehicle:getAnimalTrailerSize() > 0 then
-		local doorOpen = true;
+		local doorOpen = true
 		local trunkDoor = vehicle:getPartById("TrunkDoor") or vehicle:getPartById("DoorRear") or vehicle:getPartById("TrunkDoorOpened")
 		if trunkDoor and trunkDoor:getDoor() then
 			if not trunkDoor:getDoor():isOpen() then doorOpen = false end
@@ -312,7 +331,7 @@ VehicleMenuAPI.registerSliceOutside("OpenCloseLock", function(menu, player, vehi
 end)
 
 VehicleMenuAPI.registerSliceOutside("SmashWindow", function(menu, player, vehicle)
-	local part = vehicle:getClosestWindow(player);
+	local part = vehicle:getClosestWindow(player)
 	if part then
 		local window = part:getWindow()
 		if window:isHittable() then
@@ -325,6 +344,12 @@ end)
 
 VehicleMenuAPI.registerSliceOutside("Towing", function(menu, player, vehicle)
 	ISVehicleMenu.doTowingMenu(player, vehicle, menu)
+end)
+
+VehicleMenuAPI.registerSliceOutside("Wash", function(menu, player, vehicle)
+	if ISWashVehicle.hasBlood(vehicle) and ISWashVehicle.getWaterAmountForPlayer(player) then
+		menu:addSlice(getText("ContextMenu_Vehicle_Wash"), getTexture("Item_WaterDrop"), ISVehicleMenu.onWash, player, vehicle)
+	end
 end)
 
 --local function onExample(player)
