@@ -9,6 +9,8 @@
 
 - (New) Object inspector for an object's modData and Java fields from the right-click menu, with a client/server toggle in MP.
 
+- (New, B42) Object inspector can filter its modData and Java fields with a search box and keep them updating with a live refresh toggle.
+
 - (Tweak) Spawn Vehicle UI can target the car you're in, toggle hotwire, outlines the targeted car's size on the floor and reloads scripts on the server too.
 
 - (New) API for adding more buttons to the Debug menu. See [debugToolbar.lua](42/media/lua/client/CommunityDebugTools/debugToolbar.lua).
@@ -51,6 +53,8 @@
 
 - (Fix, B42) Fire, smoke and explosion brushes work in single player instead of erroring.
 
-- (Tweak, B42) Tile chooser searches by sheet, sprite or tile name, outlines matching tiles and shows names on hover.
+- (Tweak, B42) Stash Debug list has a search box.
 
-- (New, B42) Brush Tool Manager has a destroy brush toggle (with an include floors option) that removes the top object on clicked squares, with R cycling through the objects on a square, server-side in MP.
+- (Tweak, B42) Tile chooser searches by sheet, sprite or tile name, outlines matching tiles, shows names on hover, resizes with the grid filling the window and remembers where you left it until the game is closed.
+
+- (New, B42) Brush Tool Manager has a destroy brush (R cycles through the objects on a square), an eyedropper, undo and redo, and an optional drag to paint for both brushes, with destroying done server-side in MP.

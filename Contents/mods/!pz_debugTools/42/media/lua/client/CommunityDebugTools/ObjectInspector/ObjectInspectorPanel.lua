@@ -100,6 +100,20 @@ function isoObjectInspect:createChildren()
 	y, button = ISDebugUtils.addButton(self,"close",self.tableNamesList:getX()+w+10,self.height-30, w,20, "Close", isoObjectInspect.onClickClose)
 	self.closeButton = button
 
+	self.searchEntry = ISTextEntryBox:new("", self.modDataList:getX(), self.height-30, 200, 20)
+	self.searchEntry:initialise()
+	self.searchEntry:instantiate()
+	self.searchEntry.target = self
+	self.searchEntry.onTextChangeFunction = isoObjectInspect.onSearchChange
+	self.searchEntry:setTooltip("Filter modData and java fields")
+	self:addChild(self.searchEntry)
+
+	self.liveTickBox = ISTickBox:new(self.searchEntry:getRight()+10, self.height-30, 100, 20, "", self, isoObjectInspect.onLiveTicked)
+	self.liveTickBox:initialise()
+	self.liveTickBox:instantiate()
+	self.liveTickBox:addOption("Live refresh")
+	self:addChild(self.liveTickBox)
+
 	if isClient() then
 		y, button = ISDebugUtils.addButton(self,"server",self.width-130,10, 120,20, "View: Client", isoObjectInspect.onClickServer)
 		self.serverButton = button
@@ -110,6 +124,11 @@ end
 
 
 function isoObjectInspect:onClickClose() self:close() end
+function isoObjectInspect:onSearchChange() self:populateNameList() end
+function isoObjectInspect:onLiveTicked(index, selected)
+	self.liveRefresh = selected
+	self.nextLiveRefresh = 0
+end
 function isoObjectInspect:onClickRefresh()
 	if self.viewServer then
 		local obj = isoObjectInspect.dataListObj[self.tableNamesList.selected]
@@ -164,6 +183,9 @@ function isoObjectInspect:populateNameList()
 
 	self.closeButton:setWidth(w)
 	self.closeButton:setX(self.tableNamesList:getX()+w+10)
+
+	self.searchEntry:setX(self.modDataList:getX())
+	self.liveTickBox:setX(self.searchEntry:getRight()+10)
 end
 
 
@@ -311,9 +333,43 @@ function isoObjectInspect:populateServerInfoLists(obj)
 	return modDataWidth+fieldWidth
 end
 
+function isoObjectInspect:filterList(list, text)
+	local items = list.items
+	list:clear()
+	list:setScrollHeight(0)
+	for _,listItem in ipairs(items) do
+		if string.find(string.lower(listItem.text), text, 1, true) then
+			local addedItem = list:addItem(listItem.text, listItem.item, listItem.tooltip)
+			addedItem.referenceLink = listItem.referenceLink
+			addedItem.refName = listItem.refName
+		end
+	end
+end
+
 function isoObjectInspect:populateInfoLists(obj)
+	local sameObject = obj ~= nil and obj == self.lastInspected
+	self.lastInspected = obj
+	local modDataScroll, fieldsScroll = self.modDataList:getYScroll(), self.javaFieldsList:getYScroll()
+	local width = self:buildInfoLists(obj)
+
+	local text = string.lower(string.trim(self.searchEntry:getInternalText()))
+	if text ~= "" then
+		self:filterList(self.modDataList, text)
+		self:filterList(self.javaFieldsList, text)
+	end
+
+	if sameObject then
+		self.modDataList:setYScroll(modDataScroll)
+		self.javaFieldsList:setYScroll(fieldsScroll)
+	end
+	return width
+end
+
+function isoObjectInspect:buildInfoLists(obj)
 	self.modDataList:clear()
+	self.modDataList:setScrollHeight(0)
 	self.javaFieldsList:clear()
+	self.javaFieldsList:setScrollHeight(0)
 
 	local objectName = obj and isoObjectInspect.dataListName[obj] or ""
 	self.inspectingObjectHeader:setName(objectName..(self.viewServer and "  (server)" or ""))
@@ -361,6 +417,15 @@ end
 
 function isoObjectInspect:update()
 	ISPanel.update(self)
+	if not self.liveRefresh then return end
+	local now = getTimestampMs()
+	if now < (self.nextLiveRefresh or 0) then return end
+	self.nextLiveRefresh = now + (self.viewServer and 1000 or 500)
+	if self.viewServer then
+		local locator = Inspect.getLocator(isoObjectInspect.dataListObj[self.tableNamesList.selected])
+		if locator then self.serverRequested[locator.key] = nil end
+	end
+	self:populateNameList()
 end
 
 function isoObjectInspect:close()

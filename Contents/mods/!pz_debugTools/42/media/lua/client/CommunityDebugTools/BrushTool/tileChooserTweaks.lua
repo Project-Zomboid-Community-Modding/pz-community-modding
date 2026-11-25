@@ -56,9 +56,84 @@ end
 
 local function blankText() return "" end
 
+local MAX_TILES = 2048
+local sessionState
+
+function BrushToolTilePickerList:getColumns()
+	local scrollWidth = self.vscroll and self.vscroll:getWidth() or 0
+	return math.max(1, math.floor((self:getWidth() - scrollWidth) / TILE_WIDTH))
+end
+
+function BrushToolTilePickerList:refreshTiles()
+	local columns = self:getColumns()
+	if self.cachedSheet == self.imageName and self.cachedColumns == columns then return end
+	self.cachedSheet, self.cachedColumns = self.imageName, columns
+	self.tiles = {}
+	self.posToTileNameTable = {}
+	if not self.imageName then return end
+	for index = 0, MAX_TILES - 1 do
+		local tileName = self.imageName .. "_" .. index
+		local texture = getTexture(tileName)
+		if texture then
+			local r, c = math.floor(index / columns) + 1, (index % columns) + 1
+			self.posToTileNameTable[r] = self.posToTileNameTable[r] or {}
+			self.posToTileNameTable[r][c] = tileName
+			table.insert(self.tiles, { name = tileName, texture = texture, r = r, c = c })
+		end
+	end
+end
+
+function BrushToolTilePickerList:render()
+	ISPanel.render(self)
+	self:setStencilRect(0, 0, self:getWidth(), self:getHeight())
+	self:refreshTiles()
+
+	local scale = TILE_WIDTH / 128
+	local top = -self:getYScroll()
+	local bottom = top + self:getHeight()
+	local maxRow = 1
+	for _, tile in ipairs(self.tiles) do
+		local tileY = (tile.r - 1) * TILE_HEIGHT
+		if tileY + TILE_HEIGHT >= top and tileY <= bottom then
+			local texture = tile.texture
+			self:drawTextureScaled(texture, (tile.c - 1) * TILE_WIDTH + texture:getOffsetX() * scale, tileY + texture:getOffsetY() * scale, texture:getWidth() * scale, texture:getHeight() * scale, 1.0, 1.0, 1.0, 1.0)
+		end
+		maxRow = math.max(maxRow, tile.r)
+	end
+	self:setScrollHeight(maxRow * TILE_HEIGHT)
+	if self.pendingYScroll then
+		self:setYScroll(self.pendingYScroll)
+		self.pendingYScroll = nil
+	end
+
+	if self.imageName then self:renderSearchOverlay() end
+	self:clearStencilRect()
+end
+
+function BrushToolTilePickerList:getTileAt(x, y)
+	local row = self.posToTileNameTable[math.floor(y / TILE_HEIGHT) + 1]
+	return row and row[math.floor(x / TILE_WIDTH) + 1]
+end
+
+function BrushToolTilePickerList:onMouseDown(x, y)
+	local tileName = self:getTileAt(x, y)
+	if not tileName then return end
+	getCell():setDrag(ISBrushToolTileCursor:new(tileName, tileName, self.character), self.character:getPlayerNum())
+end
+
 function BrushToolChooseTileUI:scrollToFirstMatch(sheet)
 	local num = sheet and TileSearch.firstMatch[sheet]
-	self.tilesList:setYScroll(num and -math.floor(num / 8) * TILE_HEIGHT or 0)
+	self.tilesList.pendingYScroll = num and -math.floor(num / self.tilesList:getColumns()) * TILE_HEIGHT or 0
+end
+
+local BrushToolChooseTileUI_new = BrushToolChooseTileUI.new
+function BrushToolChooseTileUI:new(x, y, width, height, character)
+	if sessionState then x, y, width, height = sessionState.x, sessionState.y, sessionState.width, sessionState.height end
+	local o = BrushToolChooseTileUI_new(self, x, y, width, height, character)
+	o:setResizable(true)
+	o.minimumWidth = 300 + TILE_WIDTH * 2
+	o.minimumHeight = 300
+	return o
 end
 
 local BrushToolChooseTileUI_createChildren = BrushToolChooseTileUI.createChildren
@@ -71,6 +146,35 @@ function BrushToolChooseTileUI:createChildren()
 	self.searchMode:initialise()
 	for _, mode in ipairs(TileSearch.modes) do self.searchMode:addOption(mode) end
 	self:addChild(self.searchMode)
+	self.imageList:setHeight(self.height - self.imageList:getY() - self:resizeWidgetHeight())
+	self.tilesList:setHeight(self.height - self.tilesList:getY() - self:resizeWidgetHeight())
+	if sessionState then self:restoreSessionState() end
+end
+
+function BrushToolChooseTileUI:restoreSessionState()
+	self.searchEntryBox:setText(sessionState.search)
+	self.searchMode.selected = sessionState.mode
+	self:populateList()
+	for index, listItem in ipairs(self.imageList.items) do
+		if listItem.item == sessionState.sheet then
+			self.imageList.selected = index
+			self.imageList:ensureVisible(index)
+			self.tilesList.imageName = listItem.item
+			self.tilesList.pendingYScroll = sessionState.tileScroll
+		end
+	end
+end
+
+local BrushToolChooseTileUI_close = BrushToolChooseTileUI.close
+function BrushToolChooseTileUI:close()
+	sessionState = {
+		x = self:getX(), y = self:getY(), width = self:getWidth(), height = self:getHeight(),
+		search = self.searchEntryBox:getInternalText(),
+		mode = self.searchMode.selected,
+		sheet = self.tilesList.imageName,
+		tileScroll = self.tilesList:getYScroll(),
+	}
+	BrushToolChooseTileUI_close(self)
 end
 
 function BrushToolChooseTileUI:onSearchModeChange()
@@ -118,32 +222,22 @@ function BrushToolChooseTileUI.onSelectImage(target, item)
 	if BrushToolChooseTileUI.instance then BrushToolChooseTileUI.instance:scrollToFirstMatch(item) end
 end
 
-local BrushToolTilePickerList_render = BrushToolTilePickerList.render
-function BrushToolTilePickerList:render()
-	self:setStencilRect(0, 0, self:getWidth(), self:getHeight())
-	BrushToolTilePickerList_render(self)
-	if self.imageName then self:renderSearchOverlay() end
-	self:clearStencilRect()
-end
-
 function BrushToolTilePickerList:renderSearchOverlay()
 	if TileSearch.text and TileSearch.text ~= "" then
-		for r, row in pairs(self.posToTileNameTable) do
-			for c, spriteName in pairs(row) do
-				if TileSearch.matches[spriteName] then
-					self:drawRectBorder((c - 1) * TILE_WIDTH, (r - 1) * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, 1, 0.2, 1, 0.2)
-					self:drawRectBorder((c - 1) * TILE_WIDTH + 1, (r - 1) * TILE_HEIGHT + 1, TILE_WIDTH - 2, TILE_HEIGHT - 2, 1, 0.2, 1, 0.2)
-				end
+		for _, tile in ipairs(self.tiles) do
+			if TileSearch.matches[tile.name] then
+				local x, y = (tile.c - 1) * TILE_WIDTH, (tile.r - 1) * TILE_HEIGHT
+				self:drawRectBorder(x, y, TILE_WIDTH, TILE_HEIGHT, 1, 0.2, 1, 0.2)
+				self:drawRectBorder(x + 1, y + 1, TILE_WIDTH - 2, TILE_HEIGHT - 2, 1, 0.2, 1, 0.2)
 			end
 		end
 	end
 
 	if not self:isMouseOver() then return end
 	local mouseX, mouseY = self:getMouseX(), self:getMouseY()
-	local c, r = math.floor(mouseX / TILE_WIDTH), math.floor(mouseY / TILE_HEIGHT)
-	local row = self.posToTileNameTable[r + 1]
-	local spriteName = row and row[c + 1]
-	if not spriteName or not getTexture(spriteName) then return end
+	local spriteName = self:getTileAt(mouseX, mouseY)
+	if not spriteName then return end
+	self:drawRectBorder(math.floor(mouseX / TILE_WIDTH) * TILE_WIDTH, math.floor(mouseY / TILE_HEIGHT) * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT, 0.6, 1, 1, 1)
 	if self.hoverSprite ~= spriteName then
 		self.hoverSprite = spriteName
 		self.hoverLabel = TileSearch.getLabel(spriteName)
@@ -153,7 +247,7 @@ function BrushToolTilePickerList:renderSearchOverlay()
 	if lines == 2 then width = math.max(width, getTextManager():MeasureStringX(UIFont.Small, self.hoverLabel)) end
 	width = width + 8
 	local height = lines * FONT_HGT_SMALL + 4
-	local x = math.min(mouseX + 16, self:getWidth() - width - 16)
+	local x = math.max(0, math.min(mouseX + 16, self:getWidth() - width - 16))
 	local y = mouseY + 16
 	self:drawRect(x, y, width, height, 0.85, 0, 0, 0)
 	self:drawRectBorder(x, y, width, height, 1, 0.4, 0.4, 0.4)
